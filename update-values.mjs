@@ -115,12 +115,14 @@ function parseRange(r) {
 }
 function cleanName(n) {
   return n.replace(/\s+/g, " ").trim()
-    .replace(/\s+Contains\s+-.*$/i, "")      // sets list contents inline: "Ever Set Contains - Evergreen, …"
+    .replace(/\s+Contains\s+-.*$/i, "")          // sets list contents inline: "Ever Set Contains - Evergreen, …"
+    .replace(/\s+Class\s+-\s+[A-Za-z ]+$/i, "")  // pets show "Zombie Dog Class - Common" before the value
     .replace(/^(?:Tier\s*\d+|Changelog|Hot|Rising|New|Featured)\s+/i, "").trim();
 }
 
-// the item-icon image that begins each row, e.g. <img src=".../media/mm2godlies/TravelersGun.png">
-const ITEM_ICON = /<img\b[^>]*?\/media\/mm2[a-z]+\/[^>]*?>/i;
+// the per-item icon, e.g. <img src=".../media/mm2godlies/TravelersGun.png"> — match the path on any
+// element (some tiers render it on a non-<img> tag), and split each row on it.
+const ITEM_ICON = /<[a-z]+\b[^>]*?\/media\/mm2[a-z]+\/[^>]*?>/i;
 
 function parseBlock(seg) {
   const text = stripTags(seg);
@@ -180,10 +182,9 @@ function validItem(it) {
 function mergeTier(map, scraped, category, keyToId) {
   let updated = 0; const unmatched = [];
   for (const s of scraped) {
-    const id = keyToId.get(matchKey(s.name));
+    const id = keyToId.get(category + "|" + matchKey(s.name));   // key namespaced by category
     const prev = id && map.get(id);
     if (!prev) { unmatched.push(s.name); continue; }
-    if (prev.category !== category) { unmatched.push(s.name); continue; }   // same name in another tier — not this item
     const merged = {
       ...prev,
       supreme: s.supreme != null ? s.supreme : prev.supreme,
@@ -247,7 +248,7 @@ async function main() {
   log(`loaded values.json — ${existing.items.length} items, updatedAt ${existing.updatedAt}`);
 
   const map = new Map(existing.items.map(i => [i.id, { ...i }]));   // start from current data
-  const keyToId = new Map(existing.items.map(i => [matchKey(i.name), i.id]));
+  const keyToId = new Map(existing.items.map(i => [i.category + "|" + matchKey(i.name), i.id]));
   let tiersOK = 0, tiersFailed = 0, totalUpdated = 0;
 
   for (const [page, category] of TIERS) {
