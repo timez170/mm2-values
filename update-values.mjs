@@ -248,7 +248,12 @@ async function main() {
   log(`loaded values.json — ${existing.items.length} items, updatedAt ${existing.updatedAt}`);
 
   const map = new Map(existing.items.map(i => [i.id, { ...i }]));   // start from current data
-  const keyToId = new Map(existing.items.map(i => [i.category + "|" + matchKey(i.name), i.id]));
+  // match key: namespaced by category, indexed by name AND each alias (so Supreme's names resolve)
+  const keyToId = new Map();
+  for (const it of existing.items) {
+    keyToId.set(it.category + "|" + matchKey(it.name), it.id);
+    for (const a of (it.aliases || [])) keyToId.set(it.category + "|" + matchKey(a), it.id);
+  }
   let tiersOK = 0, tiersFailed = 0, totalUpdated = 0;
 
   for (const [page, category] of TIERS) {
@@ -259,6 +264,7 @@ async function main() {
       vlog(`${category}: extracted ${scraped.length} items`);
       if (scraped.length < (MIN_ITEMS[category] ?? 1)) {
         warn(`${category}: only ${scraped.length} items (< min ${MIN_ITEMS[category]}). Keeping previous data for this tier.`);
+        warn(`${category} diagnostic — html ${html.length} chars · icon-matches ${html.split(ITEM_ICON).length - 1} · has '/media/mm2' ${html.includes("/media/mm2")} · has 'Value -' ${/Value\s*-/.test(html)} · has '${page}' ${html.includes(page)}`);
         tiersFailed++; continue;
       }
       const { updated, unmatched } = mergeTier(map, scraped, category, keyToId);
