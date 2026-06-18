@@ -383,3 +383,64 @@
 - `ghoulish` **trend**: Stable → Doing Well
 - `ghoulish` **range**: null → [120,130]
 - `bats-knife` **supreme**: 135 → 145
+
+## 2026-06-18 — 59 change(s) [tiersOK 10, failed 1]
+- `traveler-s-gun` **demand**: 7 → 6
+- `traveler-s-gun` **trend**: Doing Well → Stable
+- `sunset-knife` **demand**: 5 → 4
+- `chroma-traveler-s-gun` **supreme**: 225000 → 220000
+- `chroma-constellation` **supreme**: 33000 → 32000
+- `chroma-snow-dagger` **supreme**: 5750 → 5500
+- `chroma-treat` **supreme**: 2800 → 2700
+- `chroma-treat` **trend**: Underpaid For → Fluctuating
+- `chroma-sweet` **supreme**: 2400 → 2300
+- `chroma-sweet` **trend**: Underpaid For → Fluctuating
+- `chroma-ornament` **supreme**: 2000 → 1900
+- `chroma-ornament` **range**: [1900,2000] → [1800,1900]
+- `chroma-darkbringer` **supreme**: 75 → 70
+- `chroma-lightbringer` **supreme**: 70 → 65
+- `chroma-luger` **supreme**: 55 → 52
+- `chroma-candleflame` **supreme**: 45 → 42
+- `chroma-elderwood-blade` **supreme**: 45 → 42
+- `chroma-swirly-gun` **supreme**: 45 → 42
+- `chroma-deathshard` **supreme**: 38 → 35
+- `chroma-shark` **supreme**: 35 → 32
+- `chroma-fang` **supreme**: 35 → 32
+- `chroma-boneblade` **supreme**: 27 → 25
+- `latte-gun` **supreme**: 135 → 150
+- `latte-gun` **demand**: 3 → 4
+- `latte-gun` **trend**: Stable → Overpaid For
+- `latte-gun` **range**: null → [150,175]
+- `latte-knife` **supreme**: 135 → 150
+- `latte-knife` **demand**: 3 → 4
+- `latte-knife` **trend**: Stable → Overpaid For
+- `latte-knife` **range**: null → [150,175]
+- `spectral-knife` **supreme**: 55 → 65
+- `spectral-knife` **range**: [55,60] → [65,75]
+- `traveler-gun` **supreme**: 55 → 65
+- `traveler-gun` **range**: [55,60] → [65,75]
+- `aurora-gun` **supreme**: 45 → 55
+- `aurora-gun` **trend**: Stable → Doing Well
+- `aurora-gun` **range**: null → [55,65]
+- `vampire-gun` **supreme**: 45 → 55
+- `vampire-gun` **trend**: Stable → Doing Well
+- `vampire-gun` **range**: null → [55,65]
+- `cane-knife-2018` **supreme**: 900 → 800
+- `cane-knife-2018` **trend**: Stable → Receding
+- `cane-knife-2018` **range**: [850,900] → [775,800]
+- `dungeon` **supreme**: 85 → 100
+- `dungeon` **demand**: 3 → 4
+- `dungeon` **trend**: Stable → Overpaid For
+- `dungeon` **range**: null → [100,125]
+- `darkknife` **supreme**: 45 → 50
+- `darkknife` **trend**: Stable → Doing Well
+- `darkknife` **range**: null → [50,60]
+- `bones` **supreme**: 160 → 170
+- `bones` **demand**: 2 → 3
+- `bones` **rarity**: 3 → 5
+- `bones` **trend**: Stable → Doing Well
+- `bones` **range**: null → [170,180]
+- `ghoulish` **supreme**: 110 → 120
+- `ghoulish` **trend**: Stable → Doing Well
+- `ghoulish` **range**: null → [120,130]
+- `bats-knife` **supreme**: 135 → 145
