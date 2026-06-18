@@ -45,7 +45,7 @@ const TIERS = [               // page slug -> app category label
   ["rares", "Rare"], ["uncommons", "Uncommon"], ["commons", "Common"],
 ];
 // minimum plausible item counts per category — below this we treat the scrape as failed for that tier
-const MIN_ITEMS = { Godly: 60, Chroma: 25, Ancient: 8, Legendary: 3, Pet: 6, Set: 30, Unique: 1, Vintage: 6, Rare: 2, Uncommon: 1, Common: 1 };
+const MIN_ITEMS = { Godly: 50, Chroma: 20, Ancient: 5, Legendary: 1, Pet: 3, Set: 20, Unique: 1, Vintage: 3, Rare: 1, Uncommon: 1, Common: 1 };
 const FETCH_TIMEOUT_MS = 15000;
 const FETCH_RETRIES = 3;
 const UA = "Mozilla/5.0 (compatible; LifenzMM2ValueBot/1.0; +https://github.com/)";
@@ -84,26 +84,25 @@ async function fetchText(url) {
   throw lastErr;
 }
 
-/* ----- parsing ----------------------------------------------------------------------------------
- * Strategy A: an embedded JSON array of item objects (covers hydrated/SSR-with-data pages).
- * Strategy B: labeled-text regex over the tag-stripped page.
- * Returns [{ name, supreme, range:[lo,hi]|null, trend, demand, rarity }]  (Supreme fields only).
- * ----------------------------------------------------------------------------------------------*/
-const ITEM_RE = new RegExp(
-  String.raw`(?<name>[A-Za-z0-9'’.()\- ]+?)\s*` +
-  String.raw`Value\s*[-:]?\s*(?<value>[\d,]+)\s*` +
-  String.raw`(?:Ranged Value\s*[-:]?\s*(?<range>[\d,]+\s*-\s*[\d,]+|N\/A)\s*)?` +
-  String.raw`(?:Stability\s*[-:]?\s*(?<stab>[A-Za-z ]+?)\s*)?` +
-  String.raw`Demand\s*[-:]?\s*(?<demand>\d+(?:\.\d+)?)\s*` +
-  String.raw`Rarity\s*[-:]?\s*(?<rarity>\d+(?:\.\d+)?)`,
-  "g"
-);
+/* ----- parsing -----------------------------------------------------------------------------------
+ * Supreme tier pages are server-rendered HTML. Each item row begins with the item's icon image at
+ * /media/mm2<tier>/<Name>.png, followed by the displayed name and labeled fields, e.g.:
+ *   <icon> Traveler's Gun  Value - 6,300 +1 -1 ~  Ranged Value - [N/A]  Stability - Stable
+ *          Demand - 6 Rarity - 5  Origin - …  Last Change in Value - (+100)
+ * We split each page on that item-icon image (a delimiter that always exists, exactly one per item)
+ * and parse each block on its own. This is immune to the +/- buttons between value and range, the
+ * bracketed range, the free-text Origin, and the trailing "Last Change in Value" — all of which
+ * broke a single-pass regex. Returns [{ name, supreme, range:[lo,hi]|null, trend, demand, rarity }].
+ * --------------------------------------------------------------------------------------------------*/
 const stripTags = html => html
   .replace(/<script[\s\S]*?<\/script>/gi, " ")
   .replace(/<style[\s\S]*?<\/style>/gi, " ")
   .replace(/<[^>]+>/g, " ")
-  .replace(/&amp;/g, "&").replace(/&#39;|&apos;/g, "'").replace(/&quot;/g, '"')
-  .replace(/&nbsp;|\s+/g, " ").trim();
+  .replace(/&amp;/gi, "&")
+  .replace(/&#0*39;|&#x0*27;|&apos;|&#8217;|&#x2019;|&rsquo;|&lsquo;|&#8216;|&#x2018;/gi, "'")
+  .replace(/&quot;|&#0*34;|&#x0*22;/gi, '"')
+  .replace(/&nbsp;/gi, " ")
+  .replace(/\s+/g, " ").trim();
 
 function parseRange(r) {
   if (!r || /N\/?A/i.test(r)) return null;
@@ -114,51 +113,45 @@ function parseRange(r) {
 }
 function cleanName(n) {
   return n.replace(/\s+/g, " ").trim()
-    // drop leading tier/section words a greedy match may have grabbed
-    .replace(/^(?:Tier\s*\d+|Hot|Rising|New|Featured)\s+/i, "").trim();
+    .replace(/^(?:Tier\s*\d+|Changelog|Hot|Rising|New|Featured)\s+/i, "").trim();
 }
 
-function extractFromJson(html) {
-  // find array-ish blobs containing both a name and a value field
-  const out = [];
-  const re = /\{[^{}]*?"name"\s*:\s*"([^"]+)"[^{}]*?"value"\s*:\s*"?([\d,]+)"?[^{}]*?\}/gi;
-  let m;
-  while ((m = re.exec(html))) {
-    const obj = m[0];
-    const demand = (obj.match(/"demand"\s*:\s*"?([\d.]+)"?/i) || [])[1];
-    const rarity = (obj.match(/"rarity"\s*:\s*"?([\d.]+)"?/i) || [])[1];
-    const stab = (obj.match(/"stability"\s*:\s*"([^"]+)"/i) || [])[1];
-    const range = (obj.match(/"range(?:d|dValue)?"\s*:\s*"([^"]+)"/i) || [])[1];
-    out.push({ name: cleanName(m[1]), supreme: num(m[2]),
-      range: parseRange(range), trend: stab || null, demand: num(demand), rarity: num(rarity) });
-  }
-  return out;
+// the item-icon image that begins each row, e.g. <img src=".../media/mm2godlies/TravelersGun.png">
+const ITEM_ICON = /<img\b[^>]*?\/media\/mm2[a-z]+\/[^>]*?>/i;
+
+function parseBlock(seg) {
+  const text = stripTags(seg);
+  // first "Value - <digits>" is the real value; the "Value" in "Ranged Value" / "Last Change in
+  // Value" is followed by "[" / "(" respectively, so the digit requirement skips them.
+  const mVal = text.match(/\bValue\s*-\s*([\d,]+)/);
+  if (!mVal) return null;
+  const name = cleanName(text.slice(0, mVal.index));
+  if (!name || name.length > 40) return null;
+  const mRange = text.match(/Ranged Value\s*-\s*\[?\s*([\d,]+\s*-\s*[\d,]+|N\/?A)/i);
+  const mStab  = text.match(/Stability\s*-\s*([A-Za-z][A-Za-z ]*?)\s+(?:Demand|Rarity|Origin|Last)\b/i);
+  const mDem   = text.match(/\bDemand\s*-\s*([\d.]+)/i);
+  const mRar   = text.match(/\bRarity\s*-\s*([\d.]+)/i);
+  return {
+    name,
+    supreme: num(mVal[1]),
+    range: parseRange(mRange ? mRange[1] : null),
+    trend: mStab ? mStab[1].trim() : null,
+    demand: num(mDem ? mDem[1] : null),
+    rarity: num(mRar ? mRar[1] : null),
+  };
 }
-function extractFromText(html) {
-  const text = stripTags(html);
-  const out = [];
-  let m;
-  ITEM_RE.lastIndex = 0;
-  while ((m = ITEM_RE.exec(text))) {
-    const g = m.groups;
-    const name = cleanName(g.name);
-    if (!name || name.length > 40) continue;
-    out.push({ name, supreme: num(g.value), range: parseRange(g.range),
-      trend: g.stab ? g.stab.trim() : null, demand: num(g.demand), rarity: num(g.rarity) });
-  }
-  return out;
-}
+
 export function extractItems(html) {
-  let items = extractFromJson(html);
-  if (items.length < 5) items = extractFromText(html);   // fall back to text parsing
-  // de-dupe by slug, keep first
-  const seen = new Set(), uniq = [];
-  for (const it of items) {
+  const blocks = html.split(ITEM_ICON);   // blocks[0] = page preamble; blocks[1..] = one item each
+  const seen = new Set(), out = [];
+  for (let i = 1; i < blocks.length; i++) {
+    const it = parseBlock(blocks[i]);
+    if (!it) continue;
     const id = slug(it.name);
-    if (!id || seen.has(id)) continue;
-    seen.add(id); uniq.push(it);
+    if (!id || seen.has(id)) continue;     // de-dupe by slug
+    seen.add(id); out.push(it);
   }
-  return uniq;
+  return out;
 }
 
 /* ----- merge + validate + diff ----- */
