@@ -60,6 +60,8 @@ const vlog = (...a) => { if (VERBOSE) console.log(`[${ts()}]  ·`, ...a); };
 
 /* ----- helpers (slug MUST match the app's slug()) ----- */
 const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+// match Supreme's display names to our curated ids — Supreme abbreviates "Chroma" as "C." on some tiers
+const matchKey = name => name.toLowerCase().replace(/^c\.\s+/, "chroma ").replace(/[^a-z0-9]+/g, "");
 const num = s => { if (s == null) return null; const n = Number(String(s).replace(/[^\d.]/g, "")); return Number.isFinite(n) ? n : null; };
 const today = () => new Date().toISOString().slice(0, 10);
 
@@ -169,33 +171,30 @@ function validItem(it) {
     (it.rarity == null || (it.rarity >= 1 && it.rarity <= 11)) &&
     (it.range == null || (Array.isArray(it.range) && it.range.length === 2 && it.range[0] <= it.range[1]));
 }
-/** Merge one tier's scrape into the working item map (keyed by id). Returns count merged. */
-function mergeTier(map, scraped, category) {
-  let n = 0;
+/**
+ * Update-only merge: refresh the Supreme fields of items we already curate, matched by normalized
+ * name (so "C. Traveler's Gun" updates "Chroma Traveler's Gun"). Unknown items are NOT added — they
+ * are returned in `unmatched` for review. id / name / category / mm2 / aliases / placeholder are kept.
+ */
+function mergeTier(map, scraped, category, keyToId) {
+  let updated = 0; const unmatched = [];
   for (const s of scraped) {
-    const id = slug(s.name);
-    const prev = map.get(id) || {};
+    const id = keyToId.get(matchKey(s.name));
+    const prev = id && map.get(id);
+    if (!prev) { unmatched.push(s.name); continue; }
     const merged = {
-      id, name: s.name, category,
-      supreme: s.supreme,
-      mm2: prev.mm2 ?? null,                         // carry MM2 cross-check (not auto-scraped)
-      demand: Math.round(s.demand ?? prev.demand ?? null) || (s.demand ?? prev.demand ?? null),
-      rarity: Math.round(s.rarity ?? prev.rarity ?? null) || (s.rarity ?? prev.rarity ?? null),
+      ...prev,
+      supreme: s.supreme != null ? s.supreme : prev.supreme,
+      demand: s.demand != null ? Math.round(s.demand) : prev.demand,
+      rarity: s.rarity != null ? Math.round(s.rarity) : prev.rarity,
       trend: sanitizeTrend(s.trend) ?? prev.trend ?? null,
       range: s.range ?? prev.range ?? null,
-      aliases: prev.aliases,                          // carry curated aliases
-      placeholder: prev.placeholder,                  // carry placeholder flag
     };
-    if (!validItem(merged)) { vlog(`skip invalid ${category}/${id}`, merged); continue; }
-    // round demand/rarity to integers (Supreme uses whole; MM2 sometimes .5)
-    if (merged.demand != null) merged.demand = Math.round(merged.demand);
-    if (merged.rarity != null) merged.rarity = Math.round(merged.rarity);
-    if (merged.aliases == null) delete merged.aliases;
-    if (!merged.placeholder) delete merged.placeholder;
+    if (!validItem(merged)) { vlog(`skip invalid ${category}/${id}`); continue; }
     map.set(id, merged);
-    n++;
+    updated++;
   }
-  return n;
+  return { updated, unmatched };
 }
 function diffItems(oldArr, newArr) {
   const o = new Map(oldArr.map(i => [i.id, i]));
@@ -246,7 +245,8 @@ async function main() {
   log(`loaded values.json — ${existing.items.length} items, updatedAt ${existing.updatedAt}`);
 
   const map = new Map(existing.items.map(i => [i.id, { ...i }]));   // start from current data
-  let tiersOK = 0, tiersFailed = 0;
+  const keyToId = new Map(existing.items.map(i => [matchKey(i.name), i.id]));
+  let tiersOK = 0, tiersFailed = 0, totalUpdated = 0;
 
   for (const [page, category] of TIERS) {
     const url = BASE + page;
@@ -258,8 +258,10 @@ async function main() {
         warn(`${category}: only ${scraped.length} items (< min ${MIN_ITEMS[category]}). Keeping previous data for this tier.`);
         tiersFailed++; continue;
       }
-      const n = mergeTier(map, scraped, category);
-      log(`${category}: merged ${n} items`);
+      const { updated, unmatched } = mergeTier(map, scraped, category, keyToId);
+      totalUpdated += updated;
+      log(`${category}: updated ${updated}/${scraped.length} scraped` + (unmatched.length ? `, ${unmatched.length} not in curated list (skipped)` : ""));
+      if (VERBOSE && unmatched.length) vlog(`${category} unmatched: ${unmatched.slice(0, 25).join(" | ")}`);
       tiersOK++;
     } catch (e) {
       warn(`${category}: scrape failed (${e.message}). Keeping previous data for this tier.`);
@@ -277,7 +279,7 @@ async function main() {
   }
 
   const changes = diffItems(existing.items, newItems);
-  log(`reconcile complete — tiersOK=${tiersOK} tiersFailed=${tiersFailed} changes=${changes.length}`);
+  log(`reconcile complete — tiersOK=${tiersOK} tiersFailed=${tiersFailed} updated=${totalUpdated} changes=${changes.length}`);
 
   if (changes.length === 0) { log("no value changes. values.json is current."); return; }
 
@@ -302,7 +304,7 @@ async function main() {
   await notify(changes, out.updatedAt);
 }
 
-export const __test = { slug, num, parseRange, cleanName, sanitizeTrend, validItem, mergeTier, diffItems };
+export const __test = { slug, matchKey, num, parseRange, cleanName, sanitizeTrend, validItem, mergeTier, diffItems };
 
 // only run when invoked directly (so the test file can import the pure functions)
 if (import.meta.url === `file://${process.argv[1]}`) {
