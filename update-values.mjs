@@ -265,9 +265,10 @@ async function main() {
       if (scraped.length < (MIN_ITEMS[category] ?? 1)) {
         warn(`${category}: only ${scraped.length} items (< min ${MIN_ITEMS[category]}). Keeping previous data for this tier.`);
         const _blks = html.split(ITEM_ICON);
-        const _valBlks = _blks.slice(1).filter(b => /Value\s*-\s*[\d,]/.test(b));
-        warn(`${category} diagnostic — html ${html.length} chars · blocks ${_blks.length} · value-blocks ${_valBlks.length}`);
-        warn(`${category} sample block: ${_valBlks[0] ? JSON.stringify(stripTags(_valBlks[0]).slice(0, 320)) : "(no block contains 'Value - <num>')"}`);
+        const _vN = (stripTags(html).match(/Value\s*-\s*[\d,]/g) || []).length;
+        warn(`${category} diagnostic — html ${html.length} · blocks ${_blks.length} · stripped 'Value - N' count ${_vN}`);
+        warn(`${category} block[1]: ${JSON.stringify(stripTags(_blks[1] || "").slice(0, 320))}`);
+        warn(`${category} block[2]: ${JSON.stringify(stripTags(_blks[2] || "").slice(0, 320))}`);
         tiersFailed++; continue;
       }
       const { updated, unmatched } = mergeTier(map, scraped, category, keyToId);
