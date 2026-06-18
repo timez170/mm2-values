@@ -264,7 +264,10 @@ async function main() {
       vlog(`${category}: extracted ${scraped.length} items`);
       if (scraped.length < (MIN_ITEMS[category] ?? 1)) {
         warn(`${category}: only ${scraped.length} items (< min ${MIN_ITEMS[category]}). Keeping previous data for this tier.`);
-        warn(`${category} diagnostic — html ${html.length} chars · icon-matches ${html.split(ITEM_ICON).length - 1} · has '/media/mm2' ${html.includes("/media/mm2")} · has 'Value -' ${/Value\s*-/.test(html)} · has '${page}' ${html.includes(page)}`);
+        const _blks = html.split(ITEM_ICON);
+        const _valBlks = _blks.slice(1).filter(b => /Value\s*-\s*[\d,]/.test(b));
+        warn(`${category} diagnostic — html ${html.length} chars · blocks ${_blks.length} · value-blocks ${_valBlks.length}`);
+        warn(`${category} sample block: ${_valBlks[0] ? JSON.stringify(stripTags(_valBlks[0]).slice(0, 320)) : "(no block contains 'Value - <num>')"}`);
         tiersFailed++; continue;
       }
       const { updated, unmatched } = mergeTier(map, scraped, category, keyToId);
