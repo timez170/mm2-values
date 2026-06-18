@@ -707,6 +707,17 @@
       ]
     },
     {
+      "id": "zombie-dog",
+      "name": "Zombie Dog",
+      "category": "Pet",
+      "supreme": 825,
+      "mm2": 800,
+      "demand": 4,
+      "rarity": 5,
+      "trend": "Stable",
+      "range": null
+    },
+    {
       "id": "bloom-set",
       "name": "Bloom Set",
       "category": "Set",
@@ -730,17 +741,6 @@
         775,
         800
       ]
-    },
-    {
-      "id": "zombie-dog",
-      "name": "Zombie Dog",
-      "category": "Pet",
-      "supreme": 800,
-      "mm2": 800,
-      "demand": 3,
-      "rarity": 4,
-      "trend": "Stable",
-      "range": null
     },
     {
       "id": "rainbow-set",
@@ -1040,6 +1040,20 @@
       ]
     },
     {
+      "id": "black-cat",
+      "name": "Black Cat",
+      "category": "Pet",
+      "supreme": 270,
+      "mm2": 65,
+      "demand": 3,
+      "rarity": 4,
+      "trend": "Stable",
+      "range": [
+        175,
+        200
+      ]
+    },
+    {
       "id": "flowerwood-gun",
       "name": "Flowerwood Gun",
       "category": "Godly",
@@ -1115,6 +1129,17 @@
       "range": null
     },
     {
+      "id": "elf-2019",
+      "name": "Elf (2019)",
+      "category": "Pet",
+      "supreme": 230,
+      "mm2": 220,
+      "demand": 3,
+      "rarity": 5,
+      "trend": "Stable",
+      "range": null
+    },
+    {
       "id": "blue-pumpkin-2018",
       "name": "Blue Pumpkin (2018)",
       "category": "Pet",
@@ -1154,17 +1179,6 @@
       ]
     },
     {
-      "id": "elf-2019",
-      "name": "Elf (2019)",
-      "category": "Pet",
-      "supreme": 200,
-      "mm2": 220,
-      "demand": 2,
-      "rarity": 5,
-      "trend": "Stable",
-      "range": null
-    },
-    {
       "id": "pearl-set",
       "name": "Pearl Set",
       "category": "Set",
@@ -1174,20 +1188,6 @@
       "rarity": 3,
       "trend": "Stable",
       "range": null
-    },
-    {
-      "id": "black-cat",
-      "name": "Black Cat",
-      "category": "Pet",
-      "supreme": 175,
-      "mm2": 65,
-      "demand": 4,
-      "rarity": 3,
-      "trend": "Doing Well",
-      "range": [
-        175,
-        200
-      ]
     },
     {
       "id": "bones",
@@ -1294,6 +1294,17 @@
       "mm2": 135,
       "demand": 3,
       "rarity": 3,
+      "trend": "Stable",
+      "range": null
+    },
+    {
+      "id": "dogey",
+      "name": "Dogey",
+      "category": "Pet",
+      "supreme": 130,
+      "mm2": 110,
+      "demand": 3,
+      "rarity": 4,
       "trend": "Stable",
       "range": null
     },
@@ -1407,17 +1418,6 @@
         100,
         125
       ]
-    },
-    {
-      "id": "dogey",
-      "name": "Dogey",
-      "category": "Pet",
-      "supreme": 100,
-      "mm2": 110,
-      "demand": 3,
-      "rarity": 3,
-      "trend": "Stable",
-      "range": null
     },
     {
       "id": "pearl",
@@ -1695,6 +1695,28 @@
       "mm2": 47,
       "demand": 1,
       "rarity": 2,
+      "trend": "Stable",
+      "range": null
+    },
+    {
+      "id": "mr-reindeer",
+      "name": "Mr. Reindeer",
+      "category": "Pet",
+      "supreme": 45,
+      "mm2": 25,
+      "demand": 3,
+      "rarity": 4,
+      "trend": "Stable",
+      "range": null
+    },
+    {
+      "id": "pumpkin-2017",
+      "name": "Pumpkin (2017)",
+      "category": "Pet",
+      "supreme": 45,
+      "mm2": 20,
+      "demand": 3,
+      "rarity": 5,
       "trend": "Stable",
       "range": null
     },
@@ -2039,17 +2061,6 @@
       "range": null
     },
     {
-      "id": "mr-reindeer",
-      "name": "Mr. Reindeer",
-      "category": "Pet",
-      "supreme": 30,
-      "mm2": 25,
-      "demand": 2,
-      "rarity": 3,
-      "trend": "Stable",
-      "range": null
-    },
-    {
       "id": "ornament",
       "name": "Ornament",
       "category": "Godly",
@@ -2084,17 +2095,6 @@
       "aliases": [
         "cbb"
       ]
-    },
-    {
-      "id": "pumpkin-2017",
-      "name": "Pumpkin (2017)",
-      "category": "Pet",
-      "supreme": 25,
-      "mm2": 20,
-      "demand": 2,
-      "rarity": 5,
-      "trend": "Stable",
-      "range": null
     },
     {
       "id": "amerilaser",

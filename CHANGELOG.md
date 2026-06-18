@@ -444,3 +444,21 @@
 - `ghoulish` **trend**: Stable → Doing Well
 - `ghoulish` **range**: null → [120,130]
 - `bats-knife` **supreme**: 135 → 145
+
+## 2026-06-18 — 16 change(s) [tiersOK 11, failed 0]
+- `zombie-dog` **supreme**: 800 → 825
+- `zombie-dog` **demand**: 3 → 4
+- `zombie-dog` **rarity**: 4 → 5
+- `elf-2019` **supreme**: 200 → 230
+- `elf-2019` **demand**: 2 → 3
+- `black-cat` **supreme**: 175 → 270
+- `black-cat` **demand**: 4 → 3
+- `black-cat` **rarity**: 3 → 4
+- `black-cat` **trend**: Doing Well → Stable
+- `dogey` **supreme**: 100 → 130
+- `dogey` **rarity**: 3 → 4
+- `mr-reindeer` **supreme**: 30 → 45
+- `mr-reindeer` **demand**: 2 → 3
+- `mr-reindeer` **rarity**: 3 → 4
+- `pumpkin-2017` **supreme**: 25 → 45
+- `pumpkin-2017` **demand**: 2 → 3
