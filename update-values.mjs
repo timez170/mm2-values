@@ -115,9 +115,11 @@ function parseRange(r) {
 }
 function cleanName(n) {
   return n.replace(/\s+/g, " ").trim()
+    .replace(/\s*=\d+\b[^>]*?-->\s*/g, " ")      // Supreme's pet rows leak a broken template directive: "Zombie Dog =1 condition from all conditions.txt lines 251-275 --> Class - …"
     .replace(/\s+Contains\s+-.*$/i, "")          // sets list contents inline: "Ever Set Contains - Evergreen, …"
     .replace(/\s+Class\s+-\s+[A-Za-z ]+$/i, "")  // pets show "Zombie Dog Class - Common" before the value
-    .replace(/^(?:Tier\s*\d+|Changelog|Hot|Rising|New|Featured)\s+/i, "").trim();
+    .replace(/^(?:Tier\s*\d+|Changelog|Hot|Rising|New|Featured)\s+/i, "")
+    .replace(/\s+/g, " ").trim();
 }
 
 // the per-item icon, e.g. <img src=".../media/mm2godlies/TravelersGun.png"> — match the path on any
