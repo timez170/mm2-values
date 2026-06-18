@@ -244,3 +244,82 @@
 - `haunted-gun` **added**: — → 1
 - `haunted-knife` **added**: — → 1
 - `witch` **added**: — → 1
+
+## 2026-06-18 — 77 change(s) [tiersOK 10, failed 1]
+- `traveler-s-gun` **demand**: 7 → 6
+- `traveler-s-gun` **trend**: Doing Well → Stable
+- `phantom` **supreme**: 38 → 10
+- `phantom` **rarity**: 2 → 3
+- `laser` **supreme**: 23 → 8
+- `snowflake` **supreme**: 5 → 20
+- `snowflake` **demand**: 1 → 2
+- `snowflake` **rarity**: 2 → 4
+- `chroma-traveler-s-gun` **supreme**: 225000 → 220000
+- `chroma-constellation` **supreme**: 33000 → 32000
+- `chroma-snow-dagger` **supreme**: 5750 → 5500
+- `chroma-treat` **supreme**: 2800 → 2700
+- `chroma-treat` **trend**: Underpaid For → Fluctuating
+- `chroma-sweet` **supreme**: 2400 → 2300
+- `chroma-sweet` **trend**: Underpaid For → Fluctuating
+- `chroma-ornament` **supreme**: 2000 → 1900
+- `chroma-ornament` **range**: [1900,2000] → [1800,1900]
+- `chroma-darkbringer` **supreme**: 75 → 70
+- `chroma-lightbringer` **supreme**: 70 → 65
+- `chroma-luger` **supreme**: 55 → 52
+- `chroma-candleflame` **supreme**: 45 → 42
+- `chroma-elderwood-blade` **supreme**: 45 → 42
+- `chroma-swirly-gun` **supreme**: 45 → 42
+- `chroma-deathshard` **supreme**: 38 → 35
+- `chroma-shark` **supreme**: 35 → 32
+- `chroma-fang` **supreme**: 35 → 32
+- `chroma-boneblade` **supreme**: 27 → 25
+- `latte-gun` **supreme**: 135 → 150
+- `latte-gun` **demand**: 3 → 4
+- `latte-gun` **trend**: Stable → Overpaid For
+- `latte-gun` **range**: null → [150,175]
+- `latte-knife` **supreme**: 135 → 150
+- `latte-knife` **demand**: 3 → 4
+- `latte-knife` **trend**: Stable → Overpaid For
+- `latte-knife` **range**: null → [150,175]
+- `spectral-knife` **supreme**: 55 → 65
+- `spectral-knife` **range**: [55,60] → [65,75]
+- `traveler-gun` **supreme**: 55 → 65
+- `traveler-gun` **range**: [55,60] → [65,75]
+- `aurora-gun` **supreme**: 45 → 1
+- `aurora-gun` **demand**: 3 → 1
+- `aurora-gun` **rarity**: 4 → 2
+- `aurora-gun` **range**: null → [55,65]
+- `vampire-gun` **supreme**: 45 → 7
+- `vampire-gun` **demand**: 3 → 2
+- `vampire-gun` **rarity**: 4 → 3
+- `vampire-gun` **range**: null → [55,65]
+- `cane-knife-2018` **supreme**: 900 → 800
+- `cane-knife-2018` **trend**: Stable → Receding
+- `cane-knife-2018` **range**: [850,900] → [775,800]
+- `dungeon` **supreme**: 85 → 100
+- `dungeon` **demand**: 3 → 4
+- `dungeon` **trend**: Stable → Overpaid For
+- `dungeon` **range**: null → [100,125]
+- `darkknife` **supreme**: 45 → 50
+- `darkknife` **trend**: Stable → Doing Well
+- `darkknife` **range**: null → [50,60]
+- `bones` **supreme**: 160 → 1
+- `bones` **demand**: 2 → 1
+- `bones` **rarity**: 3 → 2
+- `bones` **range**: null → [170,180]
+- `ghoulish` **supreme**: 110 → 120
+- `ghoulish` **trend**: Stable → Doing Well
+- `ghoulish` **range**: null → [120,130]
+- `bats-knife` **supreme**: 135 → 145
+- `chroma-fire-bat` **range**: null → [3,5]
+- `chroma-fire-bear` **range**: null → [3,5]
+- `chroma-fire-cat` **range**: null → [3,5]
+- `chroma-fire-dog` **range**: null → [3,5]
+- `chroma-fire-fox` **range**: null → [3,5]
+- `chroma-fire-pig` **range**: null → [3,5]
+- `chroma-fire-bunny` **range**: null → [3,5]
+- `chroma-sun-set` **supreme**: 17750 → 6500
+- `chroma-sun-set` **demand**: 6 → 5
+- `sun-set` **supreme**: 1600 → 500
+- `sun-set` **demand**: 5 → 4
+- `sun-set` **rarity**: 4 → 3
