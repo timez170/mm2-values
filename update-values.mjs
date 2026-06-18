@@ -115,6 +115,7 @@ function parseRange(r) {
 }
 function cleanName(n) {
   return n.replace(/\s+/g, " ").trim()
+    .replace(/\s+Contains\s+-.*$/i, "")      // sets list contents inline: "Ever Set Contains - Evergreen, …"
     .replace(/^(?:Tier\s*\d+|Changelog|Hot|Rising|New|Featured)\s+/i, "").trim();
 }
 
@@ -182,6 +183,7 @@ function mergeTier(map, scraped, category, keyToId) {
     const id = keyToId.get(matchKey(s.name));
     const prev = id && map.get(id);
     if (!prev) { unmatched.push(s.name); continue; }
+    if (prev.category !== category) { unmatched.push(s.name); continue; }   // same name in another tier — not this item
     const merged = {
       ...prev,
       supreme: s.supreme != null ? s.supreme : prev.supreme,
