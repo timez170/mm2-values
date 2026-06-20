@@ -1,0 +1,1376 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>MM2 Trade Calculator — Free Dual-Source Value & WFL Checker</title>
+<meta name="description" content="Free Murder Mystery 2 trade calculator. Check if an MM2 trade is a Win, Fair, or Lose using two value lists at once (Supreme Values + MM2Values), with demand, rarity, trend, live auto-updated values, and a shareable trade card." />
+<meta name="keywords" content="mm2 trade calculator, mm2 value calculator, mm2 values, murder mystery 2 values, is this a fair trade mm2, mm2 wfl, mm2 value list" />
+<meta name="theme-color" content="#0b1020" />
+<meta name="color-scheme" content="dark light" />
+<link rel="canonical" href="https://timez170.github.io/mm2-values/" />
+<!-- Open Graph / social preview. Edit the URLs to your hosted location. -->
+<meta property="og:type" content="website" />
+<meta property="og:site_name" content="Lifenz · MM2 Trade Calculator" />
+<meta property="og:title" content="MM2 Trade Calculator — Dual-Source Value & WFL Checker" />
+<meta property="og:description" content="Drop items on both sides and instantly see Win / Fair / Lose across Supreme Values + MM2Values. Live values, demand & trend, shareable trade cards." />
+<meta property="og:url" content="https://timez170.github.io/mm2-values/" />
+<meta property="og:image" content="https://timez170.github.io/mm2-values/og-image.png" />
+<meta property="og:image:width" content="1200" />
+<meta property="og:image:height" content="630" />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="MM2 Trade Calculator — Dual-Source WFL" />
+<meta name="twitter:description" content="Is your Murder Mystery 2 trade fair? Check it against two value lists at once, with live values and a shareable trade card." />
+<meta name="twitter:image" content="https://timez170.github.io/mm2-values/og-image.png" />
+<!-- installable (Android/iOS add-to-home-screen). Companion files are optional progressive enhancement. -->
+<link rel="manifest" href="manifest.webmanifest" />
+<meta name="mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="MM2 Calc" />
+<link rel="apple-touch-icon" href="data:image/png;base64,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" />
+<link rel="icon" type="image/png" href="data:image/png;base64,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" />
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "WebApplication",
+      "name": "MM2 Trade Calculator",
+      "applicationCategory": "GameApplication",
+      "operatingSystem": "Any (web browser)",
+      "description": "A free dual-source trade value calculator for Roblox Murder Mystery 2 (MM2). Evaluates a trade against Supreme Values and MM2Values independently and combined, with Win/Fair/Lose verdicts, demand, rarity, value trends, live auto-updated values, and a shareable trade card.",
+      "url": "https://timez170.github.io/mm2-values/",
+      "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
+      "featureList": ["Dual-source value comparison", "Win/Fair/Lose fairness verdict", "Demand and rarity weighting", "Live auto-updated values", "Shareable trade links and trade card images", "Value history trends"]
+    },
+    {
+      "@type": "FAQPage",
+      "mainEntity": [
+        { "@type": "Question", "name": "What does WFL mean in MM2 trading?",
+          "acceptedAnswer": { "@type": "Answer", "text": "WFL stands for Win, Fair, or Lose. It describes whether the items you receive are worth more than (Win), about the same as (Fair), or less than (Lose) the items you give in a Murder Mystery 2 trade." } },
+        { "@type": "Question", "name": "How are MM2 values calculated?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Values are community estimates aggregated from value lists. This calculator uses two sources — Supreme Values and MM2Values — and compares each side of a trade on a shared unit, then shows each list's verdict plus a combined result. Values also reflect demand, rarity, and recent trend." } },
+        { "@type": "Question", "name": "How do I know if an MM2 trade is fair?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Add the items you would give and the items you would get, and the calculator returns a Win/Fair/Lose verdict with the value gap and a fairness percentage. A trade within a small tolerance band is considered Fair; larger gaps are flagged as a Win or Loss, with demand-based notes on how easy each item is to re-trade." } },
+        { "@type": "Question", "name": "Are the values live and up to date?",
+          "acceptedAnswer": { "@type": "Answer", "text": "Yes. Values are refreshed automatically by a scraper that updates the underlying value list multiple times a day, and the app pulls the latest values on load, falling back to cached or built-in values when offline." } }
+      ]
+    }
+  ]
+}
+</script>
+<style>
+  :root{
+    --bg:#0a0e1a; --card:rgba(19,26,43,.66); --card2:rgba(24,32,52,.6);
+    --line:#1f2940; --line2:#2a3750; --text:#e8edf6; --muted:#76849f; --muted2:#97a4bf;
+    --violet:#a78bfa; --violet2:#8b5cf6; --cyan:#34d3ee;
+    --win:#34d399; --fair:#fbbf24; --lose:#fb7185;
+    --r-sm:9px; --r-md:12px; --r-lg:15px; --r-xl:18px;
+    --fast:.15s; --slow:.45s; --ease:cubic-bezier(.22,.7,.3,1);
+    --shadow:0 8px 24px -12px rgba(0,0,0,.6);
+    --font:ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",sans-serif;
+    --round:"SF Pro Rounded",ui-rounded,"Segoe UI",var(--font);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0}
+  body{background:radial-gradient(900px 460px at 10% -10%,rgba(124,58,237,.14),transparent 55%),radial-gradient(760px 420px at 98% 0%,rgba(34,184,214,.09),transparent 52%),var(--bg);
+    color:var(--text);min-height:100vh;font-family:var(--font);-webkit-font-smoothing:antialiased;font-size:14px}
+  body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.45;background-image:radial-gradient(rgba(124,140,180,.05) 1px,transparent 1px);background-size:24px 24px}
+  .glow{position:fixed;border-radius:9999px;filter:blur(90px);pointer-events:none;z-index:0;opacity:.4}
+  .glow1{top:-120px;left:-90px;width:300px;height:300px;background:rgba(124,58,237,.16)}
+  .glow2{bottom:-140px;right:-90px;width:320px;height:320px;background:rgba(34,184,214,.11)}
+  #app{position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:14px 16px 36px}
+
+  .row{display:flex;align-items:center}.between{justify-content:space-between}.center{justify-content:center}
+  .wrap{flex-wrap:wrap}.col{flex-direction:column}.min0{min-width:0}
+  .gap4{gap:4px}.gap6{gap:6px}.gap8{gap:8px}.gap10{gap:10px}.gap12{gap:12px}
+  .mb8{margin-bottom:8px}.mb10{margin-bottom:10px}.mb12{margin-bottom:12px}.mt2{margin-top:2px}.mt4{margin-top:4px}.mt8{margin-top:8px}
+  .b{font-weight:700;color:#f3f6fc}.sb{font-weight:600}.sm{font-size:13px}.xs{font-size:11px}
+  .r{text-align:right}.tab-num{font-variant-numeric:tabular-nums}
+  .mut{color:var(--muted)}.mut2{color:var(--muted2)}.dim{color:#4a5773}
+  .ic{display:inline-block;vertical-align:middle;flex:none}
+  .ell{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+  /* header */
+  .hdr{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px}
+  .brand{display:flex;align-items:center;gap:11px}
+  .logo{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#8b5cf6,#ec4899 52%,#22d3ee);box-shadow:0 8px 20px rgba(139,92,246,.36);position:relative;overflow:hidden}
+  .logo::after{content:"";position:absolute;inset:0;background:linear-gradient(120deg,rgba(255,255,255,.4),transparent 45%);opacity:.6}
+  .title{font-family:var(--round);font-size:18px;font-weight:800;letter-spacing:-.01em;margin:0;line-height:1.05}
+  .tagline{font-size:11px;color:var(--muted2);margin:3px 0 0;display:flex;align-items:center;gap:5px}
+  .tabs{display:flex;gap:3px;background:rgba(14,19,32,.7);border:1px solid var(--line);border-radius:12px;padding:3px;box-shadow:var(--shadow)}
+  .tab{display:flex;align-items:center;gap:6px;padding:7px 12px;border-radius:9px;font-size:13px;font-weight:600;background:transparent;border:none;color:var(--muted2);cursor:pointer;transition:color var(--fast),background var(--fast);font-family:var(--font)}
+  .tab:hover{color:#dce4f1}.tab-on{background:rgba(124,58,237,.16);color:#f3f6fc;box-shadow:inset 0 0 0 1px rgba(124,58,237,.3)}
+  .tab-n{font-size:10px;padding:1px 6px;border-radius:9999px;background:#313e5a;color:#cdd6e8}
+  .tab-on .tab-n{background:rgba(124,58,237,.45);color:#fff}
+
+  .card{border:1px solid var(--line);background:var(--card);backdrop-filter:blur(10px);border-radius:var(--r-lg);padding:13px;box-shadow:var(--shadow)}
+  .grid2{display:grid;grid-template-columns:1fr;gap:11px}
+  @media(min-width:760px){.grid2{grid-template-columns:1fr 1fr}}
+  .dot{width:8px;height:8px;border-radius:9999px;display:inline-block;flex:none}
+  .subt{font-size:11px;font-variant-numeric:tabular-nums;white-space:nowrap}
+
+  /* panel */
+  .panel{display:flex;flex-direction:column}
+  .panel-h{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:10px}
+  .search-wrap{position:relative}
+  .search-box{display:flex;align-items:center;gap:8px;border-radius:var(--r-md);padding:8px 11px;background:rgba(12,18,31,.7);border:1px solid var(--line2);transition:border-color var(--fast),box-shadow var(--fast)}
+  .search-box:focus-within{border-color:var(--violet2);box-shadow:0 0 0 3px rgba(124,58,237,.15)}
+  .search-input{flex:1;background:transparent;border:none;outline:none;color:#f3f6fc;font-size:13.5px;min-width:0;font-family:var(--font)}
+  .search-input::placeholder{color:var(--muted)}
+  .x-btn{background:none;border:none;color:var(--muted);cursor:pointer;padding:0;display:flex}.x-btn:hover{color:#cdd6e8}
+  .dropdown{position:absolute;z-index:40;margin-top:5px;width:100%;border:1px solid var(--line2);border-radius:var(--r-md);background:#0c1220;box-shadow:0 24px 60px rgba(0,0,0,.62);overflow:hidden}
+  .dd-list{max-height:268px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .dd-item{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px;padding:8px 11px;background:none;border:none;cursor:pointer;text-align:left;color:var(--text);border-left:2px solid transparent;transition:background var(--fast)}
+  .dd-item:hover,.dd-item.active{background:rgba(124,58,237,.14);border-left-color:var(--violet)}
+  .dd-name{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .dd-d{font-size:9.5px;color:var(--muted);font-weight:700}
+  .dd-val{font-size:11px;font-variant-numeric:tabular-nums;flex:none;white-space:nowrap}
+  .dd-empty{padding:13px;font-size:12.5px;color:var(--muted2);display:flex;align-items:center;gap:8px}
+  .dd-hint{padding:5px 11px;font-size:9.5px;color:var(--muted);border-top:1px solid var(--line);display:flex;gap:10px;background:rgba(255,255,255,.012)}
+  kbd{font-family:var(--font);font-size:9px;background:#1b2640;border:1px solid #313e5a;border-bottom-width:2px;border-radius:4px;padding:0 4px;color:#cdd6e8}
+
+  /* compact filter row: category + sort */
+  .filt{display:flex;gap:7px;margin-top:8px}
+  .cat-sel,.sort{font-size:12px;color:#dce4f1;background:rgba(12,18,31,.7);border:1px solid var(--line2);border-radius:9px;padding:6px 9px;cursor:pointer;font-family:var(--font);transition:border-color var(--fast)}
+  .cat-sel{flex:1;font-weight:600}.cat-sel:hover,.sort:hover{border-color:#384664}
+  .sort{flex:none;color:var(--muted2)}
+
+  /* quick-add (shown when a side is empty) */
+  .qa{margin-top:11px}
+  .qa-h{font-size:10.5px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted2);display:flex;align-items:center;gap:6px;margin-bottom:8px}
+  .qa-grid{display:flex;flex-wrap:wrap;gap:6px}
+  .qa-chip{display:inline-flex;align-items:center;gap:7px;padding:6px 10px;border-radius:9999px;border:1px solid var(--line2);background:rgba(26,34,56,.5);color:var(--text);cursor:pointer;transition:all var(--fast);font-family:var(--font);max-width:100%}
+  .qa-chip:hover{border-color:var(--accent);background:rgba(30,40,64,.7);transform:translateY(-1px)}
+  .qa-name{font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
+  .qa-val{font-size:10.5px;color:#c4b5fd;font-variant-numeric:tabular-nums;flex:none}
+
+  /* item rows (added items) */
+  .items{margin-top:10px;display:flex;flex-direction:column;gap:4px;max-height:230px;overflow-y:auto;overscroll-behavior:contain;-webkit-overflow-scrolling:touch;padding-right:3px}
+  .empty{text-align:center;padding:22px 0;color:#4a5773;font-size:12.5px}
+  .item{display:flex;align-items:center;gap:8px;border-radius:var(--r-sm);padding:6px 9px;background:rgba(26,34,56,.46);border:1px solid rgba(42,55,80,.45);transition:border-color var(--fast),background var(--fast)}
+  .item:hover{border-color:#384664;background:rgba(30,40,64,.6)}
+  .star{background:none;border:none;cursor:pointer;padding:0;display:flex;flex:none;transition:transform var(--fast)}.star:hover{transform:scale(1.16)}
+  .item-main{min-width:0;flex:1}
+  .item-name{font-size:13px;color:#f3f6fc;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500}
+  .item-meta{display:flex;align-items:center;gap:8px;margin-top:1px}
+  .vtag{font-size:10px;font-variant-numeric:tabular-nums;white-space:nowrap}
+  .idr{font-size:9px;color:var(--muted);font-weight:700;letter-spacing:.02em}
+  .tdot{width:7px;height:7px;border-radius:9999px;flex:none}
+  .warn-dot{width:6px;height:6px;border-radius:9999px;background:var(--fair);flex:none}
+  .qty{display:flex;align-items:center;gap:2px;flex:none}
+  .qbtn{width:22px;height:22px;border-radius:6px;background:rgba(42,55,80,.7);border:none;color:#cdd6e8;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background var(--fast)}
+  .qbtn:hover{background:#384664}
+  .qn{min-width:20px;text-align:center;font-size:12.5px;font-variant-numeric:tabular-nums;color:#f3f6fc}
+  .rm{background:none;border:none;color:#4a5773;cursor:pointer;flex:none;display:flex;transition:color var(--fast)}.rm:hover{color:var(--lose)}
+
+  /* action bar with live verdict */
+  .actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:8px;margin:13px 0}
+  .btn{display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r-sm);font-size:13px;cursor:pointer;font-weight:600;background:rgba(26,34,56,.8);border:1px solid var(--line2);color:var(--text);transition:all var(--fast);font-family:var(--font)}
+  .btn:hover{background:#2a3750;transform:translateY(-1px)}.btn:active{transform:translateY(0)}
+  .btn-violet{background:linear-gradient(135deg,#7c3aed,#8b5cf6);border-color:transparent;box-shadow:0 6px 16px -6px rgba(124,58,237,.7)}
+  .btn-violet:hover{filter:brightness(1.08)}.btn-violet:disabled{opacity:.4;cursor:not-allowed;filter:none;transform:none}
+  .btn-danger:hover{background:rgba(225,29,72,.6);border-color:rgba(251,113,133,.5)}
+  .live-pill{display:inline-flex;align-items:center;gap:7px;font-weight:700;font-size:13px;padding:8px 16px;border-radius:9999px;border:1px solid;font-variant-numeric:tabular-nums}
+  .muted-pill{color:var(--muted2);background:rgba(26,34,56,.6);border-color:var(--line2)}
+
+  .noTrade{text-align:center;padding:30px 0;color:var(--muted)}.noTrade p{font-size:13.5px;margin-top:10px;max-width:440px;margin-left:auto;margin-right:auto;line-height:1.55}
+  .results{display:flex;flex-direction:column;gap:10px}
+
+  /* verdict banner */
+  .banner{position:relative;overflow:hidden;border:1px solid;border-radius:var(--r-xl);padding:16px;text-align:center}
+  .banner-glow{position:absolute;inset:0}.banner-in{position:relative}
+  .verdict-title{font-family:var(--round);font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1}
+  .banner-sub{font-size:12.5px;color:#cdd6e8;margin:6px 0 0}.banner-sub b{font-variant-numeric:tabular-nums}
+  .balance-hint{font-size:12px;display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:9999px;background:rgba(0,0,0,.22)}
+
+  .gauge{margin:12px auto 0;max-width:380px}
+  .gauge-track{position:relative;height:9px;border-radius:9999px;background:linear-gradient(90deg,rgba(251,113,133,.5),rgba(124,140,180,.22) 30%,rgba(124,140,180,.22) 70%,rgba(52,211,153,.5));overflow:hidden}
+  .gauge-fair{position:absolute;top:0;bottom:0;background:rgba(251,191,36,.32);border-left:1px dashed rgba(251,191,36,.6);border-right:1px dashed rgba(251,191,36,.6)}
+  .gauge-mark{position:absolute;top:50%;width:15px;height:15px;border-radius:9999px;border:3px solid #0a0e1a;transform:translate(-50%,-50%);transition:left var(--slow) var(--ease);box-shadow:0 0 0 1px rgba(255,255,255,.2)}
+  .gauge-lbl{display:flex;justify-content:space-between;font-size:9.5px;color:var(--muted);margin-top:5px}
+
+  .vp{display:inline-flex;align-items:center;gap:7px;border-radius:9999px;font-weight:700;font-size:12px;padding:5px 11px;border:1px solid}
+  .bars{display:flex;flex-direction:column;gap:6px}
+  .bar-row{display:flex;align-items:center;gap:8px;font-size:12px}
+  .bar-lbl{width:52px;flex:none;color:var(--muted2)}
+  .bar-track{flex:1;height:7px;border-radius:9999px;background:rgba(42,55,80,.5);overflow:hidden}
+  .bar-fill{height:100%;border-radius:9999px;transition:width var(--slow) var(--ease)}
+  .bar-val{width:62px;text-align:right;font-variant-numeric:tabular-nums;font-weight:700;color:#eef2f9}
+  .stat2{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-top:10px;text-align:center}
+  .stat{border-radius:var(--r-sm);background:rgba(12,18,31,.55);padding:8px}
+  .stat-lbl{font-size:9.5px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  .stat-v{font-weight:800;font-variant-numeric:tabular-nums;font-size:15px}
+  .msg{margin-top:9px;font-size:12px;border-radius:var(--r-sm);padding:7px 11px}
+  .miss{margin-top:7px;font-size:11px;color:#fcd34d;display:flex;align-items:flex-start;gap:6px}
+  .explain-p{font-size:13px;color:#cdd6e8;line-height:1.55;margin:0}
+  .disc{border-color:rgba(251,191,36,.26);background:rgba(251,191,36,.05)}
+  .disc-list{display:flex;flex-direction:column;gap:5px}
+  .disc-row{display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:12px;border-radius:var(--r-sm);padding:6px 11px;background:rgba(12,18,31,.45);flex-wrap:wrap}
+  .disc-val{font-variant-numeric:tabular-nums}
+  .intel-grid{display:grid;grid-template-columns:1fr;gap:9px;margin-top:3px}
+  @media(min-width:600px){.intel-grid{grid-template-columns:1fr 1fr}}
+  .intel-side{border-radius:var(--r-md);background:rgba(12,18,31,.5);padding:10px 12px}
+  .intel-h{font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted2);margin-bottom:6px}
+  .intel-notes{list-style:none;margin:11px 0 0;padding:0;display:flex;flex-direction:column;gap:6px}
+  .intel-note{display:flex;align-items:flex-start;gap:8px;font-size:12.5px;color:#cdd6e8;line-height:1.4}
+  .conf{display:inline-flex;align-items:center;gap:6px;font-size:11px;font-weight:700;padding:3px 10px;border-radius:9999px}
+  .range-note{font-size:12px;color:var(--muted2);margin-top:9px;display:flex;align-items:flex-start;gap:7px;border-top:1px solid var(--line);padding-top:9px}
+  .range-note b{color:#dce4f1;font-variant-numeric:tabular-nums}
+  .badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;padding:2px 6px;border-radius:5px;white-space:nowrap}
+  .tbl-wrap{overflow-x:auto}
+  .tbl{width:100%;border-collapse:collapse;font-size:12px}
+  .tbl th{text-align:left;font-weight:600;color:var(--muted);padding:5px 8px 5px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+  .tbl td{padding:6px 8px 6px 0;border-bottom:1px solid rgba(31,41,64,.5);color:#cdd6e8;font-variant-numeric:tabular-nums}
+  .tbl tfoot td{font-weight:700;border-bottom:none;padding-top:8px;color:var(--muted2)}
+  .side-tag{font-size:9px;font-weight:700;padding:2px 6px;border-radius:5px;white-space:nowrap}
+  .share-bar{display:inline-block;width:40px;height:5px;border-radius:3px;background:rgba(124,140,180,.2);overflow:hidden;vertical-align:middle;margin-left:6px}.share-bar>i{display:block;height:100%}
+  .trend{font-size:9px;font-weight:700;padding:1px 6px;border-radius:5px;white-space:nowrap}
+
+  .hist{display:flex;flex-direction:column;gap:7px}
+  .hist-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:11px;padding:11px}
+  .mini{font-size:10px;padding:2px 8px;border-radius:9999px;font-weight:600}
+  .btn-sm{font-size:12px;padding:5px 11px;border-radius:8px;border:none;color:#fff;cursor:pointer;font-family:var(--font);font-weight:600}
+  .icon-btn{background:none;border:none;cursor:pointer;display:flex;color:#4a5773;transition:color var(--fast)}.icon-btn:hover{color:var(--lose)}
+  .fav-grid{display:grid;grid-template-columns:1fr;gap:8px}
+  @media(min-width:540px){.fav-grid{grid-template-columns:1fr 1fr}}
+  @media(min-width:860px){.fav-grid{grid-template-columns:1fr 1fr 1fr}}
+  .fav-card{padding:11px}
+  .fav-add{flex:1;font-size:11px;padding:6px 0;border-radius:8px;border:none;cursor:pointer;transition:all var(--fast);font-family:var(--font);font-weight:600}
+  .fav-give{background:rgba(124,58,237,.28);color:#ddd6fe}.fav-give:hover{background:rgba(124,58,237,.45)}
+  .fav-get{background:rgba(34,184,214,.26);color:#a5f3fc}.fav-get:hover{background:rgba(34,184,214,.4)}
+
+  .ftr{margin-top:24px;padding-top:14px;border-top:1px solid rgba(31,41,64,.6);font-size:11px;color:var(--muted);display:flex;flex-direction:column;gap:6px}
+  .ftr b{color:var(--muted2)}.ftr .row{align-items:flex-start;gap:6px}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes popIn{0%{opacity:0;transform:scale(.98) translateY(5px)}100%{opacity:1;transform:scale(1) translateY(0)}}
+  @keyframes rowIn{0%{opacity:0;transform:translateX(-9px)}100%{opacity:1;transform:translateX(0)}}
+  @keyframes floaty{0%,100%{transform:translate(0,0)}50%{transform:translate(16px,-20px)}}
+  @keyframes sheen{0%{transform:translateX(-120%)}60%,100%{transform:translateX(220%)}}
+  .glow1{animation:floaty 16s ease-in-out infinite}.glow2{animation:floaty 20s ease-in-out infinite reverse}
+  .anim-load>*{opacity:0;animation:fadeUp .45s var(--ease) forwards}
+  .anim-load>*:nth-child(1){animation-delay:.02s}.anim-load>*:nth-child(2){animation-delay:.08s}
+  .view-in{animation:fadeUp .3s var(--ease) both}
+  .results.pop{animation:popIn .38s var(--ease) both}
+  .row-in{animation:rowIn .28s var(--ease) both}
+  .banner-sheen{position:absolute;top:0;bottom:0;width:40%;background:linear-gradient(110deg,transparent,rgba(255,255,255,.06),transparent);animation:sheen 2.6s var(--ease) .2s}
+  ::-webkit-scrollbar{width:7px;height:7px}::-webkit-scrollbar-thumb{background:#2a3750;border-radius:8px}::-webkit-scrollbar-thumb:hover{background:#384664}::-webkit-scrollbar-track{background:transparent}
+  button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid #818cf8;outline-offset:2px}
+  .toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%) translateY(16px);z-index:60;background:rgba(16,24,40,.96);border:1px solid var(--line2);color:#eef2f9;font-size:13px;font-weight:600;padding:10px 16px;border-radius:10px;box-shadow:0 16px 40px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .25s var(--ease),transform .25s var(--ease)}
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+  @media (prefers-reduced-motion: reduce){*{animation:none !important;transition:none !important}.anim-load>*,.view-in,.results,.row-in{opacity:1 !important;transform:none !important}.storm{display:none !important}}
+
+  /* ============ THEMES ============ */
+  .theme-sel{font-size:12px;color:#dce4f1;background:rgba(14,19,32,.7);border:1px solid var(--line2);border-radius:11px;padding:7px 11px;cursor:pointer;font-family:var(--font);font-weight:600;transition:border-color var(--fast)}
+  .theme-sel:hover{border-color:#384664}
+  #fx{position:fixed;inset:0;z-index:0;pointer-events:none}
+  /* Rain / Thunder */
+  html[data-theme="rain"]{--bg:#080d18;--card:rgba(17,24,40,.62);--line:#1c2740;--line2:#28344e}
+  html[data-theme="rain"] body{background:radial-gradient(1000px 520px at 50% 118%,rgba(56,189,248,.10),transparent 60%),linear-gradient(180deg,#0c1322 0%,#0a0f1c 55%,#070b14 100%)}
+  html[data-theme="rain"] .glow{display:none}
+  .storm{position:fixed;inset:0;z-index:0;pointer-events:none;overflow:hidden}
+  .rain{position:absolute;inset:0}
+  .drop{position:absolute;top:-14%;width:1.5px;border-radius:2px;background:linear-gradient(to bottom,transparent,rgba(176,200,240,.6));will-change:transform;animation-name:fall;animation-timing-function:linear;animation-iteration-count:infinite}
+  @keyframes fall{0%{transform:translateY(-22vh)}100%{transform:translateY(122vh)}}
+  .lightning{position:absolute;inset:0;opacity:0;background:radial-gradient(1200px 760px at 48% -12%,rgba(224,232,255,.6),transparent 60%);will-change:opacity;animation:flash 9s linear infinite}
+  .lightning.l2{background:radial-gradient(900px 620px at 72% -6%,rgba(196,216,255,.5),transparent 55%);animation-duration:13s;animation-delay:5.5s}
+  @keyframes flash{0%,92%,100%{opacity:0}93%{opacity:.75}94%{opacity:.15}95.5%{opacity:.6}97%{opacity:0}}
+  /* Horizon */
+  html[data-theme="horizon"]{--bg:#1b1228;--card:rgba(40,26,52,.6);--card2:rgba(48,32,60,.55);--line:#3a2a44;--line2:#4a3654;--muted:#9b8aa6;--muted2:#bfb0c8}
+  html[data-theme="horizon"] body{background:radial-gradient(760px 340px at 50% 110%,rgba(251,146,60,.30),transparent 62%),linear-gradient(180deg,#211233 0%,#3a1d3f 44%,#5b2a4e 72%,#7c3a24 100%)}
+  html[data-theme="horizon"] .glow1{background:rgba(251,146,60,.20)}
+  html[data-theme="horizon"] .glow2{background:rgba(244,63,94,.16)}
+  html[data-theme="horizon"] body::before{opacity:.3}
+  .changes{display:flex;flex-direction:column;gap:12px}
+  .chg-intro{font-size:12px;color:var(--muted2);display:flex;align-items:center;gap:6px;margin:2px 2px 0}
+  .chg-card{padding:14px 16px}
+  .chg-date{display:flex;align-items:center;gap:7px;font-weight:700;font-size:13px;color:var(--text);margin-bottom:8px}
+  .chg-count{margin-left:auto;font-size:11px;font-weight:600;color:var(--muted2);background:rgba(124,58,237,.18);padding:1px 8px;border-radius:9999px}
+  .chg-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:6px 0;border-top:1px solid var(--line);font-size:12.5px}
+  .chg-row:first-of-type{border-top:none}
+  .chg-name{font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .chg-kind{font-size:10px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted2);background:rgba(148,163,184,.14);padding:1px 6px;border-radius:5px;flex:none}
+  .chg-delta{display:flex;align-items:center;gap:6px;white-space:nowrap;font-variant-numeric:tabular-nums;color:var(--muted2);flex:none}
+  .chg-to{color:var(--text)}
+  .chg-arrow{font-weight:700;font-size:11px}
+  .chg-more{font-size:11px;color:var(--muted2);padding-top:8px;text-align:center}
+  .spark{vertical-align:middle;margin-left:4px;opacity:.92}
+  .modal-ov{position:fixed;inset:0;z-index:80;background:rgba(6,10,20,.74);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;padding:18px;animation:ovin .18s var(--ease)}
+  @keyframes ovin{from{opacity:0}to{opacity:1}}
+  .modal-card{background:#0e1626;border:1px solid var(--line2);border-radius:18px;max-width:640px;width:100%;max-height:92vh;overflow:auto;padding:16px;box-shadow:0 30px 80px rgba(0,0,0,.6);animation:cardin .22s var(--ease)}
+  @keyframes cardin{from{opacity:0;transform:translateY(10px) scale(.98)}to{opacity:1;transform:none}}
+  .modal-h{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+  .modal-canvas{border-radius:12px;overflow:hidden;margin-bottom:14px;border:1px solid var(--line)}
+  .modal-actions{display:flex;flex-wrap:wrap;gap:8px}
+  .modal-hint{font-size:12px;color:var(--muted2);margin-top:10px;text-align:center}
+</style>
+</head>
+<body>
+  <div class="glow glow1"></div>
+  <div class="glow glow2"></div>
+  <div id="fx" aria-hidden="true"></div>
+  <div id="app"></div>
+<script>
+"use strict";
+/* ===== LIVE DATA SOURCE (optional) ====================================================
+   Leave "" to run fully offline from the embedded list (default — always works).
+   To enable auto-updates, host values.json somewhere that sends permissive CORS
+   (GitHub Pages or https://raw.githubusercontent.com/<user>/<repo>/main/values.json),
+   then paste that URL below. The app pulls it on load, caches it, and falls back to the
+   cached copy or the embedded list if the source is unavailable. */
+const DATA_URL = "https://raw.githubusercontent.com/timez170/mm2-values/main/values.json";
+/* ===========================================================================
+   MM2 TRADE CALCULATOR — dual-source (Supreme Values + MM2Values)
+   Data observed Jun 15–17, 2026. Both lists share one unit (Seer = 3),
+   compared 1:1. Demand / Rarity / Stability sourced from Supreme Values
+   (published per item); each site's value still drives its own verdict.
+
+   SCHEMA  [ name, category, supreme, mm2, demand, rarity, trend, opts? ]
+     supreme/mm2 : integer value, or null if not listed on that site
+     demand/rarity : 1–11 or null • trend : Supreme stability string or null
+     opts : { placeholder?:bool, range?:[lo,hi], aliases?:[...] }
+   =========================================================================== */
+const RAW = [
+  // ---------------- GODLIES ----------------
+  ["Traveler's Gun","Godly",6300,6200,7,5,"Doing Well",{aliases:["trav gun","tg","travelers gun"]}],
+  ["Evergun","Godly",3300,3250,5,4,"Stable"],["Constellation","Godly",2625,2600,5,4,"Stable",{aliases:["const"]}],
+  ["Turkey","Godly",2450,2450,5,4,"Stable"],["Evergreen","Godly",2425,2400,5,4,"Stable"],
+  ["Alienbeam","Godly",2000,2000,5,4,"Stable",{aliases:["ab","alien beam"]}],["Vampire's Gun","Godly",1700,1675,5,4,"Stable",{aliases:["vamp gun","vg"]}],
+  ["Darkshot","Godly",1500,1510,6,4,"Stable"],["Darksword","Godly",1480,1485,6,4,"Stable"],
+  ["Blossom","Godly",1265,1265,6,4,"Stable"],["Sakura","Godly",1255,1245,6,4,"Stable"],
+  ["Raygun","Godly",1150,1175,5,3,"Stable",{aliases:["rg","ray gun"]}],["Sunrise","Godly",1100,1075,5,4,"Stable"],
+  ["Bauble","Godly",900,900,5,4,"Stable",{aliases:["baub"]}],["Snowcannon","Godly",700,713,4,3,"Stable"],
+  ["Sunset (Knife)","Godly",500,550,5,3,"Stable"],["Soul","Godly",500,490,5,3,"Stable"],
+  ["Spirit","Godly",490,480,5,3,"Stable"],["Flora","Godly",410,400,5,3,"Stable"],
+  ["Bloom","Godly",400,390,5,3,"Stable"],["Rainbow Gun","Godly",380,315,5,3,"Overpaid For",{range:[380,410]}],
+  ["Rainbow (Knife)","Godly",370,310,5,3,"Overpaid For",{range:[370,400]}],["Heart Wand","Godly",320,300,4,3,"Improving",{range:[320,330]}],
+  ["Ocean","Godly",280,215,4,3,"Stable"],["Waves","Godly",275,210,4,3,"Stable"],
+  ["Xenoknife","Godly",270,225,4,3,"Stable",{aliases:["xeno knife"]}],["Xenoshot","Godly",270,225,4,3,"Stable",{aliases:["xeno shot"]}],
+  ["Flowerwood Gun","Godly",260,205,4,3,"Stable"],["Watergun","Godly",260,265,3,3,"Stable"],
+  ["Flowerwood (Knife)","Godly",255,200,4,3,"Stable"],["Snow Dagger","Godly",230,243,3,3,"Stable"],
+  ["Blizzard","Godly",215,203,4,3,"Doing Well",{range:[215,230]}],["Snowstorm","Godly",215,203,4,3,"Doing Well",{range:[215,230]}],
+  ["Treat","Godly",140,140,3,3,"Stable"],["Sweet","Godly",135,135,3,3,"Stable"],["Bat","Godly",120,125,2,2,"Stable"],
+  ["Borealis","Godly",125,105,3,3,"Doing Well",{range:[125,135]}],["Australis","Godly",120,100,3,3,"Doing Well",{range:[120,130]}],
+  ["Pearlshine","Godly",100,70,2,3,"Stable"],["Pearl","Godly",95,65,2,3,"Stable"],
+  ["Candy","Godly",80,90,1,2,"Stable"],["Heartblade","Godly",68,70,1,2,"Stable"],
+  ["Luger","Godly",45,47,1,2,"Stable"],["Red Luger","Godly",42,45,1,2,"Stable"],
+  ["Candleflame","Godly",38,43,1,2,"Stable"],["Darkbringer","Godly",38,43,1,2,"Stable"],
+  ["Elderwood Blade","Godly",38,42,1,2,"Stable"],["Elderwood Revolver","Godly",38,43,1,2,"Stable"],
+  ["Iceblaster","Godly",38,42,1,2,"Stable"],["Makeshift","Godly",38,43,1,2,"Stable"],
+  ["Phantom","Godly",38,42,1,2,"Stable"],["Spectre","Godly",38,42,1,2,"Stable"],
+  ["Sugar","Godly",37,40,1,2,"Stable"],["Lightbringer","Godly",35,38,1,2,"Stable"],
+  ["Ornament","Godly",28,28,1,2,"Stable"],["Green Luger","Godly",25,28,1,2,"Stable"],
+  ["Amerilaser","Godly",23,25,1,2,"Stable"],["Hallowgun","Godly",23,25,1,2,"Stable"],
+  ["Laser","Godly",23,25,1,2,"Stable"],["Swirly Gun","Godly",20,23,1,2,"Stable"],
+  ["Shark","Godly",20,23,1,2,"Stable"],["Icebeam","Godly",20,23,1,2,"Stable"],
+  ["Nightblade","Godly",20,23,1,2,"Stable",{aliases:["nightfall"]}],["Blaster","Godly",18,20,1,2,"Stable"],
+  ["Iceflake","Godly",18,20,1,2,"Stable"],["Plasmabeam","Godly",18,20,1,2,"Stable"],
+  ["Battleaxe II","Godly",17,18,1,2,"Stable"],["Ginger Luger","Godly",17,20,1,2,"Stable"],
+  ["Old Glory","Godly",17,20,1,2,"Stable"],["Pixel","Godly",17,20,1,2,"Stable"],
+  ["Plasmablade","Godly",17,18,1,2,"Stable"],["Slasher","Godly",17,20,1,2,"Stable"],
+  ["Virtual","Godly",15,18,1,2,"Stable"],["Gemstone","Godly",15,15,1,2,"Stable"],
+  ["Gingerblade","Godly",15,15,1,2,"Stable"],["Nebula","Godly",15,15,1,2,"Stable"],
+  ["Vampire's Edge","Godly",15,15,1,2,"Stable"],["Eternalcane","Godly",15,17,1,2,"Stable"],
+  ["Cookiecane","Godly",15,17,1,2,"Stable"],["Minty","Godly",15,17,1,2,"Stable"],
+  ["Gingermint","Godly",15,17,1,2,"Stable"],["Jinglegun","Godly",15,18,1,2,"Stable"],
+  ["Lugercane","Godly",15,18,1,2,"Stable"],["Swirly Blade","Godly",15,13,1,2,"Stable"],
+  ["Deathshard","Godly",13,15,1,2,"Stable"],["Battleaxe","Godly",12,13,1,2,"Stable"],
+  ["Heat","Godly",10,12,1,2,"Stable"],["Tides","Godly",10,12,1,2,"Stable"],["Fang","Godly",10,12,1,2,"Stable"],
+  ["Chill","Godly",10,12,1,2,"Stable"],["Spider","Godly",10,12,1,2,"Stable"],["Clockwork","Godly",10,12,1,2,"Stable"],
+  ["Eternal III","Godly",10,10,1,2,"Stable"],["Eternal IV","Godly",10,10,1,2,"Stable"],
+  ["Frostsaber","Godly",10,10,1,2,"Stable"],["Bioblade","Godly",10,10,1,2,"Stable"],
+  ["Eternal","Godly",8,10,1,2,"Stable"],["Eternal II","Godly",8,8,1,2,"Stable"],
+  ["Hallow's Blade","Godly",8,7,1,2,"Stable"],["Hallow's Edge","Godly",8,9,1,2,"Stable"],
+  ["Handsaw","Godly",8,9,1,2,"Stable"],["Xmas","Godly",8,10,1,2,"Stable"],
+  ["Boneblade","Godly",7,8,1,2,"Stable"],["Frostbite","Godly",7,7,1,2,"Stable"],
+  ["Ghostblade","Godly",7,8,1,2,"Stable"],["Ice Dragon","Godly",7,7,1,2,"Stable"],
+  ["Ice Shard","Godly",7,9,1,2,"Stable"],["Prismatic","Godly",7,5,1,2,"Stable"],
+  ["Pumpking","Godly",7,8,1,2,"Stable"],["Saw","Godly",7,8,1,2,"Stable"],
+  ["Eggblade","Godly",5,5,1,2,"Stable"],["Flames","Godly",5,7,1,2,"Stable"],
+  ["Snowflake","Godly",5,5,1,2,"Stable"],["Winter's Edge","Godly",5,7,1,2,"Stable"],
+  ["Peppermint","Godly",4,4,1,2,"Stable"],["Cookieblade","Godly",3,4,1,2,"Stable"],
+  ["Seer","Godly",3,3,1,1,"Stable"],["Blue Seer","Godly",3,3,1,1,"Stable"],["Purple Seer","Godly",3,3,1,1,"Stable"],
+  ["Red Seer","Godly",3,3,1,1,"Stable"],["Orange Seer","Godly",2,2,1,1,"Stable"],["Yellow Seer","Godly",2,2,1,1,"Stable"],
+
+  // ---------------- CHROMAS ----------------
+  ["Chroma Traveler's Gun","Chroma",225000,230000,9,10,"Stable",{aliases:["ctg"]}],
+  ["Chroma Evergun","Chroma",76000,74000,8,8,"Stable",{aliases:["cevergun"]}],["Chroma Evergreen","Chroma",60000,60000,7,7,"Stable",{aliases:["cevergreen"]}],
+  ["Chroma Bauble","Chroma",38000,38500,7,6,"Stable",{aliases:["cbaub"]}],["Chroma Vampire's Gun","Chroma",35000,34500,7,6,"Stable",{aliases:["cvg"]}],
+  ["Chroma Constellation","Chroma",33000,35000,7,6,"Stable",{aliases:["cconst"]}],["Chroma Alienbeam","Chroma",30000,30000,7,6,"Stable",{aliases:["cab"]}],
+  ["Chroma Raygun","Chroma",14500,14500,6,5,"Stable",{aliases:["crg"]}],["Chroma Sunrise","Chroma",11250,11000,6,5,"Stable",{aliases:["csr"]}],
+  ["Chroma Snowcannon","Chroma",8500,8650,6,5,"Stable"],["Chroma Blizzard","Chroma",8000,7800,5,5,"Stable",{aliases:["cbz"]}],
+  ["Chroma Sunset","Chroma",6500,6500,5,5,"Stable",{aliases:["css"]}],["Chroma Snow Dagger","Chroma",5750,5750,5,5,"Stable"],
+  ["Chroma Heart Wand","Chroma",4750,4750,5,4,"Stable",{aliases:["chw"]}],["Chroma Snowstorm","Chroma",4250,4250,5,5,"Stable"],
+  ["Chroma Watergun","Chroma",3400,3400,5,5,"Stable",{aliases:["cwg"]}],["Chroma Treat","Chroma",2800,4800,5,4,"Underpaid For",{range:[2600,2800]}],
+  ["Chroma Sweet","Chroma",2400,2800,5,4,"Underpaid For",{range:[2200,2400]}],["Chroma Ornament","Chroma",2000,2450,5,4,"Underpaid For",{range:[1900,2000],aliases:["cor"]}],
+  ["Chroma Darkbringer","Chroma",75,75,1,2,"Stable",{aliases:["cdb","c dark"]}],["Chroma Lightbringer","Chroma",70,70,1,2,"Stable",{aliases:["clb"]}],
+  ["Chroma Luger","Chroma",55,53,1,2,"Stable"],["Chroma Candleflame","Chroma",45,45,1,2,"Stable",{aliases:["ccf"]}],
+  ["Chroma Elderwood Blade","Chroma",45,45,1,2,"Stable",{aliases:["ceb"]}],["Chroma Swirly Gun","Chroma",45,43,1,2,"Stable",{aliases:["csg"]}],
+  ["Chroma Laser","Chroma",42,45,1,2,"Stable"],["Chroma Slasher","Chroma",38,40,1,2,"Stable"],
+  ["Chroma Deathshard","Chroma",38,40,1,2,"Stable",{aliases:["cds"]}],["Chroma Cookiecane","Chroma",38,40,1,2,"Stable",{aliases:["ccc"]}],
+  ["Chroma Shark","Chroma",35,38,1,2,"Stable"],["Chroma Fang","Chroma",35,35,1,2,"Stable"],
+  ["Chroma Heat","Chroma",32,33,1,2,"Stable"],["Chroma Gemstone","Chroma",32,33,1,2,"Stable",{aliases:["c gem"]}],
+  ["Chroma Gingerblade","Chroma",32,32,1,2,"Stable",{aliases:["cgb"]}],["Chroma Seer","Chroma",32,32,1,2,"Stable"],
+  ["Chroma Saw","Chroma",30,32,1,2,"Stable"],["Chroma Tides","Chroma",30,30,1,2,"Stable"],
+  ["Chroma Boneblade","Chroma",27,25,1,2,"Stable",{aliases:["cbb"]}],
+
+  // ---------------- ANCIENTS ----------------
+  ["Nik's Scythe","Ancient",null,null,11,11,"Overpaid For",{placeholder:true,aliases:["niks","nik scythe"]}],
+  ["Gingerscope","Ancient",17000,16750,6,4,"Stable"],["Traveler's Axe","Ancient",8400,8500,6,5,"Stable",{aliases:["trav axe"]}],
+  ["Celestial","Ancient",1850,1850,5,4,"Doing Well",{range:[1850,1900],aliases:["celes"]}],["Vampire's Axe","Ancient",1225,1200,5,4,"Stable",{aliases:["vamp axe"]}],
+  ["Harvester","Ancient",250,260,3,2,"Stable",{aliases:["harv"]}],["Icepiercer","Ancient",160,175,3,2,"Stable"],
+  ["Icebreaker","Ancient",68,75,1,2,"Stable"],["Batwing","Ancient",45,47,1,2,"Stable"],
+  ["Elderwood Scythe","Ancient",42,45,1,2,"Stable"],["Swirly Axe","Ancient",42,43,1,2,"Stable"],
+  ["Hallowscythe","Ancient",32,35,1,2,"Stable"],["Logchopper","Ancient",18,20,1,2,"Stable"],
+  ["Icewing","Ancient",15,18,2,2,"Fluctuating",{range:[10,20]}],
+
+  // ---------------- LEGENDARIES ----------------
+  ["Latte (Gun)","Legendary",135,155,3,3,"Stable"],["Latte (Knife)","Legendary",135,155,3,3,"Stable"],
+  ["Spectral (Knife)","Legendary",55,70,3,4,"Doing Well",{range:[55,60]}],["Traveler (Gun)","Legendary",55,70,3,4,"Doing Well",{range:[55,60]}],
+  ["Aurora (Gun)","Legendary",45,55,3,4,"Stable"],["Vampire (Gun)","Legendary",45,55,3,4,"Stable"],
+
+  // ---------------- UNIQUES ----------------
+  ["Corrupt","Unique",450,475,4,3,"Stable"],["slouse's Clown","Unique",null,null,11,11,null,{placeholder:true}],
+
+  // ---------------- RARE / UNCOMMON / COMMON ----------------
+  ["Cane Knife (2018)","Rare",900,825,4,5,"Stable",{range:[850,900]}],["Dungeon","Rare",85,90,3,5,"Stable"],
+  ["Darkknife","Rare",45,45,3,4,"Stable"],["Bones","Uncommon",160,null,2,3,"Stable"],
+  ["Ghoulish","Common",110,25,3,4,"Stable"],["Bats (Knife)","Common",135,105,3,5,"Stable"],
+
+  // ---------------- VINTAGES (all D1/R2/Stable, MM1 shop) ----------------
+  ["Ghost","Vintage",10,10,1,2,"Stable"],["Blood","Vintage",8,8,1,2,"Stable"],["Laser (Vintage)","Vintage",8,8,1,2,"Stable"],
+  ["America","Vintage",7,8,1,2,"Stable"],["Prince","Vintage",6,6,1,2,"Stable"],["Shadow","Vintage",6,7,1,2,"Stable"],
+  ["Phaser","Vintage",5,6,1,2,"Stable"],["Cowboy","Vintage",4,4,1,2,"Stable"],["Golden","Vintage",4,5,1,2,"Stable"],
+  ["Splitter","Vintage",3,3,1,2,"Stable"],
+
+  // ---------------- SETS (Supreme; MM2 mostly N/A — site rebuilding) ----------------
+  ["Chroma Ever Set","Set",136000,null,8,8,"Stable"],["Chroma Alien Set","Set",44500,null,7,6,"Stable"],
+  ["Chroma Bauble Set","Set",39900,null,7,6,"Underpaid For",{range:[39800,39900]}],["Chroma Sun Set","Set",17750,null,6,5,"Stable"],
+  ["Chroma Snow Set","Set",14000,null,6,5,"Stable"],["Chroma Blizzard Set","Set",12250,null,5,5,"Stable"],
+  ["Chroma Sweet Set","Set",5000,null,5,4,"Fluctuating",{range:[4800,5200]}],
+  ["Traveler's Set","Set",14700,null,6,5,"Stable"],["Ever Set","Set",5725,null,5,4,"Stable"],
+  ["Celestial Set","Set",4475,null,5,4,"Doing Well",{range:[4475,4525]}],["Alien Set","Set",3150,null,5,4,"Stable"],
+  ["Dark Set","Set",2980,null,6,4,"Stable"],["Vampire's Set","Set",2925,null,5,4,"Stable"],
+  ["Sakura Set","Set",2520,null,6,4,"Stable"],["Sun Set","Set",1600,null,5,4,"Stable"],
+  ["Soul Set","Set",990,null,5,3,"Stable"],["Bauble Set","Set",930,null,5,4,"Stable"],
+  ["Snow Set","Set",930,null,4,3,"Stable"],["Bloom Set","Set",810,null,5,3,"Stable"],
+  ["Rainbow Set","Set",750,null,5,3,"Overpaid For",{range:[750,810]}],["Ocean Set","Set",555,null,4,3,"Stable"],
+  ["Xeno Set","Set",540,null,4,3,"Stable"],["Flowerwood Set","Set",515,null,4,3,"Stable"],
+  ["Corrupt Set","Set",495,null,4,3,"Stable"],["Blizzard Set","Set",430,null,4,3,"Doing Well",{range:[430,460]}],
+  ["Bow Set","Set",410,null,3,2,"Stable"],["Pumpkin Set (2018)","Set",410,null,3,4,"Stable"],
+  ["Borealis Set","Set",245,null,3,3,"Doing Well",{range:[245,265]}],["Pearl Set","Set",195,null,2,3,"Stable"],
+  ["Bat Set","Set",158,null,2,2,"Stable"],["Latte Set","Set",300,null,4,3,"Overpaid For",{range:[300,350]}],
+  ["Bats Set","Set",146,null,3,5,"Stable"],["Sparkle Set","Set",127,175,2,3,"Stable"],
+  ["Spectral Set","Set",68,null,3,4,"Doing Well",{range:[68,78]}],["Traveler Set (Legendary)","Set",68,null,3,4,"Doing Well",{range:[68,78]}],
+  ["Aurora Set (Legendary)","Set",58,null,3,4,"Doing Well",{range:[58,68]}],["Vampire Set (Legendary)","Set",58,null,3,4,"Doing Well",{range:[58,68]}],
+  ["Dark Set (Rare)","Set",51,null,3,4,"Doing Well",{range:[51,61]}],["Eternal Set","Set",51,null,1,2,"Stable"],
+  ["Full Chroma Set","Set",615,null,1,3,"Underpaid For",{range:[600,615]}],["Full Elderwood Set","Set",118,null,1,2,"Stable"],
+  ["Pearl Set ","Set",null,null,null,null,null,{placeholder:true}], // guard against accidental dup id (removed below)
+  ["Colored Seer Set","Set",16,null,1,1,"Stable"],["Vintage Set","Set",61,null,1,2,"Stable"],
+];
+// drop the guard row (kept ids unique during authoring)
+RAW.splice(RAW.findIndex(r=>r[0]==="Pearl Set "),1);
+
+/* ---------------- build indices ---------------- */
+const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
+const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g,"");
+// Normalize either an embedded tuple or a values.json object into one canonical item.
+function rowToItem(r){ const [name,category,supreme=null,mm2=null,demand=null,rarity=null,trend=null,opts={}]=r;
+  return {id:slug(name),name,category,supreme,mm2,demand,rarity,trend,placeholder:!!opts.placeholder,range:opts.range||null,aliases:opts.aliases||[]}; }
+function jsonToItem(o){ return {id:o.id||slug(o.name),name:o.name,category:o.category,
+  supreme:o.supreme==null?null:o.supreme, mm2:o.mm2==null?null:o.mm2,
+  demand:o.demand==null?null:o.demand, rarity:o.rarity==null?null:o.rarity, trend:o.trend||null,
+  placeholder:!!o.placeholder, range:Array.isArray(o.range)?o.range:null, aliases:Array.isArray(o.aliases)?o.aliases:[]}; }
+const EMBEDDED = RAW.map(rowToItem);            // offline source of truth (always present)
+const POPULAR_NAMES=["Chroma Traveler's Gun","Traveler's Gun","Chroma Ever Set","Celestial","Corrupt","Sparkle Set","Chroma Evergun","Vampire's Gun","Constellation","Gingerscope","Harvester"];
+
+let ALL=[], BY_ID={}, HAY={}, POPULAR=[];
+let DATA_DATE="Jun 17, 2026", DATA_SRC="embedded", DATA_LIVE=false;
+function buildData(items){
+  ALL=items;
+  BY_ID=Object.fromEntries(ALL.map(i=>[i.id,i]));
+  HAY=Object.fromEntries(ALL.map(i=>[i.id,{name:norm(i.name),text:norm(i.name)+" "+i.aliases.map(norm).join(" ")}]));
+  POPULAR=POPULAR_NAMES.map(slug).filter(id=>BY_ID[id]);
+}
+buildData(EMBEDDED);                            // boot from embedded; live data overlays later
+
+const CATEGORIES=["All","Godly","Chroma","Ancient","Set","Legendary","Unique","Vintage","Rare","Uncommon","Common"];
+const FAIR=8, BIG=18;            // WFL bands: Fair ±8% • Small 8–18% • Big >18%
+const DIVERGE=15;                // cross-site flag threshold (%)
+const MAXQTY=999;
+const DIVERGE_MIN=8;             // absolute floor so cheap items don't trip the cross-site flag on rounding
+function isDivergent(it){ if(!it||it.supreme==null||it.mm2==null) return false; const d=Math.abs(it.supreme-it.mm2); return d>=DIVERGE_MIN && (d/((it.supreme+it.mm2)/2))*100>=DIVERGE; }
+
+const CAT_COLOR={Godly:"#a78bfa",Chroma:"#f472b6",Ancient:"#fbbf24",Set:"#38bdf8",Legendary:"#fb923c",Unique:"#22d3ee",Vintage:"#94a3b8",Rare:"#60a5fa",Uncommon:"#4ade80",Common:"#cbd5e1"};
+const RES={
+  win:{t:"#34d399",b:"rgba(52,211,153,.13)",bd:"rgba(52,211,153,.42)",label:"WIN",icon:"trendingUp"},
+  fair:{t:"#fbbf24",b:"rgba(251,191,36,.13)",bd:"rgba(251,191,36,.42)",label:"FAIR",icon:"scale"},
+  lose:{t:"#fb7185",b:"rgba(251,113,133,.13)",bd:"rgba(251,113,133,.42)",label:"LOSE",icon:"trendingDown"},
+  none:{t:"#94a3b8",b:"rgba(148,163,184,.1)",bd:"rgba(148,163,184,.3)",label:"—",icon:"scale"},
+};
+const TREND_SENT={"Rising":"up","Doing Well":"up","Improving":"up","Stable":"flat","Overpaid For":"warn","Underpaid For":"down","Decreasing":"down","Fluctuating":"warn","Untradable":"down"};
+const SENT_COLOR={up:"#34d399",flat:"#94a3b8",warn:"#fbbf24",down:"#fb7185"};
+
+/* ---------------- utilities ---------------- */
+const fmt = n => (n==null?"—":Math.round(n).toLocaleString("en-US"));
+const esc = s => String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[c]));
+const clampQty = q => Math.max(1,Math.min(MAXQTY,Math.round(q)||1));
+function subseq(q,t){ let i=0; for(let j=0;j<t.length&&i<q.length;j++) if(t[j]===q[i]) i++; return i===q.length; }
+
+const ICONS={
+  search:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',plus:'<path d="M5 12h14M12 5v14"/>',minus:'<path d="M5 12h14"/>',
+  x:'<path d="M18 6 6 18M6 6l12 12"/>',
+  star:'<path d="M12 2.5l2.9 5.9 6.5.9-4.7 4.6 1.1 6.5L12 18l-5.8 3 1.1-6.5L2.6 9.3l6.5-.9z"/>',
+  swap:'<path d="M8 3 4 7l4 4"/><path d="M4 7h16"/><path d="m16 21 4-4-4-4"/><path d="M20 17H4"/>',
+  trendingUp:'<path d="M3 17l6-6 4 4 8-8"/><path d="M17 7h4v4"/>',trendingDown:'<path d="M3 7l6 6 4-4 8 8"/><path d="M17 17h4v-4"/>',
+  scale:'<path d="M12 3v18"/><path d="M5 7h14"/><path d="M7 7l-3 7a3 3 0 0 0 6 0z"/><path d="M17 7l-3 7a3 3 0 0 0 6 0z"/><path d="M9 21h6"/>',
+  trophy:'<path d="M8 21h8"/><path d="M12 17v4"/><path d="M7 4h10v5a5 5 0 0 1-10 0z"/><path d="M5 5H3v2a3 3 0 0 0 3 3"/><path d="M19 5h2v2a3 3 0 0 1-3 3"/>',
+  alert:'<path d="M12 3 21 19H3z"/><path d="M12 10v4"/><path d="M12 17h.01"/>',check:'<circle cx="12" cy="12" r="9"/><path d="m8 12 3 3 5-6"/>',
+  trash:'<path d="M3 6h18"/><path d="M8 6V4h8v2"/><path d="m6 6 1 14h10l1-14"/>',
+  history:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 4v4h4"/><path d="M12 7v5l3 2"/>',
+  calculator:'<rect x="5" y="2" width="14" height="20" rx="2"/><path d="M9 6h6"/><path d="M9 11h.01M12 11h.01M15 11h.01M9 15h.01M12 15h.01M15 15h.01"/>',
+  sparkles:'<path d="M12 3l1.8 4.2L18 9l-4.2 1.8L12 15l-1.8-4.2L6 9l4.2-1.8z"/><path d="M19 15l.6 1.6L21 17l-1.4.5L19 19l-.6-1.5L17 17l1.4-.4z"/>',
+  info:'<circle cx="12" cy="12" r="9"/><path d="M12 11v5"/><path d="M12 8h.01"/>',
+  gem:'<path d="M6 3h12l4 6-10 12L2 9z"/><path d="M2 9h20"/><path d="M12 3 8 9l4 12 4-12z"/>',
+  shield:'<path d="M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6z"/><path d="m9 12 2 2 4-4"/>',
+  clock:'<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  layers:'<path d="M12 2 2 7l10 5 10-5z"/><path d="m2 12 10 5 10-5"/><path d="m2 17 10 5 10-5"/>',
+  rotate:'<path d="M3 12a9 9 0 1 0 3-6.7L3 8"/><path d="M3 3v5h5"/>',
+  brain:'<path d="M12 5a3 3 0 0 0-6 0 3 3 0 0 0-1 5 3 3 0 0 0 2 5 3 3 0 0 0 5 1 3 3 0 0 0 5-1 3 3 0 0 0 2-5 3 3 0 0 0-1-5 3 3 0 0 0-6 0Z"/><path d="M12 5v14"/>',
+  activity:'<path d="M3 12h4l3 8 4-16 3 8h4"/>',target:'<circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="5"/><circle cx="12" cy="12" r="1"/>',
+  link:'<path d="M9 17H7A5 5 0 0 1 7 7h2"/><path d="M15 7h2a5 5 0 0 1 0 10h-2"/><path d="M8 12h8"/>',
+  image:'<rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.8"/><path d="m21 15-5-5L5 21"/>',
+};
+function icon(name,size=16,cls=""){ const fill = name==="starFill"?"currentColor":"none";
+  const path = name==="starFill"?ICONS.star:ICONS[name]||"";
+  return `<svg class="ic ${cls}" width="${size}" height="${size}" viewBox="0 0 24 24" fill="${fill}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`; }
+const badge = cat => `<span class="badge" style="color:${CAT_COLOR[cat]};background:${CAT_COLOR[cat]}1f">${cat}</span>`;
+function trendChip(t){ if(!t) return ""; const s=TREND_SENT[t]||"flat",c=SENT_COLOR[s]; return `<span class="trend" style="color:${c};background:${c}1f">${t}</span>`; }
+function metricsHTML(it){
+  if(it.demand==null && it.rarity==null) return `<span class="dr dim">D — R —</span>${trendChip(it.trend)}`;
+  const dm = it.demand==null?"":`<span class="dr" title="Demand ${it.demand}/10">D<span class="mbar"><i style="width:${Math.min(100,it.demand*10)}%;background:#a78bfa"></i></span>${it.demand}</span>`;
+  const rm = it.rarity==null?"":`<span class="dr" title="Rarity ${it.rarity}/10">R<span class="mbar"><i style="width:${Math.min(100,it.rarity*10)}%;background:#f472b6"></i></span>${it.rarity}</span>`;
+  return dm+rm+trendChip(it.trend);
+}
+
+/* ===========================================================================
+   MATH / ANALYSIS  (pure functions — unit tested)
+   bound: "mid" | "lo" | "hi"  → uses range endpoints when present
+   =========================================================================== */
+function valueOf(it,site,bound="mid"){
+  if(!it||it.placeholder) return null;
+  const base=it[site]; if(base==null) return null;
+  if(bound==="mid"||!it.range) return base;
+  const [lo,hi]=it.range;
+  if(site==="supreme") return bound==="lo"?lo:hi;
+  // Range is published on Supreme's scale — scale mm2 proportionally.
+  const sMid=it.supreme!=null?it.supreme:base, ratio=(bound==="lo"?lo:hi)/(sMid||1);
+  return base*ratio;
+}
+function sideTotal(items,site,bound="mid"){
+  let total=0; const missing=[];
+  for(const {id,qty} of items){
+    const it=BY_ID[id]; if(!it) continue;
+    const q=clampQty(qty);
+    if(it.placeholder){ missing.push(it); continue; }
+    const v=valueOf(it,site,bound); if(v==null){ missing.push(it); continue; }
+    total += v*q;
+  }
+  return {total,missing};
+}
+function combinedVal(it,bound="mid"){
+  if(!it||it.placeholder) return null;
+  const a=valueOf(it,"supreme",bound), b=valueOf(it,"mm2",bound);
+  const arr=[a,b].filter(x=>x!=null);
+  return arr.length? arr.reduce((s,x)=>s+x,0)/arr.length : null;
+}
+function combinedSide(items,bound="mid"){
+  let total=0;
+  for(const {id,qty} of items){ const it=BY_ID[id]; if(!it) continue; const v=combinedVal(it,bound); if(v!=null) total+=v*clampQty(qty); }
+  return total;
+}
+function verdict(give,receive){
+  if(give===0 && receive===0) return {result:"none",magnitude:"No items",diff:0,pct:0};
+  const diff=receive-give, base=give>0?give:receive, pct=(diff/base)*100, a=Math.abs(pct);
+  let result,magnitude;
+  if(a<=FAIR){result="fair";magnitude="Fair Trade";}
+  else if(diff>0){result="win";magnitude=a>BIG?"Big Win":"Small Win";}
+  else {result="lose";magnitude=a>BIG?"Big Loss":"Small Loss";}
+  return {result,magnitude,diff,pct};
+}
+// value-weighted average demand for a side (items with demand only)
+function sideDemand(items){
+  let wsum=0,w=0;
+  for(const {id,qty} of items){ const it=BY_ID[id]; if(!it||it.demand==null) continue;
+    const v=combinedVal(it)||1, q=clampQty(qty); wsum+=it.demand*v*q; w+=v*q; }
+  return w>0? wsum/w : null;
+}
+// suggestion to reach a Fair trade (approximate, on combined values)
+function balanceSuggestion(give,receive){
+  if(give===0 && receive===0) return null;
+  const v=verdict(give,receive);
+  if(v.result==="fair"||v.result==="none") return {fair:true};
+  if(v.diff<0){ const target=give*(1-FAIR/100); return {fair:false,side:"their",add:Math.max(1,Math.round(target-receive))}; }
+  const target=receive*(1-FAIR/100); return {fair:false,side:"your",add:Math.max(1,Math.round(target-give))};
+}
+function intel(your,their){
+  const gD=sideDemand(your), rD=sideDemand(their), notes=[];
+  if(rD!=null){
+    if(rD>=5) notes.push({s:"up",t:`You're receiving high-demand items (avg ${rD.toFixed(1)}/10) — easy to re-trade later.`});
+    else if(rD>=3) notes.push({s:"flat",t:`Items you'd receive have moderate demand (avg ${rD.toFixed(1)}/10) — reasonable to move on.`});
+    else notes.push({s:"down",t:`Items you'd receive are low-demand (avg ${rD.toFixed(1)}/10) — they can be slow to re-trade even at fair value.`});
+  }
+  const recvCaution=[],recvUp=[],giveOverpaid=[];
+  their.forEach(({id})=>{ const it=BY_ID[id]; if(!it||!it.trend) return; const s=TREND_SENT[it.trend];
+    if(it.trend==="Overpaid For") recvCaution.push(it.name+" (pulls above value)");
+    else if(s==="down") recvCaution.push(it.name);
+    else if(s==="up") recvUp.push(it.name); });
+  your.forEach(({id})=>{ const it=BY_ID[id]; if(it&&it.trend==="Overpaid For") giveOverpaid.push(it.name); });
+  if(recvUp.length) notes.push({s:"up",t:`Rising / improving on your side: ${[...new Set(recvUp)].join(", ")} — potential upside.`});
+  if(recvCaution.length) notes.push({s:"down",t:`Watch on items you'd receive: ${[...new Set(recvCaution)].join(", ")} — value may be soft or volatile.`});
+  if(giveOverpaid.length) notes.push({s:"up",t:`Good to offload: ${[...new Set(giveOverpaid)].join(", ")} currently pull above listed value.`});
+  return {gD,rD,notes};
+}
+function buildAnalysis(your,their){
+  const hasTrade = your.length>0 && their.length>0;
+  const sy=sideTotal(your,"supreme"), st=sideTotal(their,"supreme");
+  const my=sideTotal(your,"mm2"), mt=sideTotal(their,"mm2");
+  const supreme={...verdict(sy.total,st.total),you:sy.total,them:st.total,missY:sy.missing,missT:st.missing};
+  const mm2={...verdict(my.total,mt.total),you:my.total,them:mt.total,missY:my.missing,missT:mt.missing};
+  const cy=combinedSide(your), ct=combinedSide(their);
+  const combined={...verdict(cy,ct),you:cy,them:ct};
+  const agree = supreme.result===mm2.result;
+  // ranged best / worst case (combined)
+  const giveLo=combinedSide(your,"lo"), giveHi=combinedSide(your,"hi");
+  const getLo=combinedSide(their,"lo"), getHi=combinedSide(their,"hi");
+  const best=verdict(giveLo,getHi), worst=verdict(giveHi,getLo);
+  const hasRange=[...your,...their].some(o=>BY_ID[o.id]&&BY_ID[o.id].range);
+  // divergences
+  const ids=new Set([...your,...their].map(x=>x.id)); const divergences=[];
+  ids.forEach(id=>{ const it=BY_ID[id]; if(!isDivergent(it)) return;
+    const rel=(Math.abs(it.supreme-it.mm2)/((it.supreme+it.mm2)/2))*100;
+    divergences.push({it,rel,higher: it.supreme>it.mm2?"Supreme":"MM2Values"}); });
+  divergences.sort((a,b)=>b.rel-a.rel);
+  // breakdown lines with value share
+  const lines=[];
+  const push=(arr,side,total)=>arr.forEach(({id,qty})=>{ const it=BY_ID[id]; if(!it) return;
+    const cv=combinedVal(it), q=clampQty(qty); lines.push({it,qty:q,side,share: total>0&&cv!=null?(cv*q/total*100):0}); });
+  push(your,"you",cy); push(their,"them",ct);
+  const balance=hasTrade?balanceSuggestion(cy,ct):null;
+  const intelData=hasTrade?intel(your,their):null;
+  let conf="Medium";
+  if(hasTrade){ let score=0; if(agree) score++; if(intelData.rD!=null&&intelData.rD>=4) score++;
+    if(intelData.notes.some(n=>n.s==="down")) score--;
+    if(supreme.missY.length||supreme.missT.length||mm2.missY.length||mm2.missT.length) score--;
+    conf = score>=2?"High":score<=-1?"Low":"Medium"; }
+  return {hasTrade,supreme,mm2,combined,agree,divergences,lines,intel:intelData,conf,
+    range:{has:hasRange,best,worst}, balance};
+}
+
+/* ===========================================================================
+   STATE + PERSISTENCE
+   =========================================================================== */
+const store={
+  ok:(()=>{ try{const k="__mm2t";localStorage.setItem(k,"1");localStorage.removeItem(k);return true;}catch(e){return false;} })(),
+  get(k,d){ if(!this.ok) return d; try{const v=localStorage.getItem(k);return v?JSON.parse(v):d;}catch(e){return d;} },
+  set(k,v){ if(!this.ok) return; try{localStorage.setItem(k,JSON.stringify(v));}catch(e){} }
+};
+const state={ view:"calc", your:[], their:[],
+  favorites: store.get("mm2.favorites",[]).filter(id=>BY_ID[id]),
+  history: store.get("mm2.history",[]),
+  theme: store.get("mm2.theme","midnight"),
+  q_you:"", q_them:"", cat_you:"All", cat_them:"All", sort:"value",
+  active_you:-1, active_them:-1 };
+function persist(){ store.set("mm2.favorites",state.favorites); store.set("mm2.history",state.history); store.set("mm2.theme",state.theme); }
+
+// transient animation flags
+let prevVerdictKey=null, justAdded={you:null,them:null}, firstPaint=true;
+
+/* ===========================================================================
+   SEARCH
+   =========================================================================== */
+// POPULAR (curated quick-access list) is computed in buildData() from POPULAR_NAMES.
+const VIRTUAL={ "Popular":i=>POPULAR.includes(i.id), "High Demand":i=>(i.demand||0)>=5 };
+function inCat(i,cat){ if(cat==="All") return true; if(VIRTUAL[cat]) return VIRTUAL[cat](i); return i.category===cat; }
+function sortKey(it){ return state.sort==="demand"?(it.demand??-1): state.sort==="rarity"?(it.rarity??-1): (it.supreme??it.mm2??0); }
+function searchItems(side){
+  const q=norm(state["q_"+side]||""), cat=state["cat_"+side]||"All";
+  let pool=ALL.filter(i=>inCat(i,cat));
+  if(q){
+    const scored=[];
+    for(const it of pool){ const h=HAY[it.id]; let s=0;
+      if(h.name.startsWith(q)) s=4; else if(h.text.startsWith(q)) s=3;
+      else if(h.text.includes(q)) s=2; else if(subseq(q,h.text)) s=1;
+      if(s>0) scored.push([s,it]); }
+    scored.sort((a,b)=> b[0]-a[0] || sortKey(b[1])-sortKey(a[1]));
+    return scored.map(x=>x[1]).slice(0,12);
+  }
+  // empty query → browse: Popular by default, High Demand by demand, else tier by chosen sort
+  if(cat==="All"||cat==="Popular") return POPULAR.map(id=>BY_ID[id]).filter(Boolean);
+  if(cat==="High Demand") return pool.slice().sort((a,b)=>(b.demand||0)-(a.demand||0)).slice(0,50);
+  return pool.slice().sort((a,b)=> sortKey(b)-sortKey(a)).slice(0,50);
+}
+
+/* ===========================================================================
+   RENDER — components
+   =========================================================================== */
+function verdictPill(result,mag){ const r=RES[result]||RES.none;
+  return `<span class="vp" style="color:${r.t};background:${r.b};border-color:${r.bd}">${icon(r.icon,14)} ${mag}</span>`; }
+function valueBars(you,them){
+  const max=Math.max(you,them,1);
+  const row=(l,v,c)=>`<div class="bar-row"><span class="bar-lbl">${l}</span><div class="bar-track"><div class="bar-fill" style="width:${(v/max)*100}%;background:${c}"></div></div><span class="bar-val">${fmt(v)}</span></div>`;
+  return `<div class="bars">${row("You give",you,"linear-gradient(90deg,#7c3aed,#a78bfa)")}${row("You get",them,"linear-gradient(90deg,#22b8d6,#34d3ee)")}</div>`;
+}
+function dropdownHTML(side){
+  const matches=searchItems(side), q=state["q_"+side]||"", active=state["active_"+side];
+  if(!matches.length) return `<div class="dropdown" id="dd-${side}"><div class="dd-empty">${icon("alert",14,"amber")} No item matches “${esc(q)}”. Try a different spelling, an alias (e.g. CTG), or pick a category.</div></div>`;
+  const rows=matches.map((i,idx)=>`<button class="dd-item${idx===active?' active':''}" data-add="${i.id}" data-side="${side}" data-idx="${idx}">
+    <span class="row gap8 min0">${badge(i.category)}<span class="dd-name">${esc(i.name)}</span>${i.demand!=null?`<span class="dd-d">D${i.demand}</span>`:""}</span>
+    <span class="dd-val"><span style="color:#c4b5fd">${fmt(i.supreme)}</span> / <span style="color:#67e8f9">${fmt(i.mm2)}</span></span>
+  </button>`).join("");
+  return `<div class="dropdown" id="dd-${side}"><div class="dd-list">${rows}</div>
+    <div class="dd-hint"><span><kbd>↑</kbd><kbd>↓</kbd> navigate</span><span><kbd>↵</kbd> add</span><span><kbd>esc</kbd> close</span></div></div>`;
+}
+function showDropdown(side){ const w=document.getElementById("ddwrap-"+side); if(w) w.innerHTML=dropdownHTML(side); }
+function hideDropdown(side){ const w=document.getElementById("ddwrap-"+side); if(w) w.innerHTML=""; state["active_"+side]=-1; }
+function setActive(side,idx,scroll){
+  const dd=document.getElementById("dd-"+side); if(!dd) return;
+  const opts=dd.querySelectorAll(".dd-item"); if(!opts.length){ state["active_"+side]=-1; return; }
+  idx=Math.max(0,Math.min(opts.length-1,idx)); state["active_"+side]=idx;
+  opts.forEach((el,i)=>el.classList.toggle("active",i===idx));
+  if(scroll){ const a=opts[idx]; if(a&&a.scrollIntoView) a.scrollIntoView({block:"nearest"}); }
+}
+
+function itemRow(side,o,idx){
+  const it=BY_ID[o.id]; if(!it) return "";
+  const fav=state.favorites.includes(o.id);
+  const div = isDivergent(it);
+  const isNew = justAdded[side]===o.id;
+  return `<div class="item${isNew?' row-in':''}">
+    <button class="star" data-action="fav" data-id="${o.id}" title="Favorite">${fav?icon("starFill",15,"amber"):icon("star",15,"mut")}</button>
+    <div class="item-main">
+      <div class="row gap6"><span class="item-name">${esc(it.name)}</span>${div?'<span class="warn-dot" title="Sites disagree ≥15%"></span>':""}</div>
+      <div class="item-meta">
+        <span class="vtag" style="color:#c4b5fd">SV ${fmt(it.supreme)}</span><span class="vtag" style="color:#67e8f9">MM2 ${fmt(it.mm2)}</span>
+        ${it.placeholder?'<span class="vtag" style="color:#fbbf24">priceless</span>':""}
+        ${(it.demand!=null||it.rarity!=null)?`<span class="idr">${it.demand!=null?"D"+it.demand:""}${it.demand!=null&&it.rarity!=null?"\u00b7":""}${it.rarity!=null?"R"+it.rarity:""}</span>`:""}
+        ${it.trend?`<span class="tdot" title="${it.trend}" style="background:${SENT_COLOR[TREND_SENT[it.trend]||"flat"]}"></span>`:""}
+        ${sparkline(o.id)}
+      </div>
+    </div>
+    <div class="qty">
+      <button class="qbtn" data-action="qty" data-side="${side}" data-id="${o.id}" data-d="-1" aria-label="decrease">${icon("minus",12)}</button>
+      <span class="qn">${o.qty}</span>
+      <button class="qbtn" data-action="qty" data-side="${side}" data-id="${o.id}" data-d="1" aria-label="increase">${icon("plus",12)}</button>
+    </div>
+    <button class="rm" data-action="rm" data-side="${side}" data-id="${o.id}" aria-label="remove">${icon("x",15)}</button>
+  </div>`;
+}
+function panelHTML(side){
+  const items = side==="you"?state.your:state.their;
+  const accent = side==="you"?"#a78bfa":"#34d3ee";
+  const title = side==="you"?"Your Items":"Their Items";
+  const sub = side==="you"?"you give":"you receive";
+  const sup=sideTotal(items,"supreme").total, mm=sideTotal(items,"mm2").total;
+  const q=state["q_"+side]||"", cat=state["cat_"+side]||"All";
+  const opt=(v,l)=>`<option value="${v}"${v===cat?" selected":""}>${l}</option>`;
+  const catSel=`<select class="cat-sel" data-action="catsel" data-side="${side}" aria-label="Category">
+    <optgroup label="Quick">${opt("All","All items")}${opt("Popular","\u2b50 Popular")}${opt("High Demand","\ud83d\udd25 High demand")}</optgroup>
+    <optgroup label="Tiers">${["Godly","Chroma","Ancient","Set","Legendary","Unique","Vintage","Rare","Uncommon","Common"].map(c=>opt(c,c)).join("")}</optgroup>
+  </select>`;
+  const sortSel=`<select class="sort" data-action="sort" aria-label="Sort">${[["value","Value"],["demand","Demand"],["rarity","Rarity"]].map(([v,l])=>`<option value="${v}"${state.sort===v?" selected":""}>${l}</option>`).join("")}</select>`;
+  let body;
+  if(items.length){
+    body=`<div class="items" id="items-${side}">${items.map((o,i)=>itemRow(side,o,i)).join("")}</div>`;
+  } else {
+    const browse=searchItems(side).slice(0,8);
+    const lbl = (cat==="All"||cat==="Popular")?"Popular": cat==="High Demand"?"High demand":cat;
+    body=`<div class="qa"><div class="qa-h">${icon("sparkles",12,"violet")} ${lbl} \u2014 tap to add</div>
+      <div class="qa-grid">${browse.map(it=>`<button class="qa-chip" data-action="qadd" data-side="${side}" data-id="${it.id}" title="${esc(it.name)} \u00b7 SV ${fmt(it.supreme)} / MM2 ${fmt(it.mm2)}">
+        <span class="qa-name">${esc(it.name)}</span><span class="qa-val">${fmt(it.supreme)}</span></button>`).join("")}</div></div>`;
+  }
+  return `<div class="card panel" style="--accent:${accent};border-color:${accent}33">
+    <div class="panel-h">
+      <div class="row gap8"><span class="dot" style="background:${accent}"></span><div><div class="b">${title}</div><div class="xs mut">${sub}</div></div></div>
+      <div class="subt"><span style="color:#c4b5fd">SV ${fmt(sup)}</span> \u00b7 <span style="color:#67e8f9">MM2 ${fmt(mm)}</span></div>
+    </div>
+    <div class="search-wrap">
+      <div class="search-box">${icon("search",15,"mut")}<input class="search-input" id="si-${side}" data-side="${side}" placeholder="Search or browse\u2026" value="${esc(q)}" autocomplete="off" spellcheck="false"/>${q?`<button class="x-btn" data-action="clearq" data-side="${side}" aria-label="clear">${icon("x",14)}</button>`:""}</div>
+      <div id="ddwrap-${side}"></div>
+    </div>
+    <div class="filt">${catSel}${sortSel}</div>
+    ${body}
+  </div>`;
+}
+function siteCard(name,tint,d){
+  const r=RES[d.result]||RES.none, overpay=d.diff<0, miss=[...d.missY,...d.missT];
+  let msg;
+  if(d.result==="none") msg="Add items to both sides.";
+  else if(overpay) msg=`You overpay by <b>${fmt(Math.abs(d.diff))}</b> (${Math.abs(d.pct).toFixed(1)}% under value).`;
+  else if(d.result==="fair") msg=`Balanced — within <b>${Math.abs(d.pct).toFixed(1)}%</b>. Either side is reasonable.`;
+  else msg=`You gain <b>${fmt(d.diff)}</b> (${d.pct.toFixed(1)}% over) — they overpay.`;
+  return `<div class="card">
+    <div class="row between mb12">
+      <div class="row gap8"><span style="display:inline-flex;color:${tint}">${icon("gem",16)}</span><span class="b">${name}</span></div>
+      ${verdictPill(d.result,d.magnitude)}
+    </div>
+    ${valueBars(d.you,d.them)}
+    <div class="stat2">
+      <div class="stat"><div class="stat-lbl">Value diff</div><div class="stat-v" style="color:${r.t}">${d.diff>=0?"+":"−"}${fmt(Math.abs(d.diff))}</div></div>
+      <div class="stat"><div class="stat-lbl">Percent</div><div class="stat-v" style="color:${r.t}">${d.pct>=0?"+":"−"}${Math.abs(d.pct).toFixed(1)}%</div></div>
+    </div>
+    <div class="msg" style="background:${r.b};color:${r.t}">${msg}</div>
+    ${miss.length?`<div class="miss">${icon("alert",13)}<span>Excluded (no ${name} value): ${miss.map(m=>esc(m.name)).join(", ")}. Totals are partial.</span></div>`:""}
+  </div>`;
+}
+function gaugeHTML(pct,color,animate){
+  const clamped=Math.max(-30,Math.min(30,pct)), pos=((clamped+30)/60)*100;
+  const fairL=((-FAIR+30)/60)*100, fairW=((FAIR*2)/60)*100;
+  return `<div class="gauge">
+    <div class="gauge-track">
+      <div class="gauge-fair" style="left:${fairL}%;width:${fairW}%"></div>
+      <div class="gauge-mark" id="gmark" data-pos="${pos}" data-animate="${animate?'1':'0'}" style="left:${animate?'50%':pos+'%'};background:${color}"></div>
+    </div>
+    <div class="gauge-lbl"><span>You lose</span><span>Even</span><span>You win</span></div>
+  </div>`;
+}
+function intelCard(A){
+  const I=A.intel; if(!I) return "";
+  const dBar=(label,v,c)=> v==null
+    ? `<div class="bar-row"><span class="bar-lbl">${label}</span><span class="dim xs">no demand data</span></div>`
+    : `<div class="bar-row"><span class="bar-lbl">${label}</span><div class="bar-track"><div class="bar-fill" style="width:${v*10}%;background:${c}"></div></div><span class="bar-val">${v.toFixed(1)}/10</span></div>`;
+  const cc = A.conf==="High"?"#34d399":A.conf==="Low"?"#fb7185":"#fbbf24";
+  const notes = I.notes.length
+    ? `<ul class="intel-notes">${I.notes.map(n=>`<li class="intel-note"><span style="display:inline-flex;color:${SENT_COLOR[n.s]};margin-top:1px">${icon(n.s==="up"?"trendingUp":n.s==="down"?"trendingDown":"activity",13)}</span><span>${esc(n.t)}</span></li>`).join("")}</ul>`
+    : `<p class="explain-p" style="font-size:12.5px;margin-top:10px">Demand and stability look unremarkable here — the value verdict above is the main signal.</p>`;
+  const range = A.range.has
+    ? `<div class="range-note">${icon("activity",13,"mut2")}<span>Accounting for published value ranges, the combined outcome spans <b>${A.range.worst.magnitude}</b> (${A.range.worst.pct>=0?"+":"−"}${Math.abs(A.range.worst.pct).toFixed(1)}%) to <b>${A.range.best.magnitude}</b> (${A.range.best.pct>=0?"+":"−"}${Math.abs(A.range.best.pct).toFixed(1)}%) depending on where each item lands in its range.</span></div>`
+    : "";
+  return `<div class="card">
+    <div class="row between mb12 wrap gap8">
+      <div class="row gap8"><span style="display:inline-flex;color:#a78bfa">${icon("brain",16)}</span><span class="b sm">Trade Intelligence — demand, rarity & trend</span></div>
+      <span class="conf" style="color:${cc};background:${cc}1f">${icon("shield",12)} ${A.conf} confidence</span>
+    </div>
+    <div class="intel-grid">
+      <div class="intel-side"><div class="intel-h">You give — demand</div>${dBar("Demand",I.gD,"#a78bfa")}</div>
+      <div class="intel-side"><div class="intel-h">You receive — demand</div>${dBar("Demand",I.rD,"#34d3ee")}</div>
+    </div>
+    ${notes}${range}
+  </div>`;
+}
+function resultsHTML(A){
+  const cR=RES[A.combined.result]||RES.none, flags=[];
+  const animate = (A.combined.result+A.combined.magnitude)!==prevVerdictKey;
+  if(A.combined.result==="lose"&&A.combined.magnitude==="Big Loss") flags.push(`<span class="balance-hint" style="color:#fda4af">${icon("shield",13)} Heads up — you give far more than you get</span>`);
+  if(A.combined.result==="win"&&A.combined.magnitude==="Big Win") flags.push(`<span class="balance-hint" style="color:#6ee7b7">${icon("trophy",13)} Strong opportunity in your favor</span>`);
+  // balance hint
+  let bal="";
+  if(A.balance&&!A.balance.fair){ const who=A.balance.side==="their"?"their":"your";
+    bal=`<span class="balance-hint" style="color:#fcd34d">${icon("target",13)} Add ~<b class="tab-num">${fmt(A.balance.add)}</b> value to <b>${who}</b> side to reach Fair</span>`; }
+  else if(A.balance&&A.balance.fair&&A.combined.result==="fair") bal=`<span class="balance-hint" style="color:#6ee7b7">${icon("check",13)} This is already a fair trade</span>`;
+  const banner=`<div class="banner" style="border-color:${cR.bd};background:${cR.b}">
+    <div class="banner-glow" style="background:radial-gradient(440px 130px at 50% -10%, ${cR.t}26, transparent)"></div>
+    <span class="banner-sheen"></span>
+    <div class="banner-in">
+      <div class="row center gap8"><span style="display:inline-flex;color:${cR.t}">${icon(cR.icon,28)}</span><span class="verdict-title" style="color:${cR.t}">${A.combined.magnitude}</span></div>
+      <p class="banner-sub">Combined (average of both lists): you give <b>${fmt(A.combined.you)}</b>, you get <b>${fmt(A.combined.them)}</b> — ${A.combined.diff>=0?"gain":"deficit"} of <b style="color:${cR.t}">${fmt(Math.abs(A.combined.diff))}</b> (${Math.abs(A.combined.pct).toFixed(1)}%).</p>
+      ${gaugeHTML(A.combined.pct,cR.t,animate)}
+      <div class="row center wrap gap8" style="margin-top:6px">${bal}${flags.join("")}</div>
+    </div>
+  </div>`;
+  const sites=`<div class="grid2">${siteCard("Supreme Values","#a78bfa",A.supreme)}${siteCard("MM2Values","#34d3ee",A.mm2)}</div>`;
+  const agreeCard=`<div class="card">
+    <div class="row gap8 mb12"><span style="display:inline-flex;color:${A.agree?'#34d399':'#fbbf24'}">${icon(A.agree?"check":"info",16)}</span><span class="b sm">${A.agree?"Both lists agree":"Why the lists differ"}</span></div>
+    <p class="explain-p">${A.agree
+      ? `Supreme Values and MM2Values both rate this a <b style="color:${cR.t}">${A.combined.result.toUpperCase()}</b>. When both sources agree, the value verdict is high-confidence.`
+      : `Supreme rates this a <b style="color:${RES[A.supreme.result].t}">${A.supreme.magnitude}</b> (${A.supreme.pct>=0?"+":"−"}${Math.abs(A.supreme.pct).toFixed(1)}%), while MM2Values rates it a <b style="color:${RES[A.mm2.result].t}">${A.mm2.magnitude}</b> (${A.mm2.pct>=0?"+":"−"}${Math.abs(A.mm2.pct).toFixed(1)}%). This happens when the trade includes items the two sites price differently — see the discrepancies below.`}</p>
+  </div>`;
+  const disc=A.divergences.length?`<div class="card disc">
+    <div class="row gap8 mb12"><span style="display:inline-flex;color:#fbbf24">${icon("alert",16)}</span><span class="b sm" style="color:#fde68a">Cross-site discrepancies in this trade</span></div>
+    <div class="disc-list">${A.divergences.map(({it,rel,higher})=>`<div class="disc-row"><span class="row gap8">${badge(it.category)}<span>${esc(it.name)}</span></span><span class="disc-val"><span style="color:#c4b5fd">SV ${fmt(it.supreme)}</span> vs <span style="color:#67e8f9">MM2 ${fmt(it.mm2)}</span> &nbsp;<span style="color:#fbbf24">${rel.toFixed(0)}% · ${higher} higher</span></span></div>`).join("")}</div>
+  </div>`:"";
+  const rowsB=A.lines.map(l=>`<tr>
+    <td><span class="row gap6">${badge(l.it.category)}<span>${esc(l.it.name)}</span>${trendChip(l.it.trend)}</span></td>
+    <td><span class="side-tag" style="color:${l.side==="you"?'#a78bfa':'#34d3ee'};background:${l.side==="you"?'#a78bfa1f':'#34d3ee1f'}">${l.side==="you"?"YOU GIVE":"YOU GET"}</span></td>
+    <td class="r">${l.qty}</td>
+    <td class="r" style="color:#c4b5fd">${l.it.placeholder?"—":fmt(l.it.supreme)+" × = "+fmt((l.it.supreme||0)*l.qty)}</td>
+    <td class="r" style="color:#67e8f9">${l.it.placeholder||l.it.mm2==null?"—":fmt(l.it.mm2)+" × = "+fmt(l.it.mm2*l.qty)}</td>
+    <td class="r">${l.share>0?l.share.toFixed(0)+"%":"—"}<span class="share-bar"><i style="width:${Math.min(100,l.share)}%;background:${l.side==="you"?'#a78bfa':'#34d3ee'}"></i></span></td>
+  </tr>`).join("");
+  const breakdown=`<div class="card">
+    <div class="b sm mb12 row gap8">${icon("layers",16,"mut")} Itemized breakdown</div>
+    <div class="tbl-wrap"><table class="tbl">
+      <thead><tr><th>Item</th><th>Side</th><th class="r">Qty</th><th class="r" style="color:#a78bfa">Supreme</th><th class="r" style="color:#34d3ee">MM2</th><th class="r">Share</th></tr></thead>
+      <tbody>${rowsB}</tbody>
+      <tfoot><tr><td colspan="3">Totals — give / get</td><td class="r" style="color:#c4b5fd">${fmt(A.supreme.you)} / ${fmt(A.supreme.them)}</td><td class="r" style="color:#67e8f9">${fmt(A.mm2.you)} / ${fmt(A.mm2.them)}</td><td></td></tr></tfoot>
+    </table></div>
+  </div>`;
+  return `<div class="results${animate?' pop':''}">${banner}${sites}${intelCard(A)}${agreeCard}${disc}${breakdown}</div>`;
+}
+function calcView(entering){
+  const A=buildAnalysis(state.your,state.their);
+  window.__lastVerdictKey = A.hasTrade ? A.combined.result+A.combined.magnitude : null;
+  const cR=RES[A.combined.result]||RES.none;
+  const live = A.hasTrade
+    ? `<span class="live-pill" style="color:${cR.t};background:${cR.b};border-color:${cR.bd}">${icon(cR.icon,15)} ${A.combined.magnitude} \u00b7 ${A.combined.pct>=0?"+":"\u2212"}${Math.abs(A.combined.pct).toFixed(1)}%</span>`
+    : `<span class="live-pill muted-pill">${icon("scale",15)} Add items to both sides</span>`;
+  const results = A.hasTrade ? resultsHTML(A)
+    : `<div class="noTrade">${icon("scale",30)}<p>Add at least one item to <b style="color:#c4b5fd">each</b> side. Click a search box to browse <b>Popular</b>, choose a category, or type a name/alias \u2014 try <b>CTG</b>, <b>Sparkle Set</b>, <b>Celestial</b>.</p></div>`;
+  return `<div class="grid2${entering?' anim-load':''}">${panelHTML("you")}${panelHTML("them")}</div>
+    <div class="actions">
+      <button class="btn" data-action="swap">${icon("swap",14)} Swap</button>
+      ${live}
+      <button class="btn" data-action="share" ${(state.your.length||state.their.length)?"":"disabled"}>${icon("link",14)} Share</button>
+      <button class="btn" data-action="card" ${A.hasTrade?"":"disabled"}>${icon("image",14)} Trade Card</button>
+      <button class="btn btn-violet" data-action="save" ${A.hasTrade?"":"disabled"}>${icon("history",14)} Save</button>
+      <button class="btn btn-danger" data-action="clear">${icon("rotate",14)} Clear</button>
+    </div>${results}`;
+}
+function historyView(){
+  if(!state.history.length) return `<div class="noTrade">${icon("clock",32)}<p>No saved trades yet. Build one in the calculator and hit <b>Save trade</b> — they're stored on this device.</p></div>`;
+  return `<div class="hist">`+state.history.map(h=>`<div class="card hist-row">
+    <div><div class="xs mut">${esc(h.time)}</div><div class="sm">${h.your.length} given · ${h.their.length} received</div></div>
+    <div class="row gap8 wrap">
+      <span class="mini" style="color:${RES[h.sup].t};background:${RES[h.sup].b}">SV ${RES[h.sup].label}</span>
+      <span class="mini" style="color:${RES[h.mm].t};background:${RES[h.mm].b}">MM2 ${RES[h.mm].label}</span>
+      <span class="mini" style="color:${RES[h.comb].t};background:${RES[h.comb].b};font-weight:700">${esc(h.combMag)}</span>
+      <button class="btn-sm btn-violet" data-action="load" data-id="${h.id}">Load</button>
+      <button class="icon-btn" data-action="delTrade" data-id="${h.id}" aria-label="delete">${icon("trash",15)}</button>
+    </div>
+  </div>`).join("")+`</div>`;
+}
+function favoritesView(){
+  if(!state.favorites.length) return `<div class="noTrade">${icon("star",32)}<p>No favorites yet. Tap the ☆ on any item to pin it here for one-tap adding.</p></div>`;
+  return `<div class="fav-grid">`+state.favorites.map(id=>{const it=BY_ID[id];if(!it)return"";return `<div class="card fav-card">
+    <div class="row between"><span class="row gap6 min0">${badge(it.category)}<span class="item-name">${esc(it.name)}</span></span><button class="star" data-action="fav" data-id="${id}">${icon("starFill",15,"amber")}</button></div>
+    <div class="item-meta mt4"><span class="vtag" style="color:#c4b5fd">SV ${fmt(it.supreme)}</span><span class="vtag" style="color:#67e8f9">MM2 ${fmt(it.mm2)}</span>${metricsHTML(it)}</div>
+    <div class="row gap6 mt8"><button class="fav-add fav-give" data-action="addFav" data-side="you" data-id="${id}">+ You give</button><button class="fav-add fav-get" data-action="addFav" data-side="them" data-id="${id}">+ You get</button></div>
+  </div>`;}).join("")+`</div>`;
+}
+function headerHTML(){
+  const tab=(id,ic,label,n)=>`<button class="tab${state.view===id?' tab-on':''}" data-action="view" data-view="${id}">${icon(ic,15)} ${label}${n>0?`<span class="tab-n">${n}</span>`:""}</button>`;
+  const tOpt=(v,l)=>`<option value="${v}"${state.theme===v?" selected":""}>${l}</option>`;
+  const themeSel=`<select class="theme-sel" data-action="theme" aria-label="Theme">${tOpt("midnight","\ud83c\udf19 Midnight")}${tOpt("rain","\ud83c\udf27 Rain")}${tOpt("horizon","\ud83c\udf05 Horizon")}</select>`;
+  return `<header class="hdr">
+    <div class="brand">
+      <div class="logo">${icon("gem",22,"white")}</div>
+      <div><h1 class="title">MM2 Trade Calculator</h1><p class="tagline">${icon("sparkles",11,"violet")} Dual-source · value · demand · rarity · trend</p></div>
+    </div>
+    <div class="row gap8 wrap">${themeSel}<div class="tabs">${tab("calc","calculator","Calculator",0)}${tab("history","history","Saved",state.history.length)}${tab("favorites","star","Favorites",state.favorites.length)}${tab("changes","activity","Changes",0)}</div></div>
+  </header>`;
+}
+function footerHTML(){
+  return `<footer class="ftr">
+    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Demand, rarity, stability & ranged values are sourced from <b>Supreme Values</b> (published per item); each site's value drives its own verdict. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
+    <p>Community estimates — not endorsed by Roblox or Nikilis. Demand/hype/duping shift fast; confirm live before high-value trades. Saved trades & favorites are stored locally on this device only.</p>
+  </footer>`;
+}
+function rainFX(){
+  let d="";
+  for(let i=0;i<60;i++){
+    const l=(Math.random()*100).toFixed(2), dur=(0.5+Math.random()*0.45).toFixed(2),
+          del=(Math.random()*-1.4).toFixed(2), h=(40+Math.random()*70).toFixed(0), o=(0.18+Math.random()*0.4).toFixed(2);
+    d+=`<span class="drop" style="left:${l}%;height:${h}px;animation-duration:${dur}s;animation-delay:${del}s;opacity:${o}"></span>`;
+  }
+  return `<div class="storm"><div class="rain">${d}</div><div class="lightning"></div><div class="lightning l2"></div></div>`;
+}
+function applyTheme(){
+  const t=["midnight","rain","horizon"].includes(state.theme)?state.theme:"midnight";
+  state.theme=t;
+  if(document.documentElement) document.documentElement.setAttribute("data-theme",t);
+  const fx=document.getElementById("fx"); if(fx) fx.innerHTML = (t==="rain"?rainFX():"");
+}
+let lastView=null;
+function render(){
+  const app=document.getElementById("app");
+  const sc={}; ["you","them"].forEach(s=>{ const el=document.getElementById("items-"+s); if(el) sc[s]=el.scrollTop; });
+  const entering = state.view!==lastView;
+  const body = state.view==="calc"?calcView(entering) : state.view==="history"?historyView() : state.view==="changes"?changesView() : favoritesView();
+  app.innerHTML = headerHTML()+`<div class="${entering?'view-in':''}" id="view">${body}</div>`+footerHTML();
+  ["you","them"].forEach(s=>{ const el=document.getElementById("items-"+s); if(el&&sc[s]) el.scrollTop=sc[s]; });
+  // gauge marker glides only when the verdict category changes
+  const mark=document.getElementById("gmark");
+  if(mark && mark.dataset.animate==="1"){ const pos=mark.dataset.pos; requestAnimationFrame(()=>{ mark.style.left=pos+"%"; }); }
+  prevVerdictKey = window.__lastVerdictKey ?? prevVerdictKey;
+  justAdded.you=justAdded.them=null;
+  lastView=state.view; firstPaint=false;
+}
+
+/* ===========================================================================
+   MUTATIONS
+   =========================================================================== */
+function addItem(side,id){
+  if(!BY_ID[id]) return;
+  const arr = side==="you"?state.your:state.their;
+  const ex=arr.find(x=>x.id===id);
+  if(ex) ex.qty=clampQty(ex.qty+1); else arr.push({id,qty:1});
+  justAdded[side]=id; state["q_"+side]=""; state["active_"+side]=-1;
+  render();
+}
+function changeQty(side,id,d){
+  const arr=side==="you"?state.your:state.their, o=arr.find(x=>x.id===id);
+  if(o){ o.qty=clampQty(o.qty+d); render(); }
+}
+function removeItem(side,id){
+  if(side==="you") state.your=state.your.filter(x=>x.id!==id); else state.their=state.their.filter(x=>x.id!==id);
+  render();
+}
+function toggleFav(id){
+  if(!BY_ID[id]) return;
+  state.favorites = state.favorites.includes(id) ? state.favorites.filter(x=>x!==id) : [...state.favorites,id];
+  persist(); render();
+}
+function saveTrade(){
+  const A=buildAnalysis(state.your,state.their); if(!A.hasTrade) return;
+  state.history.unshift({id:Date.now(),time:new Date().toLocaleString(),
+    your:state.your.map(x=>({...x})),their:state.their.map(x=>({...x})),
+    sup:A.supreme.result,mm:A.mm2.result,comb:A.combined.result,combMag:A.combined.magnitude});
+  state.history=state.history.slice(0,30); persist(); render();
+}
+function loadTrade(id){
+  const h=state.history.find(x=>x.id===id); if(!h) return;
+  state.your=h.your.map(x=>({...x})).filter(x=>BY_ID[x.id]);
+  state.their=h.their.map(x=>({...x})).filter(x=>BY_ID[x.id]);
+  state.view="calc"; prevVerdictKey=null; render();
+}
+
+/* ===========================================================================
+   SHARE LINKS + LIVE CHANGE LOG
+   Trade links carry item NAMES (human-readable, self-describing). The id is recoverable as
+   slug(name); unresolved names fall back to a fuzzy lookup, so links survive catalogue changes.
+   =========================================================================== */
+const CHANGELOG_URL = DATA_URL ? DATA_URL.replace(/values\.json(\?.*)?$/i,"CHANGELOG.md") : "";
+function b64urlEnc(str){ const b=btoa(String.fromCharCode(...new TextEncoder().encode(str))); return b.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,""); }
+function b64urlDec(b64){ b64=b64.replace(/-/g,"+").replace(/_/g,"/"); const pad=b64.length%4?"=".repeat(4-b64.length%4):""; const bin=atob(b64+pad); return new TextDecoder().decode(Uint8Array.from(bin,c=>c.charCodeAt(0))); }
+function resolveItem(name){
+  if(!name) return null;
+  const id=slug(name); if(BY_ID[id]) return id;        // exact: id === slug(name)
+  const q=norm(name); let best=null,bs=0;              // fallback: fuzzy by name/alias
+  for(const it of ALL){ const h=HAY[it.id]; let s=0;
+    if(h.name===q) s=5; else if(h.name.startsWith(q)||h.text.startsWith(q)) s=3; else if(h.text.includes(q)) s=2; else if(subseq(q,h.text)) s=1;
+    if(s>bs){ bs=s; best=it.id; } }
+  return bs>=2?best:null;
+}
+function encodeTrade(){
+  const m=arr=>arr.map(o=>{ const it=BY_ID[o.id]; return [it?it.name:o.id, clampQty(o.qty)]; });
+  return b64urlEnc(JSON.stringify({v:1,g:m(state.your),r:m(state.their)}));
+}
+function decodeTrade(token){
+  try{
+    const obj=JSON.parse(b64urlDec(token));
+    if(!obj||obj.v!==1||!Array.isArray(obj.g)||!Array.isArray(obj.r)) return false;
+    const rows=arr=>{ const seen={},out=[]; for(const p of arr){ if(!Array.isArray(p)) continue; const id=resolveItem(p[0]); if(!id) continue;
+      const qty=clampQty(p[1]); if(seen[id]) seen[id].qty=clampQty(seen[id].qty+qty); else { const r={id,qty}; seen[id]=r; out.push(r); } } return out; };
+    state.your=rows(obj.g); state.their=rows(obj.r);
+    return state.your.length>0||state.their.length>0;
+  }catch(e){ return false; }
+}
+function shareTrade(){
+  if(!state.your.length && !state.their.length){ toast("Add items first, then share"); return; }
+  const token=encodeTrade();
+  try{ history.replaceState(null,"",location.pathname+location.search+"#t="+token); }catch(e){ try{ location.hash="t="+token; }catch(_){} }
+  const url=location.href;
+  if(navigator.clipboard&&navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(()=>toast("\u2713 Trade link copied — paste to share")).catch(()=>{ try{ prompt("Copy this trade link:",url); }catch(_){} });
+  else { try{ prompt("Copy this trade link:",url); }catch(_){ toast("Trade link is in the address bar"); } }
+}
+function loadFromHash(){
+  try{ const m=(location.hash||"").match(/^#t=(.+)$/); if(m && decodeTrade(decodeURIComponent(m[1]))){ state.view="calc"; prevVerdictKey=null; return true; } }catch(e){}
+  return false;
+}
+let CHANGES=[], CHANGES_STATE="idle", changesLoaded=false;
+function parseChangelog(md){
+  const out=[]; let cur=null;
+  for(const raw of String(md).split(/\r?\n/)){
+    const line=raw.trim();
+    let m=line.match(/^##\s+(\d{4}-\d{2}-\d{2})\s*[—-]\s*(\d+)\s+change/i);
+    if(m){ cur={date:m[1],count:+m[2],items:[]}; out.push(cur); continue; }
+    if(!cur) continue;
+    m=line.match(/^-\s+`([^`]+)`\s+\*\*([^*]+)\*\*:\s*(.*?)\s*(?:→|->)\s*(.*)$/);
+    if(m) cur.items.push({id:m[1],kind:m[2].trim(),from:m[3].trim(),to:m[4].trim()});
+  }
+  return out;
+}
+async function loadChanges(){
+  if(!CHANGELOG_URL){ CHANGES_STATE="disabled"; return; }
+  if(changesLoaded) return;
+  changesLoaded=true; CHANGES_STATE="loading"; if(state.view==="changes") render();
+  try{
+    const ctrl=new AbortController(), to=setTimeout(()=>ctrl.abort(),7000);
+    const res=await fetch(CHANGELOG_URL,{signal:ctrl.signal,cache:"no-store"}); clearTimeout(to);
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    CHANGES=parseChangelog(await res.text());
+    CHANGES_STATE=CHANGES.length?"ok":"empty";
+  }catch(e){ CHANGES_STATE="error"; changesLoaded=false; console.warn("[mm2] changelog unavailable:",e&&e.message); }
+  if(state.view==="changes") render();
+}
+function changesView(){
+  if(!CHANGELOG_URL) return `<div class="noTrade">${icon("history",30)}<p>Live change history appears here when the calculator is pulling values from a published <b>values.json</b>.</p></div>`;
+  if(CHANGES_STATE==="loading"||CHANGES_STATE==="idle") return `<div class="noTrade">${icon("history",30)}<p>Loading recent value changes\u2026</p></div>`;
+  if(CHANGES_STATE==="error") return `<div class="noTrade">${icon("alert",30)}<p>Couldn't load the change log right now. <button class="btn-sm btn-violet" data-action="reloadChanges">Retry</button></p></div>`;
+  if(CHANGES_STATE==="empty"||!CHANGES.length) return `<div class="noTrade">${icon("check",30)}<p>No value changes recorded yet. When the updater detects a Supreme price move, it'll show up here.</p></div>`;
+  const delta=(kind,from,to)=>{ if(kind!=="supreme"&&kind!=="mm2") return ""; const f=parseFloat(String(from).replace(/[^\d.-]/g,"")), t=parseFloat(String(to).replace(/[^\d.-]/g,"")); if(!isFinite(f)||!isFinite(t)||f===t) return ""; const up=t>f; return `<span class="chg-arrow" style="color:${up?'#34d399':'#fb7185'}">${up?'\u25b2':'\u25bc'}${fmt(Math.abs(t-f))}</span>`; };
+  const sections=CHANGES.slice(0,12).map(sec=>{
+    const rows=sec.items.slice(0,60).map(c=>{ const it=BY_ID[c.id]; const name=it?it.name:c.id.replace(/-/g," "); const cat=it?badge(it.category):"";
+      return `<div class="chg-row"><span class="row gap8 min0">${cat}<span class="chg-name">${esc(name)}</span><span class="chg-kind">${esc(c.kind)}</span></span><span class="chg-delta">${esc(c.from)} <span class="chg-to">\u2192 ${esc(c.to)}</span> ${delta(c.kind,c.from,c.to)}</span></div>`; }).join("");
+    const more=sec.items.length>60?`<div class="chg-more">\u2026and ${sec.items.length-60} more</div>`:"";
+    return `<div class="card chg-card"><div class="chg-date">${icon("clock",13,"mut")} ${esc(sec.date)}<span class="chg-count">${sec.count} change${sec.count===1?"":"s"}</span></div>${rows}${more}</div>`;
+  }).join("");
+  return `<div class="changes"><p class="chg-intro">${icon("info",12)} Recent Supreme value changes detected by the auto-updater \u2014 newest first.</p>${sections}</div>`;
+}
+
+/* ===========================================================================
+   VALUE HISTORY  (sparklines from the auto-updater's history.json — graceful if absent)
+   =========================================================================== */
+let HISTORY=null, historyLoaded=false;
+const HISTORY_URL = DATA_URL ? DATA_URL.replace(/values\.json(\?.*)?$/i,"history.json") : "";
+async function loadHistory(){
+  if(!HISTORY_URL||historyLoaded) return; historyLoaded=true;
+  try{
+    const ctrl=new AbortController(), to=setTimeout(()=>ctrl.abort(),7000);
+    const res=await fetch(HISTORY_URL,{signal:ctrl.signal,cache:"no-store"}); clearTimeout(to);
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const h=await res.json();
+    if(h && h.values && typeof h.values==="object"){ HISTORY=h; if(state.view==="calc") render(); }
+  }catch(e){ /* no history yet — sparklines simply don't render */ }
+}
+function sparkline(id){
+  if(!HISTORY||!HISTORY.values) return "";
+  const raw=HISTORY.values[id]; if(!Array.isArray(raw)) return "";
+  const pts=raw.map((v,i)=>[i,v]).filter(p=>p[1]!=null && isFinite(p[1]));
+  if(pts.length<2) return "";
+  const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]);
+  const x0=Math.min(...xs),x1=Math.max(...xs),lo=Math.min(...ys),hi=Math.max(...ys);
+  const W=56,Hh=16,p=2;
+  const sx=i=>x1===x0?0:((i-x0)/(x1-x0))*W;
+  const sy=v=>hi===lo?Hh/2:Hh-p-((v-lo)/(hi-lo))*(Hh-p*2);
+  const d=pts.map((q,k)=>`${k?"L":"M"}${sx(q[0]).toFixed(1)} ${sy(q[1]).toFixed(1)}`).join(" ");
+  const first=ys[0],last=ys[ys.length-1], c=last>first?"#34d399":last<first?"#fb7185":"#8aa0c6";
+  return `<svg class="spark" width="${W}" height="${Hh}" viewBox="0 0 ${W} ${Hh}" aria-hidden="true" title="value trend"><path d="${d}" fill="none" stroke="${c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${sx(x1).toFixed(1)}" cy="${sy(last).toFixed(1)}" r="1.7" fill="${c}"/></svg>`;
+}
+
+/* ===========================================================================
+   TRADE CARD  (shareable branded PNG via Canvas — no external image assets, no CORS)
+   pure model (testable) + a canvas renderer + a preview modal
+   =========================================================================== */
+function tradeCardModel(){
+  const A=buildAnalysis(state.your,state.their);
+  const side=arr=>arr.map(o=>{ const it=BY_ID[o.id]; if(!it) return null;
+    return {name:it.name,cat:it.category,qty:clampQty(o.qty),supreme:it.supreme,mm2:it.mm2,combined:combinedVal(it)}; }).filter(Boolean);
+  const r=RES[A.combined.result]||RES.none;
+  return { complete: state.your.length>0 && state.their.length>0,
+    give:side(state.your), get:side(state.their),
+    verdict:{label:r.label,color:r.t,bg:r.b,bd:r.bd,magnitude:A.combined.magnitude,pct:A.combined.pct,result:A.combined.result},
+    totals:{cgive:A.combined.you,cget:A.combined.them,sgive:A.supreme.you,sget:A.supreme.them,mgive:A.mm2.you,mget:A.mm2.them},
+    conf:A.conf, date:DATA_DATE, live:DATA_LIVE };
+}
+function drawTradeCard(m){
+  const cv=document.createElement("canvas"); if(!cv||!cv.getContext) return null;
+  const W=1000, PAD=44, COLW=(W-PAD*3)/2, rowH=46, headH=176, totH=132, footH=78;
+  const rows=Math.max(m.give.length,m.get.length,3), listH=rows*rowH, H=headH+listH+totH+footH;
+  const S=2; cv.width=W*S; cv.height=H*S;
+  const x=cv.getContext("2d"); if(!x) return null; x.scale(S,S); x.textBaseline="alphabetic";
+  const F=(w,s,c)=>{ x.font=`${w} ${s}px Inter, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif`; x.fillStyle=c; };
+  const rr=(X,Y,w,h,r)=>{ x.beginPath(); x.moveTo(X+r,Y); x.arcTo(X+w,Y,X+w,Y+h,r); x.arcTo(X+w,Y+h,X,Y+h,r); x.arcTo(X,Y+h,X,Y,r); x.arcTo(X,Y,X+w,Y,r); x.closePath(); };
+  const ell=(s,max)=>{ if(x.measureText(s).width<=max) return s; let t=String(s); while(t.length>1 && x.measureText(t+"…").width>max) t=t.slice(0,-1); return t+"…"; };
+  // background
+  const bg=x.createLinearGradient(0,0,W,H); bg.addColorStop(0,"#0a0f1e"); bg.addColorStop(1,"#0d1426");
+  x.fillStyle=bg; x.fillRect(0,0,W,H);
+  const grad=x.createLinearGradient(0,0,W,0); grad.addColorStop(0,"#7c3aed"); grad.addColorStop(.5,"#a855f7"); grad.addColorStop(1,"#ec4899");
+  x.fillStyle=grad; x.fillRect(0,0,W,6);
+  // brand
+  x.save(); x.translate(PAD,28); x.scale(1.3,1.3); const gem=new Path2D("M6 3h12l4 6-10 12L2 9z");
+  x.strokeStyle="#c4b5fd"; x.lineWidth=2; x.lineJoin="round"; x.stroke(gem);
+  x.beginPath(); x.moveTo(2,9); x.lineTo(22,9); x.moveTo(12,3); x.lineTo(8,9); x.lineTo(12,21); x.lineTo(16,9); x.closePath(); x.stroke(); x.restore();
+  F("800",26,"#f4f1ff"); x.fillText("MM2 Trade Calculator",PAD+46,50);
+  F("600",13.5,"#8aa0c6"); x.fillText("Lifenz · dual-source value · @wyalife",PAD+46,72);
+  // verdict pill
+  const vlabel=m.complete?m.verdict.magnitude:"Incomplete trade";
+  const vpct=m.complete?`${m.verdict.pct>=0?"+":"−"}${Math.abs(m.verdict.pct).toFixed(1)}%`:"";
+  F("800",20,"#fff"); const vw=x.measureText(vlabel).width; F("700",15,"#fff"); const pw=x.measureText(vpct).width;
+  const pillW=Math.max(vw,pw)+48, pillX=W-PAD-pillW, pillY=26, pillH=64;
+  x.fillStyle=m.verdict.bg; rr(pillX,pillY,pillW,pillH,14); x.fill();
+  x.strokeStyle=m.verdict.bd; x.lineWidth=1.5; rr(pillX,pillY,pillW,pillH,14); x.stroke();
+  x.textAlign="center"; F("800",20,m.verdict.color); x.fillText(vlabel,pillX+pillW/2,pillY+ (vpct?27:38));
+  if(vpct){ F("700",15,m.verdict.color); x.fillText(vpct,pillX+pillW/2,pillY+50); } x.textAlign="left";
+  // column headers
+  const colY=headH-44, giveX=PAD, getX=PAD*2+COLW;
+  F("800",13,"#a78bfa"); x.fillText("YOU GIVE",giveX+14,colY);
+  F("800",13,"#34d3ee"); x.fillText("YOU GET",getX+14,colY);
+  // columns
+  const drawCol=(items,cx,accent)=>{
+    rr(cx,headH-28,COLW,listH+8,14); x.fillStyle="rgba(255,255,255,.03)"; x.fill();
+    x.strokeStyle=accent+"33"; x.lineWidth=1.2; rr(cx,headH-28,COLW,listH+8,14); x.stroke();
+    if(!items.length){ F("500",14,"#5a6a88"); x.fillText("— empty —",cx+16,headH-28+rowH/2+5); return; }
+    items.forEach((it,i)=>{
+      const ry=headH-28+i*rowH+rowH/2;
+      x.fillStyle=CAT_COLOR[it.cat]||"#94a3b8"; x.beginPath(); x.arc(cx+18,ry,4.5,0,7); x.fill();
+      F("600",15,"#e8edf6"); x.fillText(ell((it.qty>1?`${it.qty}× `:"")+it.name,COLW-150),cx+34,ry+5);
+      F("700",15,"#cbd5e1"); x.textAlign="right"; x.fillText(fmt(it.combined),cx+COLW-14,ry+5); x.textAlign="left";
+      if(i<items.length-1){ x.strokeStyle="rgba(255,255,255,.05)"; x.lineWidth=1; x.beginPath(); x.moveTo(cx+14,headH-28+(i+1)*rowH); x.lineTo(cx+COLW-14,headH-28+(i+1)*rowH); x.stroke(); }
+    });
+  };
+  drawCol(m.give,giveX,"#a78bfa"); drawCol(m.get,getX,"#34d3ee");
+  // totals band
+  const ty=headH+listH+6, tw=W-PAD*2, th=totH-24;
+  rr(PAD,ty,tw,th,16); const tg=x.createLinearGradient(PAD,ty,W-PAD,ty); tg.addColorStop(0,"rgba(124,58,237,.10)"); tg.addColorStop(1,"rgba(236,72,153,.10)"); x.fillStyle=tg; x.fill();
+  x.strokeStyle="rgba(168,139,250,.25)"; x.lineWidth=1.2; rr(PAD,ty,tw,th,16); x.stroke();
+  F("600",12,"#8aa0c6"); x.fillText("COMBINED  (give · get)",PAD+22,ty+28);
+  F("800",24,"#f4f1ff"); x.fillText(`${fmt(m.totals.cgive)}  ·  ${fmt(m.totals.cget)}`,PAD+22,ty+60);
+  F("600",12,"#8aa0c6"); x.fillText("SUPREME",PAD+22,ty+88); F("700",15,"#c4b5fd"); x.fillText(`${fmt(m.totals.sgive)} · ${fmt(m.totals.sget)}`,PAD+108,ty+88);
+  F("600",12,"#8aa0c6"); x.fillText("MM2",W/2+30,ty+88); F("700",15,"#67e8f9"); x.fillText(`${fmt(m.totals.mgive)} · ${fmt(m.totals.mget)}`,W/2+78,ty+88);
+  if(m.complete){ const cc=m.conf==="High"?"#34d399":m.conf==="Low"?"#fb7185":"#fbbf24"; F("800",13,cc); x.textAlign="right"; x.fillText(`${m.conf} confidence`,W-PAD-22,ty+28); x.textAlign="left"; }
+  // footer
+  const fy=H-footH+footH/2;
+  x.strokeStyle="rgba(255,255,255,.07)"; x.lineWidth=1; x.beginPath(); x.moveTo(PAD,H-footH); x.lineTo(W-PAD,H-footH); x.stroke();
+  F("600",13,"#8aa0c6"); x.fillText(`Values as of ${m.date} · ${m.live?"live":"cached"} · Supreme Values + MM2Values`,PAD,fy+5);
+  F("800",13,"#a78bfa"); x.textAlign="right"; x.fillText("discord.gg/resurrect",W-PAD,fy+5); x.textAlign="left";
+  return cv;
+}
+function openCardModal(){
+  if(!(state.your.length && state.their.length)){ toast("Add items to both sides to make a trade card"); return; }
+  const cv=drawTradeCard(tradeCardModel());
+  if(!cv){ toast("Image export isn't supported on this browser"); return; }
+  closeCardModal();
+  const ov=document.createElement("div"); if(!ov||!ov.appendChild) return; ov.id="card-modal"; ov.className="modal-ov";
+  const shareBtn = (typeof navigator!=="undefined"&&navigator.canShare) ? `<button class="btn btn-violet" data-cardact="share">${icon("link",14)} Share</button>` : "";
+  const copyBtn = (typeof navigator!=="undefined"&&navigator.clipboard&&typeof window!=="undefined"&&window.ClipboardItem) ? `<button class="btn" data-cardact="copy">${icon("layers",14)} Copy</button>` : "";
+  ov.innerHTML=`<div class="modal-card">
+    <div class="modal-h"><span class="b row gap8">${icon("image",16)} Trade card</span><button class="icon-btn" data-cardact="close" aria-label="close">${icon("x",16)}</button></div>
+    <div class="modal-canvas" id="card-canvas-wrap"></div>
+    <div class="modal-actions">
+      <button class="btn btn-violet" data-cardact="download">${icon("history",14)} Download PNG</button>
+      ${shareBtn}${copyBtn}
+      <button class="btn" data-cardact="close">Close</button>
+    </div>
+    <p class="modal-hint">Post it in a trade, a Discord server, or socials — it's branded and shows the full WFL verdict.</p>
+  </div>`;
+  (document.body||document.documentElement).appendChild(ov);
+  cv.style.width="100%"; cv.style.height="auto"; cv.style.display="block"; cv.style.borderRadius="12px";
+  const wrap=document.getElementById("card-canvas-wrap"); if(wrap) wrap.appendChild(cv);
+  ov._canvas=cv;
+  ov.addEventListener("click",e=>{ if(e.target===ov) closeCardModal(); });
+}
+function closeCardModal(){ const ov=document.getElementById("card-modal"); if(ov&&ov.remove) ov.remove(); }
+function cardToBlob(cb){ const ov=document.getElementById("card-modal"), cv=ov&&ov._canvas; if(!cv||!cv.toBlob){ toast("Export not supported — try another browser"); return; } cv.toBlob(b=>{ if(b) cb(b); else toast("Couldn't render image"); },"image/png"); }
+function cardDownload(){ cardToBlob(b=>{ try{ const u=URL.createObjectURL(b); const a=document.createElement("a"); a.href=u; a.download="mm2-trade-card.png"; (document.body||document.documentElement).appendChild(a); a.click(); a.remove(); setTimeout(()=>URL.revokeObjectURL(u),2000); toast("✓ Trade card saved"); }catch(e){ toast("Couldn't save image"); } }); }
+function cardShare(){ cardToBlob(async b=>{ try{ const f=new File([b],"mm2-trade-card.png",{type:"image/png"}); if(navigator.canShare&&navigator.canShare({files:[f]})) await navigator.share({files:[f],title:"MM2 Trade",text:"My Murder Mystery 2 trade — is it fair?"}); else cardDownload(); }catch(e){} }); }
+function cardCopy(){ cardToBlob(async b=>{ try{ await navigator.clipboard.write([new window.ClipboardItem({"image/png":b})]); toast("✓ Card copied to clipboard"); }catch(e){ toast("Copy not supported — use Download"); } }); }
+
+/* ===========================================================================
+   EVENTS  (delegated once on #app)
+   =========================================================================== */
+const app=document.getElementById("app");
+app.addEventListener("input",e=>{
+  const inp=e.target.closest(".search-input"); if(!inp) return;
+  const side=inp.dataset.side; state["q_"+side]=inp.value; state["active_"+side]=-1; showDropdown(side);
+});
+app.addEventListener("focusin",e=>{ const inp=e.target.closest(".search-input"); if(inp) showDropdown(inp.dataset.side); });
+app.addEventListener("focusout",e=>{
+  const inp=e.target.closest(".search-input"); if(!inp) return; const side=inp.dataset.side;
+  setTimeout(()=>{ if(document.activeElement!==document.getElementById("si-"+side)) hideDropdown(side); },150);
+});
+app.addEventListener("keydown",e=>{
+  const inp=e.target.closest(".search-input"); if(!inp) return; const side=inp.dataset.side;
+  const matches=searchItems(side); if(!matches.length && e.key!=="Escape") return;
+  if(e.key==="ArrowDown"){ e.preventDefault(); if(!document.getElementById("dd-"+side)) showDropdown(side); setActive(side,(state["active_"+side]<0?-1:state["active_"+side])+1,true); }
+  else if(e.key==="ArrowUp"){ e.preventDefault(); if(!document.getElementById("dd-"+side)) showDropdown(side); setActive(side,(state["active_"+side]<0?0:state["active_"+side])-1,true); }
+  else if(e.key==="Enter"){ const idx=state["active_"+side]; const pick = idx>=0?matches[idx]:matches[0]; if(pick){ e.preventDefault(); addItem(side,pick.id); const si=document.getElementById("si-"+side); if(si) si.focus(); } }
+  else if(e.key==="Escape"){ hideDropdown(side); inp.blur(); }
+});
+app.addEventListener("mousedown",e=>{ const opt=e.target.closest("[data-add]"); if(opt){ e.preventDefault(); addItem(opt.dataset.side,opt.dataset.add); } });
+app.addEventListener("mousemove",e=>{ const opt=e.target.closest("[data-add]"); if(opt){ const s=opt.dataset.side,i=+opt.dataset.idx; if(state["active_"+s]!==i) setActive(s,i,false); } });
+app.addEventListener("change",e=>{
+  const t=e.target;
+  if(t.closest("[data-action='theme']")){ state.theme=t.value; persist(); applyTheme(); }
+  else if(t.closest("[data-action='sort']")){ state.sort=t.value; render(); }
+  else if(t.closest("[data-action='catsel']")){ const side=t.dataset.side; state["cat_"+side]=t.value; state["active_"+side]=-1; render();
+    const si=document.getElementById("si-"+side); if(si){ si.focus(); showDropdown(side); } }
+});
+app.addEventListener("click",e=>{
+  const b=e.target.closest("[data-action]"); if(!b) return; const a=b.dataset.action;
+  if(a==="view"){ if(state.view!==b.dataset.view){ state.view=b.dataset.view; prevVerdictKey=null; render(); if(state.view==="changes") loadChanges(); } }
+  else if(a==="share"){ shareTrade(); }
+  else if(a==="card"){ openCardModal(); }
+  else if(a==="reloadChanges"){ changesLoaded=false; loadChanges(); }
+  else if(a==="qadd"){ addItem(b.dataset.side,b.dataset.id); }
+  else if(a==="clearq"){ const side=b.dataset.side; state["q_"+side]=""; render(); const si=document.getElementById("si-"+side); if(si) si.focus(); }
+  else if(a==="qty"){ changeQty(b.dataset.side,b.dataset.id,parseInt(b.dataset.d,10)); }
+  else if(a==="rm"){ removeItem(b.dataset.side,b.dataset.id); }
+  else if(a==="fav"){ toggleFav(b.dataset.id); }
+  else if(a==="addFav"){ state.view="calc"; addItem(b.dataset.side,b.dataset.id); }
+  else if(a==="swap"){ const t=state.your; state.your=state.their; state.their=t; const qy=state.q_you; state.q_you=state.q_them; state.q_them=qy; prevVerdictKey=null; render(); }
+  else if(a==="clear"){ state.your=[]; state.their=[]; state.q_you=""; state.q_them=""; prevVerdictKey=null; render(); }
+  else if(a==="save"){ saveTrade(); }
+  else if(a==="load"){ loadTrade(parseInt(b.dataset.id,10)); }
+  else if(a==="delTrade"){ state.history=state.history.filter(h=>h.id!==parseInt(b.dataset.id,10)); persist(); render(); }
+});
+
+/* trade-card modal lives outside #app, so handle its controls + Escape at the document level */
+document.addEventListener("click",e=>{ const b=e.target&&e.target.closest&&e.target.closest("[data-cardact]"); if(!b) return;
+  const a=b.dataset.cardact;
+  if(a==="download") cardDownload(); else if(a==="share") cardShare(); else if(a==="copy") cardCopy(); else if(a==="close") closeCardModal();
+});
+document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeCardModal(); });
+
+/* ---------------- data loading: cache → embedded fallback → live refresh ---------------- */
+const DATA_KEY="mm2.values";
+function validDataset(d){
+  if(!d||typeof d!=="object"||!Array.isArray(d.items)||d.items.length<100) return false;
+  return d.items.every(o=> o && typeof o.name==="string" && typeof o.category==="string"
+    && (o.supreme==null||(Number.isFinite(o.supreme)&&o.supreme>=0))
+    && (o.mm2==null||(Number.isFinite(o.mm2)&&o.mm2>=0))
+    && (o.demand==null||(o.demand>=1&&o.demand<=11))
+    && (o.rarity==null||(o.rarity>=1&&o.rarity<=11)) );
+}
+function applyDataset(d,src){
+  if(!validDataset(d)) return false;
+  buildData(d.items.map(jsonToItem));
+  DATA_DATE=d.updatedAt||DATA_DATE; DATA_SRC=src; DATA_LIVE=(src==="live");
+  state.your=state.your.filter(o=>BY_ID[o.id]);
+  state.their=state.their.filter(o=>BY_ID[o.id]);
+  state.favorites=state.favorites.filter(id=>BY_ID[id]);
+  return true;
+}
+function applyCachedData(){ try{ const c=store.get(DATA_KEY,null); if(c&&applyDataset(c,"cache")) return true; }catch(e){} return false; }
+async function refreshData(){
+  if(!DATA_URL) return;                       // embedded/offline-only mode
+  try{
+    const ctrl=new AbortController(), to=setTimeout(()=>ctrl.abort(),7000);
+    const res=await fetch(DATA_URL,{signal:ctrl.signal,cache:"no-store"}); clearTimeout(to);
+    if(!res.ok) throw new Error("HTTP "+res.status);
+    const d=await res.json();
+    if(!validDataset(d)){ console.warn("[mm2] values.json failed validation — keeping current data"); return; }
+    const prevDate=DATA_DATE;
+    if(applyDataset(d,"live")){
+      try{ store.set(DATA_KEY,d); }catch(e){}
+      if(!state.your.length && !state.their.length) loadFromHash();   // resolve shared items now in live data
+      render();
+      if(d.updatedAt && d.updatedAt!==prevDate) toast("✓ Values updated — "+d.updatedAt);
+    }
+  }catch(e){ console.warn("[mm2] value refresh unavailable, using cached/embedded:", e&&e.message); }
+}
+let toastTimer=null;
+function toast(msg){
+  try{
+    let t=document.getElementById("toast");
+    if(!t){ if(!document.createElement) return; t=document.createElement("div"); t.id="toast"; t.className="toast"; (document.body||document.documentElement).appendChild(t); }
+    t.textContent=msg; t.classList.add("show");
+    clearTimeout(toastTimer); toastTimer=setTimeout(()=>{ t.classList.remove("show"); },3200);
+  }catch(e){}
+}
+
+applyCachedData();   // instant freshness from last good pull (also covers offline-after-online)
+loadFromHash();      // populate a shared trade from the URL (#t=…) if present
+applyTheme();
+render();
+refreshData();       // background: pull latest if DATA_URL is configured
+loadHistory();       // background: pull value-history for sparklines (graceful if absent)
+// installable/offline when hosted over http(s); silent no-op as a local file or if sw.js is absent
+if(typeof navigator!=="undefined" && "serviceWorker" in navigator && location.protocol.indexOf("http")===0){
+  try{ navigator.serviceWorker.register("sw.js").catch(()=>{}); }catch(e){}
+}
+</script>
+</body>
+</html>
