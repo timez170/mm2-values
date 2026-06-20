@@ -31,6 +31,7 @@ import { existsSync } from "node:fs";
 const ROOT = new URL(".", import.meta.url).pathname;
 const VALUES_PATH = ROOT + "values.json";
 const CHANGELOG_PATH = ROOT + "CHANGELOG.md";
+const HISTORY_PATH = ROOT + "history.json";
 
 const ARGS = new Set(process.argv.slice(2));
 const DRY = ARGS.has("--dry");
@@ -260,18 +261,104 @@ function diffItems(oldArr, newArr) {
   return changes;
 }
 
+/* ----- anomaly detection -----
+ * A single-cycle value move beyond ANOMALY_PCT (with a meaningful absolute size) is suspicious —
+ * often a source typo, dupe wave, or transient glitch. We flag (not suppress) these so they are
+ * surfaced in the changelog + notification for a human glance, never silently trusted.
+ */
+const ANOMALY_PCT = 60;   // percent move in one run that warrants a second look
+const ANOMALY_MIN = 50;   // ignore tiny absolute moves (rounding noise on cheap items)
+function pctMove(c) {
+  const a = Number(c.from), b = Number(c.to);
+  return (Number.isFinite(a) && Number.isFinite(b) && a > 0) ? ((b - a) / a) * 100 : null;
+}
+function isAnomalous(c) {
+  if (c.kind !== "supreme" && c.kind !== "mm2") return false;
+  const a = Number(c.from), b = Number(c.to);
+  if (!Number.isFinite(a) || !Number.isFinite(b) || a <= 0) return false;
+  const abs = Math.abs(b - a);
+  return abs >= ANOMALY_MIN && (abs / a) * 100 >= ANOMALY_PCT;
+}
+
+/* ----- historical time-series -----
+ * Maintains a compact rolling daily series (per-item Supreme value) so the app can draw sparklines
+ * and trends. One point per calendar day: a later same-day run overwrites the day's point with the
+ * freshest value; a new day appends. All series stay aligned to `dates` (null where an item was
+ * absent that day). Bounded to the last `maxDays` to keep the file small.
+ */
+function updateHistory(hist, items, date, maxDays = 90) {
+  const h = (hist && Array.isArray(hist.dates) && hist.values && typeof hist.values === "object")
+    ? { schema: 1, dates: [...hist.dates], values: { ...hist.values } }
+    : { schema: 1, dates: [], values: {} };
+  const sameDay = h.dates[h.dates.length - 1] === date;
+  if (!sameDay) h.dates.push(date);
+  const di = h.dates.length - 1;
+  const cur = new Map(items.map(i => [i.id, i.supreme ?? null]));
+  const allIds = new Set([...Object.keys(h.values), ...cur.keys()]);
+  for (const id of allIds) {
+    let arr = h.values[id]; if (!arr) arr = h.values[id] = [];
+    while (arr.length < di) arr.push(null);          // backfill gaps for items that appeared late
+    arr[di] = cur.has(id) ? cur.get(id) : null;       // today's point (null if item absent now)
+  }
+  if (h.dates.length > maxDays) {
+    const drop = h.dates.length - maxDays;
+    h.dates = h.dates.slice(drop);
+    for (const id of Object.keys(h.values)) {
+      h.values[id] = h.values[id].slice(drop);
+      if (h.values[id].every(v => v == null)) delete h.values[id];   // forget items gone for the whole window
+    }
+  }
+  h.updatedAt = date; h.days = h.dates.length;
+  return h;
+}
+
+/* ----- Discord rich embed builder (pure) -----
+ * Turns the change list into a color-coded embed: rising / falling / new / removed / anomalies,
+ * each as its own field with arrows and percent moves. Returns a full webhook payload.
+ */
+function buildDiscordEmbed(changes, updatedAt, stats) {
+  const up = [], down = [], added = [], removed = [], anomalies = [];
+  for (const c of changes) {
+    if (c.kind === "added") { added.push(c); continue; }
+    if (c.kind === "removed") { removed.push(c); continue; }
+    if (c.kind === "supreme" || c.kind === "mm2") {
+      if (c.anomaly) anomalies.push(c);
+      const m = pctMove(c);
+      if (m != null && m > 0) up.push({ c, m });
+      else if (m != null && m < 0) down.push({ c, m });
+    }
+  }
+  up.sort((a, b) => b.m - a.m); down.sort((a, b) => a.m - b.m);
+  const clip = s => s.length > 1024 ? s.slice(0, 1010) + "\n… more" : s;
+  const moveLines = list => list.slice(0, 10).map(({ c, m }) =>
+    `${m > 0 ? "🔼" : "🔽"} \`${c.id}\` ${c.from ?? "—"} → ${c.to ?? "—"} (${m > 0 ? "+" : ""}${m.toFixed(0)}%)`).join("\n");
+  const idList = list => list.slice(0, 18).map(c => `\`${c.id}\``).join(", ") + (list.length > 18 ? ` +${list.length - 18}` : "");
+  const fields = [];
+  if (up.length)   fields.push({ name: `🔼 Rising (${up.length})`,   value: clip(moveLines(up)),   inline: false });
+  if (down.length) fields.push({ name: `🔽 Falling (${down.length})`, value: clip(moveLines(down)), inline: false });
+  if (added.length)   fields.push({ name: `✨ New items (${added.length})`,  value: clip(idList(added)),   inline: false });
+  if (removed.length) fields.push({ name: `🗑️ Removed (${removed.length})`, value: clip(idList(removed)), inline: false });
+  if (anomalies.length) fields.push({ name: `⚠️ Large moves to verify (${anomalies.length})`,
+    value: clip(anomalies.slice(0, 10).map(c => `\`${c.id}\` ${c.from ?? "—"} → ${c.to ?? "—"}`).join("\n")), inline: false });
+  const color = up.length >= down.length ? 0x34d399 : 0xfb7185;   // green if net-rising, rose if net-falling
+  const desc = [`**${changes.length}** change${changes.length === 1 ? "" : "s"} on ${updatedAt}`,
+    stats ? `${stats.updated} updated · ${stats.added} added` : null].filter(Boolean).join("  ·  ");
+  const embed = { title: "MM2 Values Updated", description: desc, color, fields,
+    footer: { text: "Lifenz · Supreme Values + MM2Values" }, timestamp: new Date().toISOString() };
+  if (process.env.EMBED_THUMBNAIL_URL) embed.thumbnail = { url: process.env.EMBED_THUMBNAIL_URL };
+  return { username: "MM2 Values", embeds: [embed] };
+}
+
 /* ----- notification (optional, portable, never throws) -----
  * Fires only when values changed AND a webhook env var is set, so runs without it are silent.
- *   DISCORD_WEBHOOK_URL  → posts a formatted message to a Discord channel
+ *   DISCORD_WEBHOOK_URL  → posts a color-coded rich embed (rising/falling/new/removed/anomalies)
  *   NOTIFY_WEBHOOK_URL   → posts raw JSON to any endpoint (Slack/ntfy/Zapier/your own)
+ *   EMBED_THUMBNAIL_URL  → optional image shown on the Discord embed
  */
-async function notify(changes, updatedAt) {
+async function notify(changes, updatedAt, stats) {
   const discord = process.env.DISCORD_WEBHOOK_URL;
   const generic = process.env.NOTIFY_WEBHOOK_URL;
   if (!discord && !generic) return;
-  const top = changes.slice(0, 15).map(c => `• ${c.id} — ${c.kind}: ${c.from ?? "—"} → ${c.to ?? "—"}`).join("\n");
-  const more = changes.length > 15 ? `\n…and ${changes.length - 15} more` : "";
-  const summary = `**MM2 values updated — ${updatedAt}** (${changes.length} change${changes.length === 1 ? "" : "s"})\n${top}${more}`;
   const post = async (url, body) => {
     try {
       const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 10000);
@@ -280,8 +367,9 @@ async function notify(changes, updatedAt) {
       if (!res.ok) warn(`notify → HTTP ${res.status}`); else log("notification sent");
     } catch (e) { warn(`notify failed (non-fatal): ${e.message}`); }
   };
-  if (discord) await post(discord, { content: summary.slice(0, 1900), username: "MM2 Values" });
-  if (generic) await post(generic, { event: "mm2_values_updated", updatedAt, count: changes.length, changes });
+  if (discord) await post(discord, buildDiscordEmbed(changes, updatedAt, stats));
+  if (generic) await post(generic, { event: "mm2_values_updated", updatedAt, count: changes.length,
+    anomalies: changes.filter(c => c.anomaly).map(c => c.id), changes });
 }
 
 /* ----- main ----- */
@@ -336,14 +424,17 @@ async function main() {
   }
 
   const changes = diffItems(existing.items, newItems);
-  log(`reconcile complete — tiersOK=${tiersOK} tiersFailed=${tiersFailed} updated=${totalUpdated} added=${totalAdded} changes=${changes.length}`);
+  for (const c of changes) if (isAnomalous(c)) c.anomaly = true;
+  const anomalyCount = changes.filter(c => c.anomaly).length;
+  log(`reconcile complete — tiersOK=${tiersOK} tiersFailed=${tiersFailed} updated=${totalUpdated} added=${totalAdded} changes=${changes.length}` + (anomalyCount ? ` ⚠️ ${anomalyCount} large move(s) to verify` : ""));
 
   if (changes.length === 0) { log("no value changes. values.json is current."); return; }
 
   // summarize
   for (const c of changes.slice(0, 50))
-    log(`  ~ ${c.id} ${c.kind}: ${c.from ?? "—"} → ${c.to ?? "—"}`);
+    log(`  ~ ${c.id} ${c.kind}: ${c.from ?? "—"} → ${c.to ?? "—"}${c.anomaly ? " ⚠️" : ""}`);
   if (changes.length > 50) log(`  …and ${changes.length - 50} more`);
+  if (anomalyCount) warn(`${anomalyCount} change(s) exceeded ±${ANOMALY_PCT}% in one cycle — flagged for review (not suppressed).`);
 
   if (DRY) { log("--dry: not writing."); return; }
 
@@ -355,13 +446,20 @@ async function main() {
   };
   await writeFile(VALUES_PATH, JSON.stringify(out, null, 2) + "\n");
   const entry = `\n## ${today()} — ${changes.length} change(s) [tiersOK ${tiersOK}, failed ${tiersFailed}]\n` +
-    changes.map(c => `- \`${c.id}\` **${c.kind}**: ${c.from ?? "—"} → ${c.to ?? "—"}`).join("\n") + "\n";
+    changes.map(c => `- \`${c.id}\` **${c.kind}**: ${c.from ?? "—"} → ${c.to ?? "—"}${c.anomaly ? " ⚠️" : ""}`).join("\n") + "\n";
   await appendFile(CHANGELOG_PATH, entry);
-  log(`wrote values.json (${newItems.length} items) and appended CHANGELOG.md`);
-  await notify(changes, out.updatedAt);
+
+  // roll the historical time-series forward (one point per day) so the app can draw trends
+  let hist = null;
+  try { if (existsSync(HISTORY_PATH)) hist = JSON.parse(await readFile(HISTORY_PATH, "utf8")); } catch (e) { warn(`history.json unreadable, reseeding: ${e.message}`); }
+  hist = updateHistory(hist, out.items, out.updatedAt);
+  await writeFile(HISTORY_PATH, JSON.stringify(hist) + "\n");
+
+  log(`wrote values.json (${newItems.length} items), appended CHANGELOG.md, updated history.json (${hist.days} day${hist.days === 1 ? "" : "s"})`);
+  await notify(changes, out.updatedAt, { updated: totalUpdated, added: totalAdded, anomalies: anomalyCount });
 }
 
-export const __test = { slug, matchKey, num, parseRange, cleanName, variantBase, baseKey, uniqueId, sanitizeTrend, validItem, mergeTier, diffItems };
+export const __test = { slug, matchKey, num, parseRange, cleanName, variantBase, baseKey, uniqueId, sanitizeTrend, validItem, mergeTier, diffItems, isAnomalous, pctMove, updateHistory, buildDiscordEmbed };
 
 // only run when invoked directly (so the test file can import the pure functions)
 if (import.meta.url === `file://${process.argv[1]}`) {
