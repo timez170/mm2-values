@@ -29,14 +29,15 @@ jobs:
           # to get pinged when values change. Omit them and the run is silent.
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
           NOTIFY_WEBHOOK_URL: ${{ secrets.NOTIFY_WEBHOOK_URL }}
+          EMBED_THUMBNAIL_URL: ${{ secrets.EMBED_THUMBNAIL_URL }}
         run: node update-values.mjs --verbose
 
       - name: Commit if values changed
         run: |
-          if [ -n "$(git status --porcelain values.json CHANGELOG.md)" ]; then
+          if [ -n "$(git status --porcelain values.json CHANGELOG.md history.json)" ]; then
             git config user.name  "mm2-values-bot"
             git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-            git add values.json CHANGELOG.md
+            git add values.json CHANGELOG.md history.json
             git commit -m "chore(values): auto-update MM2 values ($(date -u +%Y-%m-%d))"
             git push
             echo "Committed updated values."
