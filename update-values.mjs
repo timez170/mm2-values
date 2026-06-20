@@ -40,12 +40,12 @@ const VERBOSE = ARGS.has("--verbose");
 const BASE = "https://supremevalues.com/mm2/";
 const TIERS = [               // page slug -> app category label
   ["godlies", "Godly"], ["chromas", "Chroma"], ["ancients", "Ancient"],
-  ["legendaries", "Legendary"], ["pets", "Pet"], ["sets", "Set"],
+  ["legendaries", "Legendary"], ["sets", "Set"],
   ["uniques", "Unique"], ["vintages", "Vintage"],
   ["rares", "Rare"], ["uncommons", "Uncommon"], ["commons", "Common"],
 ];
 // minimum plausible item counts per category — below this we treat the scrape as failed for that tier
-const MIN_ITEMS = { Godly: 50, Chroma: 20, Ancient: 5, Legendary: 1, Pet: 3, Set: 20, Unique: 1, Vintage: 3, Rare: 1, Uncommon: 1, Common: 1 };
+const MIN_ITEMS = { Godly: 50, Chroma: 20, Ancient: 5, Legendary: 1, Set: 20, Unique: 1, Vintage: 3, Rare: 1, Uncommon: 1, Common: 1 };
 const FETCH_TIMEOUT_MS = 15000;
 const FETCH_RETRIES = 3;
 const UA = "Mozilla/5.0 (compatible; LifenzMM2ValueBot/1.0; +https://github.com/)";
@@ -115,12 +115,16 @@ function parseRange(r) {
 }
 function cleanName(n) {
   return n.replace(/\s+/g, " ").trim()
-    .replace(/\s*=\d+\b[^>]*?-->\s*/g, " ")      // Supreme's pet rows leak a broken template directive: "Zombie Dog =1 condition from all conditions.txt lines 251-275 --> Class - …"
     .replace(/\s+Contains\s+-.*$/i, "")          // sets list contents inline: "Ever Set Contains - Evergreen, …"
-    .replace(/\s+Class\s+-\s+[A-Za-z ]+$/i, "")  // pets show "Zombie Dog Class - Common" before the value
     .replace(/^(?:Tier\s*\d+|Changelog|Hot|Rising|New|Featured)\s+/i, "")
     .replace(/\s+/g, " ").trim();
 }
+// strip a trailing form qualifier so "Silent Night (Knife)" and "Silent Night (Gun)" share a base.
+// year suffixes like "Mummy (2018)" / "Potion (2017)" are NOT stripped — they are distinct collectibles.
+const variantBase = name => name.replace(/\s*\((?:knife|gun)\)\s*$/i, "").trim();
+// normalized base key for grouping new variants + detecting items we already track (matchKey-compatible)
+const baseKey = name => matchKey(variantBase(name));
+function uniqueId(map, base) { let id = base || "item", n = 2; while (map.has(id)) id = `${base}-${n++}`; return id; }
 
 // the per-item icon, e.g. <img src=".../media/mm2godlies/TravelersGun.png"> — match the path on any
 // element (some tiers render it on a non-<img> tag), and split each row on it.
@@ -177,16 +181,31 @@ function validItem(it) {
     (it.range == null || (Array.isArray(it.range) && it.range.length === 2 && it.range[0] <= it.range[1]));
 }
 /**
- * Update-only merge: refresh the Supreme fields of items we already curate, matched by normalized
- * name (so "C. Traveler's Gun" updates "Chroma Traveler's Gun"). Unknown items are NOT added — they
- * are returned in `unmatched` for review. id / name / category / mm2 / aliases / placeholder are kept.
+ * Reconcile a tier against the catalogue:
+ *   1. UPDATE the Supreme fields of items we already curate, matched by normalized name / alias
+ *      (so "C. Traveler's Gun" updates "Chroma Traveler's Gun"). id / name / mm2 / aliases kept.
+ *   2. ADD items Supreme lists that we don't yet track. Balanced variant handling: "(Knife)"/"(Gun)"
+ *      forms of the same item collapse to one base entry when their value matches; if their values
+ *      genuinely differ they are kept as separate entries (honest). A would-be new item whose base
+ *      already exists in the catalogue (under any name or alias, same category) is skipped as a dupe.
+ * New items carry Supreme value/demand/rarity/trend/range and mm2:null (no MM2Values cross-check yet,
+ * which the app already renders honestly as "—").
  */
 function mergeTier(map, scraped, category, keyToId) {
-  let updated = 0; const unmatched = [];
+  let updated = 0, added = 0; const skipped = [];
+  // bases we already track in THIS category (curated names + aliases) — never add a variant of these
+  const existingBase = new Set();
+  for (const it of map.values()) {
+    if (it.category !== category) continue;
+    existingBase.add(baseKey(it.name));
+    for (const a of (it.aliases || [])) existingBase.add(baseKey(a));
+  }
+  // phase 1 — update curated items; collect the rest
+  const leftover = [];
   for (const s of scraped) {
     const id = keyToId.get(category + "|" + matchKey(s.name));   // key namespaced by category
     const prev = id && map.get(id);
-    if (!prev) { unmatched.push(s.name); continue; }
+    if (!prev) { leftover.push(s); continue; }
     const merged = {
       ...prev,
       supreme: s.supreme != null ? s.supreme : prev.supreme,
@@ -196,10 +215,33 @@ function mergeTier(map, scraped, category, keyToId) {
       range: s.range ?? prev.range ?? null,
     };
     if (!validItem(merged)) { vlog(`skip invalid ${category}/${id}`); continue; }
-    map.set(id, merged);
-    updated++;
+    map.set(id, merged); updated++;
   }
-  return { updated, unmatched };
+  // phase 2 — add new items, grouping (Knife)/(Gun) variants by shared base
+  const groups = new Map();
+  for (const s of leftover) {
+    const bk = baseKey(s.name);
+    if (existingBase.has(bk)) { skipped.push(s.name); continue; }   // a variant of something we already track
+    let g = groups.get(bk); if (!g) { g = []; groups.set(bk, g); } g.push(s);
+  }
+  for (const members of groups.values()) {
+    const collapse = members.length > 1 && new Set(members.map(m => m.supreme)).size === 1;
+    const toAdd = collapse ? [{ ...members[0], name: variantBase(members[0].name) }] : members;
+    for (const m of toAdd) {
+      const item = {
+        id: uniqueId(map, slug(m.name)), name: m.name, category,
+        supreme: m.supreme, mm2: null,
+        demand: m.demand != null ? Math.round(m.demand) : null,
+        rarity: m.rarity != null ? Math.round(m.rarity) : null,
+        trend: sanitizeTrend(m.trend), range: m.range ?? null,
+        placeholder: false, aliases: [],
+      };
+      if (!validItem(item)) { vlog(`skip invalid new ${category}/${item.name}`); continue; }
+      map.set(item.id, item); added++;
+      existingBase.add(baseKey(item.name));   // stop a later group adding the same base
+    }
+  }
+  return { updated, added, skipped };
 }
 function diffItems(oldArr, newArr) {
   const o = new Map(oldArr.map(i => [i.id, i]));
@@ -256,7 +298,7 @@ async function main() {
     keyToId.set(it.category + "|" + matchKey(it.name), it.id);
     for (const a of (it.aliases || [])) keyToId.set(it.category + "|" + matchKey(a), it.id);
   }
-  let tiersOK = 0, tiersFailed = 0, totalUpdated = 0;
+  let tiersOK = 0, tiersFailed = 0, totalUpdated = 0, totalAdded = 0;
 
   for (const [page, category] of TIERS) {
     const url = BASE + page;
@@ -273,10 +315,10 @@ async function main() {
         warn(`${category} block[2]: ${JSON.stringify(stripTags(_blks[2] || "").slice(0, 320))}`);
         tiersFailed++; continue;
       }
-      const { updated, unmatched } = mergeTier(map, scraped, category, keyToId);
-      totalUpdated += updated;
-      log(`${category}: updated ${updated}/${scraped.length} scraped` + (unmatched.length ? `, ${unmatched.length} not in curated list (skipped)` : ""));
-      if (VERBOSE && unmatched.length) vlog(`${category} unmatched: ${unmatched.slice(0, 25).join(" | ")}`);
+      const { updated, added, skipped } = mergeTier(map, scraped, category, keyToId);
+      totalUpdated += updated; totalAdded += added;
+      log(`${category}: updated ${updated}, added ${added}` + (skipped.length ? `, ${skipped.length} variant-dupes skipped` : "") + ` (of ${scraped.length} scraped)`);
+      if (VERBOSE && skipped.length) vlog(`${category} skipped (already tracked as a variant): ${skipped.slice(0, 25).join(" | ")}`);
       tiersOK++;
     } catch (e) {
       warn(`${category}: scrape failed (${e.message}). Keeping previous data for this tier.`);
@@ -294,7 +336,7 @@ async function main() {
   }
 
   const changes = diffItems(existing.items, newItems);
-  log(`reconcile complete — tiersOK=${tiersOK} tiersFailed=${tiersFailed} updated=${totalUpdated} changes=${changes.length}`);
+  log(`reconcile complete — tiersOK=${tiersOK} tiersFailed=${tiersFailed} updated=${totalUpdated} added=${totalAdded} changes=${changes.length}`);
 
   if (changes.length === 0) { log("no value changes. values.json is current."); return; }
 
@@ -319,7 +361,7 @@ async function main() {
   await notify(changes, out.updatedAt);
 }
 
-export const __test = { slug, matchKey, num, parseRange, cleanName, sanitizeTrend, validItem, mergeTier, diffItems };
+export const __test = { slug, matchKey, num, parseRange, cleanName, variantBase, baseKey, uniqueId, sanitizeTrend, validItem, mergeTier, diffItems };
 
 // only run when invoked directly (so the test file can import the pure functions)
 if (import.meta.url === `file://${process.argv[1]}`) {
