@@ -881,3 +881,7 @@
 - `bones-2` **added**: — → 1
 - `brains-2` **added**: — → 1
 - `witch` **added**: — → 1
+
+## 2026-06-21 — 2 change(s) [tiersOK 10, failed 0]
+- `gingerbread-set` **added**: — → 63
+- `santa-s-set-legend` **added**: — → 6
