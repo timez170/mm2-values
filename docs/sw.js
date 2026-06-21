@@ -4,7 +4,7 @@
  * the app is fully self-contained and works without this file (it just won't be installable
  * or offline-cached when hosted). Bump CACHE to invalidate old caches on deploy.
  */
-const CACHE = "mm2-calc-v1";
+const CACHE = "mm2-calc-v2";
 const SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icon-192.png", "./icon-512.png", "./og-image.png"];
 
 self.addEventListener("install", (e) => {
