@@ -990,3 +990,102 @@
 - `makeshift-knife` **supreme**: 40 → 45
 - `swirl` **supreme**: 20 → 25
 - `arctic-gun` **supreme**: 7 → 10
+
+## 2026-06-25 — 97 change(s) [tiersOK 10, failed 0]
+- `chroma-alien-set` **supreme**: 42500 → 41500
+- `chroma-alien-set` **demand**: 7 → 6
+- `chroma-alien-set` **range**: [41500,42500] → [39500,41500]
+- `chroma-vampire-s-gun` **supreme**: 33000 → 32000
+- `chroma-vampire-s-gun` **demand**: 7 → 6
+- `chroma-vampire-s-gun` **range**: [32000,33000] → [30000,32000]
+- `chroma-constellation` **supreme**: 30000 → 29000
+- `chroma-constellation` **demand**: 7 → 6
+- `chroma-constellation` **range**: [29000,30000] → [27000,29000]
+- `chroma-alienbeam` **supreme**: 28000 → 27000
+- `chroma-alienbeam` **demand**: 7 → 6
+- `chroma-alienbeam` **range**: [27000,28000] → [25000,27000]
+- `gingerscope` **supreme**: 17500 → 17750
+- `traveler-s-set` **supreme**: 14400 → 14150
+- `chroma-snow-set` **supreme**: 13500 → 13250
+- `traveler-s-gun` **supreme**: 6000 → 5750
+- `ever-set` **supreme**: 5775 → 5825
+- `ever-set` **demand**: 5 → 6
+- `ever-set` **trend**: Stable → Doing Well
+- `ever-set` **range**: null → [5825,5925]
+- `chroma-snow-dagger` **supreme**: 5000 → 4750
+- `celestial-set` **supreme**: 4650 → 4725
+- `celestial-set` **demand**: 6 → 5
+- `celestial-set` **trend**: Doing Well → Stable
+- `evergun` **supreme**: 3325 → 3350
+- `evergun` **demand**: 5 → 6
+- `evergun` **trend**: Stable → Doing Well
+- `evergun` **range**: null → [3350,3400]
+- `alien-set` **supreme**: 3175 → 3200
+- `alien-set` **trend**: Stable → Improving
+- `alien-set` **range**: null → [3200,3225]
+- `constellation` **supreme**: 2700 → 2725
+- `constellation` **trend**: Doing Well → Stable
+- `evergreen` **supreme**: 2450 → 2475
+- `evergreen` **demand**: 5 → 6
+- `evergreen` **trend**: Stable → Doing Well
+- `evergreen` **range**: null → [2475,2525]
+- `celestial` **supreme**: 1950 → 2000
+- `celestial` **demand**: 6 → 5
+- `celestial` **trend**: Doing Well → Stable
+- `sun-set` **supreme**: 1550 → 1525
+- `sun-set` **range**: [1525,1550] → [1500,1525]
+- `raygun` **supreme**: 1175 → 1200
+- `raygun` **trend**: Stable → Improving
+- `raygun` **range**: null → [1200,1225]
+- `sunrise` **supreme**: 1050 → 1025
+- `sunrise` **range**: [1025,1050] → [1000,1025]
+- `snow-set` **supreme**: 980 → 1030
+- `snow-set` **range**: [980,1005] → [1030,1055]
+- `rainbow-set` **supreme**: 820 → 830
+- `rainbow-set` **trend**: Doing Well → Stable
+- `cane-knife-2018` **supreme**: 750 → 725
+- `cane-knife-2018` **range**: [725,750] → [700,725]
+- `snowcannon` **supreme**: 750 → 800
+- `snowcannon` **range**: [750,775] → [800,825]
+- `rainbow-gun` **supreme**: 415 → 420
+- `rainbow-gun` **trend**: Doing Well → Stable
+- `rainbow-knife` **supreme**: 405 → 410
+- `rainbow-knife` **trend**: Doing Well → Stable
+- `latte-set` **supreme**: 370 → 400
+- `latte-set` **range**: [370,420] → [400,430]
+- `borealis-set` **supreme**: 295 → 305
+- `borealis-set` **range**: [295,325] → [305,315]
+- `bones` **supreme**: 185 → 200
+- `bones` **range**: [185,200] → [200,215]
+- `latte-gun` **supreme**: 185 → 200
+- `latte-gun` **range**: [185,210] → [200,215]
+- `latte-knife` **supreme**: 185 → 200
+- `latte-knife` **range**: [185,210] → [200,215]
+- `borealis` **supreme**: 150 → 155
+- `borealis` **range**: [150,165] → [155,160]
+- `dungeon` **supreme**: 150 → 175
+- `dungeon` **range**: [150,175] → [175,200]
+- `australis` **supreme**: 145 → 150
+- `australis` **range**: [145,160] → [150,155]
+- `ghoulish` **supreme**: 140 → 150
+- `ghoulish` **range**: [140,150] → [150,160]
+- `spectral-set` **supreme**: 83 → 93
+- `spectral-set` **range**: [83,93] → [93,103]
+- `traveler-set` **supreme**: 83 → 93
+- `traveler-set` **range**: [83,93] → [93,103]
+- `spectral-knife` **supreme**: 80 → 90
+- `spectral-knife` **range**: [80,90] → [90,100]
+- `traveler-gun` **supreme**: 80 → 90
+- `traveler-gun` **range**: [80,90] → [90,100]
+- `aurora-set-legend` **supreme**: 73 → 83
+- `aurora-set-legend` **range**: [73,83] → [83,93]
+- `vampire-set-legend` **supreme**: 73 → 83
+- `vampire-set-legend` **range**: [73,83] → [83,93]
+- `dark-set-rare` **supreme**: 71 → 81
+- `dark-set-rare` **range**: [71,81] → [81,91]
+- `aurora-gun` **supreme**: 70 → 80
+- `aurora-gun` **range**: [70,80] → [80,90]
+- `vampire-gun` **supreme**: 70 → 80
+- `vampire-gun` **range**: [70,80] → [80,90]
+- `darkknife` **supreme**: 70 → 80
+- `darkknife` **range**: [70,80] → [80,90]
