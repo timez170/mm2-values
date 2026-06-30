@@ -90,6 +90,7 @@
   body{background:radial-gradient(900px 460px at 10% -10%,rgba(124,58,237,.14),transparent 55%),radial-gradient(760px 420px at 98% 0%,rgba(34,184,214,.09),transparent 52%),var(--bg);
     color:var(--text);min-height:100vh;font-family:var(--font);-webkit-font-smoothing:antialiased;font-size:14px}
   body::before{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;opacity:.45;background-image:radial-gradient(rgba(124,140,180,.05) 1px,transparent 1px);background-size:24px 24px}
+  body::after{content:"";position:fixed;inset:0;z-index:0;pointer-events:none;background:radial-gradient(125% 125% at 50% 32%,transparent 60%,rgba(0,0,0,.20))}
   .glow{position:fixed;border-radius:9999px;filter:blur(90px);pointer-events:none;z-index:0;opacity:.4}
   .glow1{top:-120px;left:-90px;width:300px;height:300px;background:rgba(124,58,237,.16)}
   .glow2{bottom:-140px;right:-90px;width:320px;height:320px;background:rgba(34,184,214,.11)}
@@ -320,6 +321,11 @@
   .rec-chip{font-size:10.5px;color:#cdd6e8;background:rgba(255,255,255,.05);border:1px solid var(--line);padding:2px 7px;border-radius:6px}
   .rec-add{margin-top:1px;display:inline-flex;align-items:center;justify-content:center;gap:5px;font-size:12px;font-weight:600;padding:6px 10px;border-radius:8px;border:1px solid var(--line2);background:transparent;color:#cdd6e8;cursor:pointer;font-family:var(--font);transition:border-color var(--fast),background var(--fast),color var(--fast)}
   .rec-add:hover{border-color:rgba(139,92,246,.5);background:rgba(139,92,246,.12);color:#fff}
+  .rec-conf{margin-left:auto;font-size:10px;font-weight:700;display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:9999px;font-variant-numeric:tabular-nums}
+  .rec-fit{display:flex;align-items:center;gap:8px;margin-top:1px}
+  .rec-fitbar{flex:1;height:5px;border-radius:9999px;background:rgba(42,55,80,.5);overflow:hidden}
+  .rec-fitbar>span{display:block;height:100%;border-radius:9999px}
+  .rec-fitn{font-size:10px;font-weight:700;color:var(--muted2);font-variant-numeric:tabular-nums;flex:none}
   /* ===== Saved portfolios ===== */
   .sp-card{margin-bottom:12px}
   .sp-h{font-size:13px;font-weight:800;display:flex;align-items:center;gap:7px;margin-bottom:11px}
@@ -383,7 +389,7 @@
   /* ============ THEMES ============ */
   .theme-sel{font-size:12px;color:#dce4f1;background:rgba(14,19,32,.7);border:1px solid var(--line2);border-radius:11px;padding:7px 11px;cursor:pointer;font-family:var(--font);font-weight:600;transition:border-color var(--fast)}
   .theme-sel:hover{border-color:#384664}
-  #fx{position:fixed;inset:0;z-index:0;pointer-events:none}
+  #fx{position:fixed;inset:0;z-index:0;pointer-events:none;opacity:1;transition:opacity .42s ease;will-change:opacity}
   /* Rain / Thunder */
   html[data-theme="rain"]{--bg:#080d18;--card:rgba(17,24,40,.62);--line:#1c2740;--line2:#28344e}
   html[data-theme="rain"] body{background:radial-gradient(1000px 520px at 50% 118%,rgba(56,189,248,.10),transparent 60%),linear-gradient(180deg,#0c1322 0%,#0a0f1c 55%,#070b14 100%)}
@@ -460,6 +466,18 @@
   .snow-fx .frost{background:radial-gradient(120% 120% at 50% 50%,transparent 62%,rgba(180,210,245,.07) 90%,rgba(150,190,235,.13))}
   .snow-fx .flake{position:absolute;top:-4%;border-radius:50%;background:radial-gradient(circle,#ffffff,rgba(220,235,255,.6));opacity:var(--o);animation-name:snowFall;animation-timing-function:linear;animation-iteration-count:infinite;will-change:transform}
   @keyframes snowFall{0%{transform:translateY(-6vh) translateX(0)}50%{transform:translateY(54vh) translateX(var(--sw))}100%{transform:translateY(116vh) translateX(0)}}
+  /* ---- Vibe: warm, cozy late-night — drifting auras, a breathing ambient glow, soft rising motes ---- */
+  html[data-theme="vibe"]{--bg:#120e1a;--card:rgba(30,23,42,.62);--card2:rgba(36,28,48,.55);--line:#2a2236;--line2:#392d49;--muted:#9a8ca8;--muted2:#bdaecb;--violet:#c6a9ff;--violet2:#a78bfa;--cyan:#f3b486}
+  html[data-theme="vibe"] body{background:radial-gradient(880px 500px at 22% -8%,rgba(168,85,247,.16),transparent 56%),radial-gradient(760px 460px at 86% 112%,rgba(251,146,60,.13),transparent 58%),linear-gradient(180deg,#1b1428 0%,#140f1f 55%,#0e0a16 100%)}
+  html[data-theme="vibe"] .glow{display:none}
+  .vibe-fx .vibe-aura{background:radial-gradient(42% 50% at 30% 32%,rgba(168,85,247,.17),transparent 70%);animation:vibeDrift 26s ease-in-out infinite;will-change:transform,opacity}
+  .vibe-fx .vibe-aura.a2{background:radial-gradient(46% 46% at 72% 66%,rgba(251,146,60,.14),transparent 70%);animation:vibeDrift2 33s ease-in-out infinite;animation-delay:-9s}
+  @keyframes vibeDrift{0%,100%{transform:translate3d(0,0,0) scale(1);opacity:.78}50%{transform:translate3d(4%,-3%,0) scale(1.08);opacity:1}}
+  @keyframes vibeDrift2{0%,100%{transform:translate3d(0,0,0) scale(1.05);opacity:.66}50%{transform:translate3d(-4%,3%,0) scale(1);opacity:.92}}
+  .vibe-fx .vibe-glow{left:50%;bottom:-16%;top:auto;width:120%;height:56%;transform:translateX(-50%);background:radial-gradient(60% 82% at 50% 100%,rgba(245,165,95,.11),transparent 72%);animation:vibeBreath 9.5s ease-in-out infinite;will-change:opacity}
+  @keyframes vibeBreath{0%,100%{opacity:.6}50%{opacity:1}}
+  .vibe-fx .vmote{position:absolute;bottom:-6%;border-radius:50%;background:radial-gradient(circle,rgba(255,224,180,.95),rgba(255,198,150,0));opacity:var(--o);animation-name:vibeRise;animation-timing-function:linear;animation-iteration-count:infinite;will-change:transform,opacity}
+  @keyframes vibeRise{0%{transform:translateY(0) translateX(0)}100%{transform:translateY(-118vh) translateX(12px)}}
   .changes{display:flex;flex-direction:column;gap:12px}
   .chg-intro{font-size:12px;color:var(--muted2);display:flex;align-items:center;gap:6px;margin:2px 2px 0}
   .chg-card{padding:14px 16px}
@@ -1164,10 +1182,10 @@ const state={ view:"calc", your:[], their:[],
   favorites: store.get("mm2.favorites",[]).filter(id=>BY_ID[id]),
   history: store.get("mm2.history",[]),
   recents: store.get("mm2.recents",[]).filter(id=>BY_ID[id]),
-  portfolio: store.get("mm2.portfolio",[]).filter(o=>o&&BY_ID[o.id]).map(o=>({id:o.id,qty:clampQty(o.qty)})), portQ:"", portCat:"All",
+  portfolio: store.get("mm2.portfolio",[]).filter(o=>o&&BY_ID[o.id]).map(o=>({id:o.id,qty:clampQty(o.qty)})), portQ:"", portCat:"Godly",
   savedPorts: store.get("mm2.savedPorts",[]).filter(s=>s&&Array.isArray(s.items)).map((s,i)=>({id:s.id!=null?s.id:Date.now()+i, name:String(s.name||("Portfolio "+(i+1))), items:s.items.filter(o=>o&&BY_ID[o.id]).map(o=>({id:o.id,qty:clampQty(o.qty)})), ts:s.ts||Date.now()})),
   portName:"", portConfirmDel:null,
-  theme: store.get("mm2.theme","midnight"),
+  theme: ((t)=>t==="midnight"?"vibe":t)(store.get("mm2.theme","vibe")),
   q_you:"", q_them:"", cat_you:"All", cat_them:"All", sort:"value",
   active_you:-1, active_them:-1 };
 function persist(){ store.set("mm2.favorites",state.favorites); store.set("mm2.history",state.history); store.set("mm2.theme",state.theme); store.set("mm2.recents",state.recents); store.set("mm2.portfolio",state.portfolio); store.set("mm2.savedPorts",state.savedPorts); }
@@ -1506,7 +1524,7 @@ function headerHTML(){
 }
 function footerHTML(){
   return `<footer class="ftr">
-    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30a</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Demand, rarity, stability & ranged values are sourced from <b>Supreme Values</b> (published per item); each site's value drives its own verdict. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
+    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30c</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Demand, rarity, stability & ranged values are sourced from <b>Supreme Values</b> (published per item); each site's value drives its own verdict. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
     <p>Community estimates — not endorsed by Roblox or Nikilis. Demand/hype/duping shift fast; confirm live before high-value trades. Saved trades & favorites are stored locally on this device only.</p>
     <div class="ftr-social">
       <a href="https://youtube.com/@wyalife" target="_blank" rel="noopener noreferrer" aria-label="YouTube">${icon("youtube",15)} YouTube</a>
@@ -1524,7 +1542,7 @@ function footerHTML(){
    - prefers-reduced-motion: particles are skipped entirely (themed gradients stay).
    - applyTheme() is idempotent and defensive: safe to call any number of times. */
 const THEME_LABELS={
-  midnight:"\ud83c\udf19 Midnight", rain:"\ud83c\udf27 Rain", horizon:"\ud83c\udf05 Horizon",
+  vibe:"\ud83c\udf0c Vibe", rain:"\ud83c\udf27 Rain", horizon:"\ud83c\udf05 Horizon",
   rainforest:"\ud83c\udf34 Rainforest", sakura:"\ud83c\udf38 Sakura",
   meteor:"\u2604\ufe0f Meteor", firewarm:"\ud83d\udd25 Fire", snowy:"\u2744\ufe0f Snowy"
 };
@@ -1533,7 +1551,11 @@ const _rng=(a,b)=>a+Math.random()*(b-a);
 const _f=(n,d)=>n.toFixed(d===undefined?2:d);
 function _reduceMotion(){ try{ return !!(window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches); }catch(e){ return false; } }
 const FX={
-  midnight(){ return ""; },
+  vibe(){
+    let m=""; for(let i=0;i<15;i++){ const l=_f(_rng(0,100)),sz=_f(_rng(3,7),0),dur=_f(_rng(12,21)),del=_f(_rng(-21,0)),o=_f(_rng(.10,.34));
+      m+=`<span class="vmote" style="left:${l}%;width:${sz}px;height:${sz}px;--o:${o};animation-duration:${dur}s;animation-delay:${del}s"></span>`; }
+    return `<div class="fxw vibe-fx"><div class="vibe-aura"></div><div class="vibe-aura a2"></div><div class="vibe-glow"></div><div>${m}</div></div>`;
+  },
   rain(){
     let d=""; for(let i=0;i<54;i++){ const l=_f(_rng(0,100)),dur=_f(_rng(.5,.95)),del=_f(_rng(-1.4,0)),h=_f(_rng(40,110),0),o=_f(_rng(.18,.55));
       d+=`<span class="drop" style="left:${l}%;height:${h}px;animation-duration:${dur}s;animation-delay:${del}s;opacity:${o}"></span>`; }
@@ -1577,12 +1599,25 @@ const FX={
     return `<div class="fxw snow-fx"><div class="frost"></div><div>${fl}</div></div>`;
   }
 };
+let _fxTimer=null;
+// Render the active theme's particle layer, crossfading on change. The layer is fully UNLOADED
+// (innerHTML emptied) whenever the page is hidden or reduced-motion is set — so a backgrounded
+// tab does zero compositing work and holds no particle DOM. Restored on return.
+function paintFX(){
+  const fx=document.getElementById("fx"); if(!fx) return;
+  if(document.hidden || _reduceMotion()){ clearTimeout(_fxTimer); if(fx.innerHTML!=="") fx.innerHTML=""; fx.style.opacity="0"; return; }
+  let html=""; const g=FX[state.theme]; try{ if(g) html=g(); }catch(e){ html=""; }
+  if(fx.innerHTML===html){ fx.style.opacity="1"; return; }
+  clearTimeout(_fxTimer);
+  const swap=()=>{ fx.innerHTML=html; requestAnimationFrame(()=>{ fx.style.opacity="1"; }); };
+  if(!fx.innerHTML) swap();                                  // first paint / restored from empty: fade in
+  else { fx.style.opacity="0"; _fxTimer=setTimeout(swap,360); } // theme change: dip-crossfade, no overlap
+}
 function applyTheme(){
-  const t=THEME_KEYS.indexOf(state.theme)>=0?state.theme:"midnight";
+  const t=THEME_KEYS.indexOf(state.theme)>=0?state.theme:"vibe";
   state.theme=t;
   const root=document.documentElement; if(root) root.setAttribute("data-theme",t);
-  const fx=document.getElementById("fx");
-  if(fx){ let html=""; if(!_reduceMotion()){ const g=FX[t]; try{ if(g) html=g(); }catch(e){ html=""; } } if(fx.innerHTML!==html) fx.innerHTML=html; }
+  paintFX();
 }
 let lastView=null;
 function render(){
@@ -1720,18 +1755,30 @@ async function loadChanges(){
 function invSignals(it){
   const liq=itemLiquidity01(it), des=itemDesire01(it), stab=stabScore01(it), trend=itemTrend01(it);
   const m=histMetrics(it.id);
-  const mom = m? clamp01(0.5+m.normSlope*2) : 0.5;
+  const raw=(HISTORY&&HISTORY.values)?HISTORY.values[it.id]:null;
+  const pts=Array.isArray(raw)?raw.filter(v=>v!=null&&isFinite(v)):[];
+  const mom = m? clamp01(0.5+m.normSlope*2) : 0.5;        // whole-window momentum
+  let recentMom=mom, chgPct=0, headroom=0.25;
+  if(pts.length>=2){ const f=pts[0], l=pts[pts.length-1]; chgPct=f>0?(l-f)/f*100:0; }
+  if(pts.length>=4){ const k=Math.max(2,Math.round(pts.length/3)); const rc=pts.slice(-k), bs=pts.slice(0,pts.length-k);
+    const ra=rc.reduce((a,b)=>a+b,0)/rc.length, ba=bs.reduce((a,b)=>a+b,0)/bs.length;
+    recentMom=clamp01(0.5 + (ba>0?(ra-ba)/ba:0)*1.6); }   // recency-weighted momentum (last third vs rest)
+  if(pts.length>=3){ const peak=Math.max(...pts), l=pts[pts.length-1]; headroom=peak>0?clamp01((peak-l)/peak):0; } // room below historical peak
   const vol = m? clamp01(m.cv/0.5) : 0.35;
   const r=reconcile(it); const vconf=r?r.conf/100:0.6, val=r?r.value:(combinedVal(it)||0);
-  return {liq,des,stab,trend,mom,vol,vconf,val,m};
+  const dataN = m? clamp01((m.n-3)/9) : 0;                // history sufficiency
+  const d01 = it.demand==null?0.4:it.demand/10, rar01 = it.rarity==null?0.4:it.rarity/10;
+  const activity = clamp01(0.6*d01 + 0.4*liq);            // trading-activity proxy (no live volume feed)
+  const longTerm = clamp01(0.34*stab + 0.24*Math.max(mom,recentMom) + 0.22*des + 0.20*headroom*(Math.max(mom,recentMom)>=0.5?1:0.4));
+  return {liq,des,stab,trend,mom,recentMom,chgPct,headroom,vol,vconf,val,dataN,d01,rar01,activity,longTerm,m};
 }
 const RISK_PROFILES=[
-  {k:"safe",label:"Safe",color:"#34d399",icon:"shield",blurb:"Liquid, in-demand, steady \u2014 easy to re-trade and unlikely to tank.",
-   score:x=>clamp100(100*clamp01(0.34*x.liq + 0.26*x.des + 0.24*x.stab + 0.16*x.vconf - 0.30*x.vol))},
-  {k:"balanced",label:"Balanced",color:"#a78bfa",icon:"scale",blurb:"A healthy mix of value retention and upside.",
-   score:x=>clamp100(100*clamp01(0.26*x.liq + 0.24*x.des + 0.22*x.trend + 0.16*x.mom + 0.12*x.vconf - 0.10*x.vol))},
-  {k:"aggressive",label:"High-risk",color:"#fb923c",icon:"trendingUp",blurb:"Momentum & swing potential \u2014 bigger upside, bigger risk.",
-   score:x=>clamp100(100*clamp01(0.45*x.mom + 0.20*x.des + 0.18*x.vol + 0.17*x.trend))}
+  {k:"safe",label:"Safe",color:"#34d399",icon:"shield",blurb:"Stable, high-demand, liquid \u2014 lowest trading risk.",
+   score:x=>clamp100(100*clamp01(0.30*x.liq + 0.24*x.des + 0.22*x.stab + 0.14*x.vconf + 0.10*x.activity - 0.34*x.vol - 0.14*Math.max(0,0.5-x.recentMom)))},
+  {k:"balanced",label:"Balanced",color:"#a78bfa",icon:"scale",blurb:"A mix of stability and growth potential.",
+   score:x=>clamp100(100*clamp01(0.22*x.liq + 0.20*x.des + 0.18*x.longTerm + 0.16*x.recentMom + 0.12*x.stab + 0.12*x.vconf - 0.10*x.vol))},
+  {k:"aggressive",label:"High-risk",color:"#fb923c",icon:"trendingUp",blurb:"Volatile with stronger upside \u2014 higher risk, higher reward.",
+   score:x=>clamp100(100*clamp01(0.34*x.recentMom + 0.20*x.headroom + 0.16*x.vol + 0.16*x.des + 0.14*x.mom))}
 ];
 const PORT_CATS=["All","Set","Godly","Chroma","Ancient","Collectibles","High-demand"];
 function catMatch(it,cat){
@@ -1740,15 +1787,21 @@ function catMatch(it,cat){
   if(cat==="High-demand") return it.demand!=null && it.demand>=7;
   return it.category===cat;
 }
+function recConfidence(x){ return Math.round(clamp100(40 + 30*x.vconf + 16*x.dataN + 12*(1-x.vol))); }
 function recWhy(o){
   const it=o.it, x=o.s, out=[];
+  if(x.chgPct>=3) out.push(`\u25b2 ${x.chgPct.toFixed(0)}% trend`);
+  else if(x.chgPct<=-3) out.push(`\u25bc ${Math.abs(x.chgPct).toFixed(0)}% trend`);
+  else out.push("Flat trend");
   if(it.demand!=null) out.push(`Demand ${it.demand}/10`);
   out.push(x.liq>=0.66?"Very liquid":x.liq>=0.45?"Tradeable":"Thin market");
-  const tw=recTrendWord(it); out.push(tw.charAt(0).toUpperCase()+tw.slice(1));
-  if(x.m){ if(x.m.normSlope>=0.08) out.push("Momentum up"); else if(x.m.normSlope<=-0.08) out.push("Momentum down"); }
-  if(x.vol>=0.6) out.push("Volatile");
-  if(x.vconf>=0.78) out.push("Sources agree");
-  return out.slice(0,4);
+  out.push(x.activity>=0.6?"Active trades":x.activity>=0.4?"Moderate activity":"Quiet market");
+  if(it.rarity!=null) out.push(`Rarity ${it.rarity}/10`);
+  if(x.vol>=0.55) out.push("Volatile");
+  if(x.headroom>=0.30 && x.recentMom>=0.5) out.push("Room to grow");
+  if(x.longTerm>=0.62) out.push("Strong long-term");
+  if(x.vconf>=0.80) out.push("Sources agree");
+  return out.slice(0,5);
 }
 function recOutlook(it){
   const tw=recTrendWord(it);
@@ -1761,14 +1814,19 @@ function recommendUpgrades(port,cat){
   const V=reconciledSide(port).value;
   const owned=new Set(port.map(o=>o.id));
   let pool=ALL.filter(it=> !it.placeholder && !owned.has(it.id) && reconcile(it) && catMatch(it,cat));
-  if(V>0) pool=pool.filter(it=>{ const v=reconcile(it).value; return v>=V*0.65 && v<=V*1.5; });
-  const scored=pool.map(it=>({it, s:invSignals(it)}));
+  // prefer realistic upgrade targets (wide band around inventory value); fall back to the whole
+  // category when the band is too thin (e.g. a category whose value ceiling sits below your inventory).
+  if(V>0){ const band=pool.filter(it=>{ const v=reconcile(it).value; return v>=V*0.4 && v<=V*4; }); if(band.length>=3) pool=band; }
+  const scored=pool.map(it=>{ const sg=invSignals(it); return {it, s:sg, conf:recConfidence(sg)}; });
+  const diversify = (cat==="All");          // within a single category, just take the top 3 by fit
   const out={};
   for(const p of RISK_PROFILES){
     const ranked=scored.map(o=>({...o, sc:p.score(o.s)})).sort((a,b)=>b.sc-a.sc);
-    const picks=[], seen=new Set();
-    for(const o of ranked){ if(picks.length>=3) break; if(seen.has(o.it.category)) continue; seen.add(o.it.category); picks.push(o); }
-    for(const o of ranked){ if(picks.length>=3) break; if(!picks.includes(o)) picks.push(o); }
+    let picks=[];
+    if(diversify){ const seen=new Set();
+      for(const o of ranked){ if(picks.length>=3) break; if(seen.has(o.it.category)) continue; seen.add(o.it.category); picks.push(o); }
+      for(const o of ranked){ if(picks.length>=3) break; if(!picks.includes(o)) picks.push(o); }
+    } else picks=ranked.slice(0,3);
     out[p.k]=picks;
   }
   return {V, out, count:pool.length};
@@ -1794,15 +1852,17 @@ function portfolioView(){
   }).join("") : `<p class="port-empty">No items yet. Search below to add what you own \u2014 then I\u2019ll value your inventory at reconciled True Value and suggest upgrade paths.</p>`;
   const rec=recommendUpgrades(port, state.portCat);
   const catChips=PORT_CATS.map(c=>`<button class="pcat${state.portCat===c?' on':''}" data-action="pcat" data-c="${c}">${c}</button>`).join("");
-  const card=(o)=>{ const it=o.it, r=reconcile(it), ol=recOutlook(it);
+  const card=(o,pf)=>{ const it=o.it, r=reconcile(it), ol=recOutlook(it);
+    const cc = o.conf>=75?"#34d399":o.conf>=55?"#fbbf24":"#fb7185";
     return `<div class="rec-card"><div class="rec-top"><span class="row gap8 min0">${itemIconTag(it,16)}<span class="rec-name">${esc(it.name)}</span></span><span class="rec-val">${r?fmt(Math.round(r.value)):"\u2014"}</span></div>
-      <div class="rec-mid">${badge(it.category)}<span class="rec-outlook" style="color:${ol.c};background:${ol.c}1f">${ol.t}</span><span class="rec-score" title="Match score for this profile">${Math.round(o.sc)}<span class="rec-score-s">/100</span></span></div>
+      <div class="rec-mid">${badge(it.category)}<span class="rec-outlook" style="color:${ol.c};background:${ol.c}1f">${ol.t}</span><span class="rec-conf" style="color:${cc};background:${cc}1f" title="Confidence \u2014 data quality, source agreement & price stability">${icon("shield",10)} ${o.conf}%</span></div>
       <div class="rec-why">${recWhy(o).map(w=>`<span class="rec-chip">${esc(w)}</span>`).join("")}</div>
+      <div class="rec-fit" title="How well it fits the ${esc(pf.label)} strategy"><span class="rec-fitbar"><span style="width:${Math.round(o.sc)}%;background:${pf.color}"></span></span><span class="rec-fitn">${Math.round(o.sc)}<span class="rec-score-s">/100 fit</span></span></div>
       <button class="rec-add" data-action="addFav" data-side="them" data-id="${it.id}">${icon("plus",12)} Model in calculator</button></div>`;
   };
   const profSection=(pf)=>{ const picks=rec.out[pf.k]||[];
     return `<div class="card rec-prof"><div class="rec-ph" style="color:${pf.color}">${icon(pf.icon,15)} ${pf.label}<span class="rec-blurb">${pf.blurb}</span></div>
-      ${picks.length?`<div class="rec-grid">${picks.map(card).join("")}</div>`:`<p class="port-empty">No ${state.portCat==="All"?"":esc(state.portCat)+" "}matches in your value range right now \u2014 try another category.</p>`}</div>`;
+      ${picks.length?`<div class="rec-grid">${picks.map(o=>card(o,pf)).join("")}</div>`:`<p class="port-empty">No ${state.portCat==="All"?"":esc(state.portCat)+" "}matches in your value range right now \u2014 try another category.</p>`}</div>`;
   };
   const sp=state.savedPorts;
   const savedList = sp.length ? sp.map(x=>{ const rr=reconciledSide(x.items), cnt=x.items.length, pend=String(state.portConfirmDel)===String(x.id);
@@ -1818,7 +1878,7 @@ function portfolioView(){
     <div class="sp-list">${savedList}</div>
   </div>`;
   return `<div class="portfolio">
-    <p class="chg-intro">${icon("box",12,"violet")} <b>Portfolio &amp; upgrade ideas</b> \u2014 add what you own; I value it at reconciled True Value and suggest trade-up targets across risk levels and categories, weighing demand, liquidity, stability, momentum &amp; volatility. Heuristics, not guarantees \u2014 confirm live before high-value trades.</p>
+    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 add what you own and your inventory is scored against every target on trend momentum, demand, rarity, value, liquidity, trading activity &amp; long-term potential. Each pick shows a <b>confidence</b> score (data quality + source agreement) and a strategy-fit bar. Transparent multi-signal model \u2014 not guarantees; confirm live before high-value trades.</p>
     <div class="card">
       <div class="port-sum"><div><div class="port-sum-l">Inventory True Value</div><div class="port-sum-v">${fmt(Math.round(inv.value))}</div>${inv.hi>inv.lo?`<div class="port-sum-band">${fmt(Math.round(inv.lo))} \u2013 ${fmt(Math.round(inv.hi))}</div>`:""}</div>
         <div class="port-sum-r"><span class="port-health" style="color:${hCol}">${icon("activity",13)} ${hLabel} holdings</span>${inv.value>0?`<span class="port-conf">${inv.conf}% conf</span>`:""}${inv.priceless?`<span class="port-pl">${inv.priceless} priceless</span>`:""}</div></div>
@@ -2151,6 +2211,7 @@ function __boot(){
   __lzGuard();         // soft "unauthorized copy" banner on non-allowlisted hosts
 }
 if(document.readyState==="loading"){ document.addEventListener("DOMContentLoaded",__boot,{once:true}); } else { __boot(); }
+try{ document.addEventListener("visibilitychange", paintFX); }catch(e){}  // pause/unload the FX layer for backgrounded tabs
 try{ const _mq=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)"); if(_mq&&_mq.addEventListener) _mq.addEventListener("change",applyTheme); }catch(e){}         // soft "unauthorized copy" banner on non-allowlisted hosts
 try { window.__lz = { wm: __LZ_WM, build: __LZ_BUILD, owner: "Lifenz", src: "youtube.com/@wyalife · discord.gg/resurrect" }; } catch (e) {}
 // Service worker intentionally DISABLED. Proactively remove any previously-installed worker and
