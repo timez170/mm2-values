@@ -320,19 +320,23 @@
   .rec-chip{font-size:10.5px;color:#cdd6e8;background:rgba(255,255,255,.05);border:1px solid var(--line);padding:2px 7px;border-radius:6px}
   .rec-add{margin-top:1px;display:inline-flex;align-items:center;justify-content:center;gap:5px;font-size:12px;font-weight:600;padding:6px 10px;border-radius:8px;border:1px solid var(--line2);background:transparent;color:#cdd6e8;cursor:pointer;font-family:var(--font);transition:border-color var(--fast),background var(--fast),color var(--fast)}
   .rec-add:hover{border-color:rgba(139,92,246,.5);background:rgba(139,92,246,.12);color:#fff}
-  .radar-card{padding:6px}
-  .radar-row{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;background:transparent;border:none;border-radius:9px;padding:9px 10px;cursor:pointer;color:var(--text);font-family:var(--font);transition:background var(--fast)}
-  .radar-row+.radar-row{border-top:1px solid var(--line)}
-  .radar-row:hover{background:rgba(124,58,237,.10)}
-  .radar-l{min-width:0;flex:1}
-  .radar-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:150px}
-  .radar-mid{display:flex;flex-direction:column;align-items:flex-end;gap:1px;font-variant-numeric:tabular-nums;flex:none}
-  .radar-tv{font-size:12px;color:#dce4f1}
-  .radar-split{font-size:10.5px;color:var(--muted)}
-  .radar-end{display:flex;align-items:center;gap:10px;flex:none}
-  .radar-gap{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;white-space:nowrap}
-  .radar-hi{font-size:9px;font-weight:700;opacity:.75;text-transform:uppercase;letter-spacing:.02em}
-  .radar-conf{font-size:12px;font-weight:700;font-variant-numeric:tabular-nums;min-width:36px;text-align:right}
+  /* ===== Saved portfolios ===== */
+  .sp-card{margin-bottom:12px}
+  .sp-h{font-size:13px;font-weight:800;display:flex;align-items:center;gap:7px;margin-bottom:11px}
+  .sp-n{font-size:11px;font-weight:700;color:var(--muted2);background:rgba(255,255,255,.06);padding:1px 8px;border-radius:9999px;margin-left:2px}
+  .sp-save{display:flex;gap:8px;align-items:stretch;margin-bottom:11px}
+  .sp-namebox{flex:1;padding:7px 11px}
+  .sp-savebtn{flex:none;white-space:nowrap}
+  .sp-list{display:flex;flex-direction:column;gap:5px}
+  .sp-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 10px;border-radius:10px;border:1px solid var(--line);background:rgba(14,19,32,.4)}
+  .sp-info{display:flex;flex-direction:column;gap:1px;min-width:0;flex:1}
+  .sp-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .sp-meta{font-size:11px;color:var(--muted2);font-variant-numeric:tabular-nums}
+  .sp-act{display:flex;align-items:center;gap:6px;flex:none}
+  .sp-q{font-size:12px;color:#fda4af;font-weight:600}
+  .sp-load{background:rgba(124,58,237,.28);color:#ddd6fe}
+  .sp-yes{background:rgba(225,29,72,.85);color:#fff}
+  .sp-no{background:rgba(42,55,80,.85);color:#cdd6e8}
   .tbl-wrap{overflow-x:auto}
   .tbl{width:100%;border-collapse:collapse;font-size:12px}
   .tbl th{text-align:left;font-weight:600;color:var(--muted);padding:5px 8px 5px 0;border-bottom:1px solid var(--line);white-space:nowrap}
@@ -1161,10 +1165,12 @@ const state={ view:"calc", your:[], their:[],
   history: store.get("mm2.history",[]),
   recents: store.get("mm2.recents",[]).filter(id=>BY_ID[id]),
   portfolio: store.get("mm2.portfolio",[]).filter(o=>o&&BY_ID[o.id]).map(o=>({id:o.id,qty:clampQty(o.qty)})), portQ:"", portCat:"All",
+  savedPorts: store.get("mm2.savedPorts",[]).filter(s=>s&&Array.isArray(s.items)).map((s,i)=>({id:s.id!=null?s.id:Date.now()+i, name:String(s.name||("Portfolio "+(i+1))), items:s.items.filter(o=>o&&BY_ID[o.id]).map(o=>({id:o.id,qty:clampQty(o.qty)})), ts:s.ts||Date.now()})),
+  portName:"", portConfirmDel:null,
   theme: store.get("mm2.theme","midnight"),
   q_you:"", q_them:"", cat_you:"All", cat_them:"All", sort:"value",
   active_you:-1, active_them:-1 };
-function persist(){ store.set("mm2.favorites",state.favorites); store.set("mm2.history",state.history); store.set("mm2.theme",state.theme); store.set("mm2.recents",state.recents); store.set("mm2.portfolio",state.portfolio); }
+function persist(){ store.set("mm2.favorites",state.favorites); store.set("mm2.history",state.history); store.set("mm2.theme",state.theme); store.set("mm2.recents",state.recents); store.set("mm2.portfolio",state.portfolio); store.set("mm2.savedPorts",state.savedPorts); }
 
 // transient animation flags
 let prevVerdictKey=null, justAdded={you:null,them:null}, firstPaint=true;
@@ -1495,12 +1501,12 @@ function headerHTML(){
       <div class="logo"><img class="logo-img" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgdmlld0JveD0iMCAwIDI1NiAyNTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMmMxZDUwIi8+PHN0b3Agb2Zmc2V0PSIwLjU1IiBzdG9wLWNvbG9yPSIjMWExMzMwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMTAwYzFjIi8+PC9saW5lYXJHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0icGlua0dsb3ciIGN4PSIwLjQyIiBjeT0iMC40IiByPSIwLjU1Ij48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmNDcyYjYiIHN0b3Atb3BhY2l0eT0iMC4zMiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2Y0NzJiNiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iY29vbEdsb3ciIGN4PSIwLjY2IiBjeT0iMC4zMiIgcj0iMC41Ij48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNjZmUwZmYiIHN0b3Atb3BhY2l0eT0iMC4yMCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2NmZTBmZiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic3RlZWwiIHgxPSIwIiB5MT0iMSIgeDI9IjEiIHkyPSIwIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM3Yzg4OWUiLz48c3RvcCBvZmZzZXQ9IjAuNSIgc3RvcC1jb2xvcj0iI2MyY2NkZCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2VlZjNmYiIvPjwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImdvbGQiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmN2NkNmIiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNjZjhhMmEiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJncmlwIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMzMyOTNmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMWMxNjI2Ii8+PC9saW5lYXJHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0icGV0YWwiIGN4PSIwLjUiIGN5PSIwLjIiIHI9IjAuOSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmZkOWVjIi8+PHN0b3Agb2Zmc2V0PSIwLjU1IiBzdG9wLWNvbG9yPSIjZjlhOGQ0Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZWM1ZmE2Ii8+PC9yYWRpYWxHcmFkaWVudD4KICAgIDxnIGlkPSJwZXRhbFNoYXBlIj48cGF0aCBkPSJNMCAwIEMgNiAtOSA2IC0xOSAwLjYgLTIzIEMgMC4yIC0yMiAwLjIgLTIyIDAgLTIxLjQgQyAtMC4yIC0yMiAtMC4yIC0yMiAtMC42IC0yMyBDIC02IC0xOSAtNiAtOSAwIDAgWiIvPjwvZz4KICA8L2RlZnM+CiAgPHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjI0NCIgaGVpZ2h0PSIyNDQiIHJ4PSI2MCIgZmlsbD0idXJsKCNiZykiLz4KICA8cmVjdCB4PSI2IiB5PSI2IiB3aWR0aD0iMjQ0IiBoZWlnaHQ9IjI0NCIgcng9IjYwIiBmaWxsPSJ1cmwoI3BpbmtHbG93KSIvPgogIDxyZWN0IHg9IjYiIHk9IjYiIHdpZHRoPSIyNDQiIGhlaWdodD0iMjQ0IiByeD0iNjAiIGZpbGw9InVybCgjY29vbEdsb3cpIi8+CiAgPHJlY3QgeD0iNi41IiB5PSI2LjUiIHdpZHRoPSIyNDMiIGhlaWdodD0iMjQzIiByeD0iNTkuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utb3BhY2l0eT0iMC4xMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KCiAgPCEtLSBrYXRhbmEgLS0+CiAgPGc+CiAgICA8IS0tIGJsYWRlIGJvZHkgLS0+CiAgICA8cGF0aCBkPSJNODQgMTcyIFExMzIgMTA0IDE5NiA2MiBMMjA4IDUwIEwyMDAgNzAgUTE0MCAxMTAgOTQgMTgyIFoiIGZpbGw9InVybCgjc3RlZWwpIiAvPgogICAgPCEtLSB5YWtpLWJhIChoYXJkZW5lZCBlZGdlLCBicmlnaHRlcikgLS0+CiAgICA8cGF0aCBkPSJNIDIwMC4wIDcwLjAgTCAxOTUuNCA3My4xIEwgMTkwLjkgNzYuMyBMIDE4Ni4zIDc5LjcgTCAxODEuOSA4My4xIEwgMTc3LjQgODYuNiBMIDE3My4xIDkwLjIgTCAxNjguNyA5My45IEwgMTY0LjQgOTcuNiBMIDE2MC4xIDEwMS41IEwgMTU1LjkgMTA1LjUgTCAxNTEuNyAxMDkuNiBMIDE0Ny42IDExMy43IEwgMTQzLjUgMTE4LjAgTCAxMzkuNCAxMjIuNCBMIDEzNS40IDEyNi44IEwgMTMxLjUgMTMxLjMgTCAxMjcuNSAxMzYuMCBMIDEyMy42IDE0MC43IEwgMTE5LjggMTQ1LjYgTCAxMTYuMCAxNTAuNSBMIDExMi4yIDE1NS41IEwgMTA4LjUgMTYwLjYgTCAxMDQuOCAxNjUuOCBMIDEwMS4yIDE3MS4xIEwgOTcuNiAxNzYuNSBMIDk0LjAgMTgyLjAgTCA4NS42IDE3Ni42IEwgOTEuMiAxNzIuMyBMIDk0LjUgMTY2LjYgTCA5Ni4yIDE1OS44IEwgOTkuMiAxNTMuOSBMIDEwNC42IDE0OS44IEwgMTEwLjUgMTQ2LjMgTCAxMTQuNiAxNDEuNSBMIDExNi43IDEzNS4xIEwgMTE5LjYgMTI5LjMgTCAxMjQuNyAxMjUuNSBMIDEzMC44IDEyMi43IEwgMTM1LjUgMTE4LjggTCAxMzguMiAxMTMuMCBMIDE0MS4wIDEwNy4zIEwgMTQ1LjkgMTAzLjYgTCAxNTIuMSAxMDEuNSBMIDE1Ny4zIDk4LjUgTCAxNjAuNiA5My40IEwgMTYzLjYgODcuOSBMIDE2OC4xIDg0LjMgTCAxNzQuMyA4Mi43IEwgMTgwLjAgODAuNiBMIDE4My45IDc2LjQgTCAxODcuMSA3MS4xIEwgMTkxLjUgNjcuNSBMIDE5Ny41IDY2LjMgWiIgZmlsbD0iI2ZmZmZmZiIgZmlsbC1vcGFjaXR5PSIwLjMwIi8+CiAgICA8IS0tIGhhbW9uICh3YXZ5IHRlbXBlciBsaW5lKSAtLT4KICAgIDxwYXRoIGQ9Ik0gMTk3LjUgNjYuMyBMIDE5MS41IDY3LjUgTCAxODcuMSA3MS4xIEwgMTgzLjkgNzYuNCBMIDE4MC4wIDgwLjYgTCAxNzQuMyA4Mi43IEwgMTY4LjEgODQuMyBMIDE2My42IDg3LjkgTCAxNjAuNiA5My40IEwgMTU3LjMgOTguNSBMIDE1Mi4xIDEwMS41IEwgMTQ1LjkgMTAzLjYgTCAxNDEuMCAxMDcuMyBMIDEzOC4yIDExMy4wIEwgMTM1LjUgMTE4LjggTCAxMzAuOCAxMjIuNyBMIDEyNC43IDEyNS41IEwgMTE5LjYgMTI5LjMgTCAxMTYuNyAxMzUuMSBMIDExNC42IDE0MS41IEwgMTEwLjUgMTQ2LjMgTCAxMDQuNiAxNDkuOCBMIDk5LjIgMTUzLjkgTCA5Ni4yIDE1OS44IEwgOTQuNSAxNjYuNiBMIDkxLjIgMTcyLjMgTCA4NS42IDE3Ni42IiBmaWxsPSJub25lIiBzdHJva2U9IiNlOGVlZmIiIHN0cm9rZS1vcGFjaXR5PSIwLjY1IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgICA8IS0tIGJyaWdodCBlZGdlIGhpZ2hsaWdodCAtLT4KICAgIDxwYXRoIGQ9Ik0yMDAgNzAgUTE0MCAxMTAgOTUgMTgxIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjg1IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogICAgPCEtLSBzdWJ0bGUgc3BpbmUgc2hhZGUgZm9yIGZvcm0gLS0+CiAgICA8cGF0aCBkPSJNODQgMTcyIFExMzIgMTA0IDE5NiA2MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNWI2Njc4IiBzdHJva2Utb3BhY2l0eT0iMC41IiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogICAgPCEtLSB0c3VrYSAoaGFuZGxlKSBkaWFtb25kIGl0byB3cmFwICsgbWVudWtpIGRpYW1vbmRzIC0tPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoODkgMTc3KSByb3RhdGUoMTMzLjYpIj4KICAgICAgPHJlY3QgeD0iMiIgeT0iLTgiIHdpZHRoPSI1MCIgaGVpZ2h0PSIxNiIgcng9IjQuNSIgZmlsbD0idXJsKCNncmlwKSIvPgogICAgICA8ZyBzdHJva2U9IiMxMDBjMTciIHN0cm9rZS13aWR0aD0iMS42IiBzdHJva2Utb3BhY2l0eT0iMC45IiBzdHJva2UtbGluZWNhcD0icm91bmQiPgogICAgICAgIDxwYXRoIGQ9Ik03IC04IDE2IDggTTE2IC04IDI1IDggTTI1IC04IDM0IDggTTM0IC04IDQzIDggTTQzIC04IDUwIDUiLz4KICAgICAgICA8cGF0aCBkPSJNMTYgLTggNyA4IE0yNSAtOCAxNiA4IE0zNCAtOCAyNSA4IE00MyAtOCAzNCA4IE01MCAtNSA0MyA4Ii8+CiAgICAgIDwvZz4KICAgICAgPGcgZmlsbD0iI2VmM2U1NyI+CiAgICAgICAgPHBhdGggZD0iTTExLjUgLTMuMSBMMTQuNiAwIEwxMS41IDMuMSBMOC40IDAgWiIvPjxwYXRoIGQ9Ik0yMC41IC0zLjEgTDIzLjYgMCBMMjAuNSAzLjEgTDE3LjQgMCBaIi8+PHBhdGggZD0iTTI5LjUgLTMuMSBMMzIuNiAwIEwyOS41IDMuMSBMMjYuNCAwIFoiLz48cGF0aCBkPSJNMzguNSAtMy4xIEw0MS42IDAgTDM4LjUgMy4xIEwzNS40IDAgWiIvPgogICAgICA8L2c+CiAgICAgIDwhLS0gZnVjaGkgKGNvbGxhcikgKyBrYXNoaXJhIChjYXApIC0tPgogICAgICA8cmVjdCB4PSIxLjUiIHk9Ii04IiB3aWR0aD0iNC41IiBoZWlnaHQ9IjE2IiByeD0iMS44IiBmaWxsPSJ1cmwoI2dvbGQpIi8+CiAgICAgIDxyZWN0IHg9IjQ4LjUiIHk9Ii04IiB3aWR0aD0iNS41IiBoZWlnaHQ9IjE2IiByeD0iMi42IiBmaWxsPSJ1cmwoI2dvbGQpIi8+CiAgICA8L2c+CgogICAgPCEtLSB0c3ViYSAoYm9sZCBzcXVhcmVkIGd1YXJkIGFjcm9zcyB0aGUgYmxhZGUpIC0tPgogICAgPGcgdHJhbnNmb3JtPSJyb3RhdGUoLTQ2LjQgODkgMTc3KSI+CiAgICAgIDxyZWN0IHg9IjgzLjUiIHk9IjE2MyIgd2lkdGg9IjExIiBoZWlnaHQ9IjI4IiByeD0iMy41IiBmaWxsPSJ1cmwoI2dvbGQpIi8+CiAgICAgIDxyZWN0IHg9Ijg2LjYiIHk9IjE2MyIgd2lkdGg9IjQuOCIgaGVpZ2h0PSIyOCIgcng9IjIiIGZpbGw9IiM3YzNhMjQiIGZpbGwtb3BhY2l0eT0iMC41Ii8+CiAgICA8L2c+CiAgPC9nPgoKICA8IS0tIHNha3VyYTogc21hbGwgYmxvc3NvbSArIGRyaWZ0aW5nIHBldGFscyAtLT4KICA8ZyBmaWxsPSJ1cmwoI3BldGFsKSI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNTAgODApIj4KICAgICAgPHVzZSBocmVmPSIjcGV0YWxTaGFwZSIgdHJhbnNmb3JtPSJyb3RhdGUoMCkgc2NhbGUoMC42MikiLz48dXNlIGhyZWY9IiNwZXRhbFNoYXBlIiB0cmFuc2Zvcm09InJvdGF0ZSg3Mikgc2NhbGUoMC42MikiLz48dXNlIGhyZWY9IiNwZXRhbFNoYXBlIiB0cmFuc2Zvcm09InJvdGF0ZSgxNDQpIHNjYWxlKDAuNjIpIi8+PHVzZSBocmVmPSIjcGV0YWxTaGFwZSIgdHJhbnNmb3JtPSJyb3RhdGUoMjE2KSBzY2FsZSgwLjYyKSIvPjx1c2UgaHJlZj0iI3BldGFsU2hhcGUiIHRyYW5zZm9ybT0icm90YXRlKDI4OCkgc2NhbGUoMC42MikiLz4KICAgICAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjIuNiIgZmlsbD0iI2ZmZjNkNiIvPgogICAgPC9nPgogICAgPHVzZSBocmVmPSIjcGV0YWxTaGFwZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAwIDY0KSByb3RhdGUoMzUpIHNjYWxlKDAuODIpIiBvcGFjaXR5PSIwLjk1Ii8+CiAgICA8dXNlIGhyZWY9IiNwZXRhbFNoYXBlIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3NCAxMTYpIHJvdGF0ZSgtMjUpIHNjYWxlKDAuNjYpIiBvcGFjaXR5PSIwLjkiLz4KICAgIDx1c2UgaHJlZj0iI3BldGFsU2hhcGUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MiAxNTApIHJvdGF0ZSgxMjUpIHNjYWxlKDAuNTgpIiBvcGFjaXR5PSIwLjgyIi8+CiAgPC9nPgo8L3N2Zz4=" alt="Lifenz MM2 Trade Calculator logo" width="38" height="38"/></div>
       <div><h1 class="title"><span class="brandmark">LIFENZ</span> MM2 Trade Calculator</h1><p class="tagline">${icon("sparkles",11,"violet")} Dual-source · value · demand · rarity · trend</p></div>
     </div>
-    <div class="row gap8 wrap">${themeSel}<div class="tabs">${tab("calc","calculator","Calculator",0)}${tab("history","history","Saved",state.history.length)}${tab("favorites","star","Favorites",state.favorites.length)}${tab("portfolio","box","Portfolio",state.portfolio.length)}${tab("changes","activity","Changes",0)}${tab("trends","trendingUp","Trends",0)}${tab("radar","target","Radar",0)}</div></div>
+    <div class="row gap8 wrap">${themeSel}<div class="tabs">${tab("calc","calculator","Calculator",0)}${tab("history","history","Saved",state.history.length)}${tab("favorites","star","Favorites",state.favorites.length)}${tab("portfolio","box","Portfolio",state.portfolio.length)}${tab("changes","activity","Changes",0)}${tab("trends","trendingUp","Trends",0)}</div></div>
   </header>`;
 }
 function footerHTML(){
   return `<footer class="ftr">
-    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Demand, rarity, stability & ranged values are sourced from <b>Supreme Values</b> (published per item); each site's value drives its own verdict. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
+    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30a</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Demand, rarity, stability & ranged values are sourced from <b>Supreme Values</b> (published per item); each site's value drives its own verdict. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
     <p>Community estimates — not endorsed by Roblox or Nikilis. Demand/hype/duping shift fast; confirm live before high-value trades. Saved trades & favorites are stored locally on this device only.</p>
     <div class="ftr-social">
       <a href="https://youtube.com/@wyalife" target="_blank" rel="noopener noreferrer" aria-label="YouTube">${icon("youtube",15)} YouTube</a>
@@ -1583,7 +1589,7 @@ function render(){
   const app=document.getElementById("app");
   const sc={}; ["you","them"].forEach(s=>{ const el=document.getElementById("items-"+s); if(el) sc[s]=el.scrollTop; });
   const entering = state.view!==lastView;
-  const body = state.view==="calc"?calcView(entering) : state.view==="history"?historyView() : state.view==="changes"?changesView() : state.view==="portfolio"?portfolioView() : state.view==="trends"?trendsView() : state.view==="radar"?radarView() : favoritesView();
+  const body = state.view==="calc"?calcView(entering) : state.view==="history"?historyView() : state.view==="changes"?changesView() : state.view==="portfolio"?portfolioView() : state.view==="trends"?trendsView() : favoritesView();
   app.innerHTML = headerHTML()+`<div class="${entering?'view-in':''}" id="view">${body}</div>`+footerHTML();
   ["you","them"].forEach(s=>{ const el=document.getElementById("items-"+s); if(el&&sc[s]) el.scrollTop=sc[s]; });
   // gauge marker glides only when the verdict category changes
@@ -1798,6 +1804,19 @@ function portfolioView(){
     return `<div class="card rec-prof"><div class="rec-ph" style="color:${pf.color}">${icon(pf.icon,15)} ${pf.label}<span class="rec-blurb">${pf.blurb}</span></div>
       ${picks.length?`<div class="rec-grid">${picks.map(card).join("")}</div>`:`<p class="port-empty">No ${state.portCat==="All"?"":esc(state.portCat)+" "}matches in your value range right now \u2014 try another category.</p>`}</div>`;
   };
+  const sp=state.savedPorts;
+  const savedList = sp.length ? sp.map(x=>{ const rr=reconciledSide(x.items), cnt=x.items.length, pend=String(state.portConfirmDel)===String(x.id);
+    return `<div class="sp-row">
+      <span class="sp-info min0"><span class="sp-name">${esc(x.name)}</span><span class="sp-meta">${cnt} item${cnt===1?"":"s"} \u00b7 ${fmt(Math.round(rr.value))}</span></span>
+      ${pend
+        ? `<span class="sp-act"><span class="sp-q">Delete?</span><button class="btn-sm sp-yes" data-action="pdelyes" data-id="${x.id}">Delete</button><button class="btn-sm sp-no" data-action="pdelno">Cancel</button></span>`
+        : `<span class="sp-act"><button class="btn-sm sp-load" data-action="pload" data-id="${x.id}">Load</button><button class="qbtn rm" data-action="pdel" data-id="${x.id}" aria-label="Delete ${esc(x.name)}">${icon("trash",13)}</button></span>`}
+    </div>`; }).join("") : `<p class="port-empty">No saved portfolios yet. Build your inventory below, name it, and tap Save \u2014 it stays on this device.</p>`;
+  const savedCard = `<div class="card sp-card">
+    <div class="sp-h">${icon("history",14,"violet")} Saved portfolios${sp.length?`<span class="sp-n">${sp.length}</span>`:""}</div>
+    <div class="sp-save"><div class="search-box sp-namebox">${icon("star",14,"mut")}<input id="port-name" class="port-search" placeholder="Name this portfolio\u2026" value="${esc(state.portName||"")}" autocomplete="off" spellcheck="false" maxlength="40"/></div><button class="btn-sm btn-violet sp-savebtn" data-action="psave"${state.portfolio.length?"":" disabled"}>Save current</button></div>
+    <div class="sp-list">${savedList}</div>
+  </div>`;
   return `<div class="portfolio">
     <p class="chg-intro">${icon("box",12,"violet")} <b>Portfolio &amp; upgrade ideas</b> \u2014 add what you own; I value it at reconciled True Value and suggest trade-up targets across risk levels and categories, weighing demand, liquidity, stability, momentum &amp; volatility. Heuristics, not guarantees \u2014 confirm live before high-value trades.</p>
     <div class="card">
@@ -1806,6 +1825,7 @@ function portfolioView(){
       <div class="port-add"><div class="search-box">${icon("search",15,"mut")}<input class="port-search" id="port-search" placeholder="Search items you own\u2026" value="${esc(state.portQ||"")}" autocomplete="off" spellcheck="false"/></div><div id="port-results" class="port-results">${portSearchHTML(state.portQ)}</div></div>
       <div class="port-list">${invRows}</div>
     </div>
+    ${savedCard}
     <div class="rec-catbar">${catChips}</div>
     ${RISK_PROFILES.map(profSection).join("")}
   </div>`;
@@ -1848,26 +1868,6 @@ function trendsView(){
     ${sec("Falling","trendingDown","#fb7185",fallers,"Nothing notably down right now.")}
     ${sec("Most volatile","activity","#fbbf24",volatile,"Not enough movement yet.")}
   </div>`;
-}
-function radarView(){
-  const rows = ALL.filter(it=> !it.placeholder && it.supreme!=null && it.mm2!=null)
-    .map(it=>({it, r:reconcile(it)}))
-    .filter(o=> o.r && o.r.divPct>=2)
-    .sort((a,b)=> b.r.divPct - a.r.divPct)
-    .slice(0,40);
-  if(!rows.length) return `<div class="noTrade">${icon("target",30)}<p>No notable cross-list gaps right now \u2014 Supreme and MM2Values are in close agreement.</p></div>`;
-  const row=({it,r})=>{
-    const hi = r.higher==="supreme"?"Supreme":"MM2";
-    const hiCol = r.higher==="supreme"?"#c4b5fd":"#67e8f9";
-    const cc = r.conf>=75?"#34d399":r.conf>=50?"#fbbf24":"#fb7185";
-    return `<button class="radar-row" data-action="qadd" data-side="them" data-id="${it.id}" title="Add ${esc(it.name)} to You get">
-      <span class="radar-l row gap8 min0">${itemIconTag(it,15)}<span class="radar-name">${esc(it.name)}</span>${badge(it.category)}</span>
-      <span class="radar-mid"><span class="radar-tv">TV <b class="tab-num">${fmt(Math.round(r.value))}</b></span><span class="radar-split"><span style="color:#c4b5fd">${fmt(it.supreme)}</span> / <span style="color:#67e8f9">${fmt(it.mm2)}</span></span></span>
-      <span class="radar-end"><span class="radar-gap" style="color:${hiCol}">\u25b2 ${r.divPct.toFixed(0)}% <span class="radar-hi">${hi}</span></span><span class="radar-conf" style="color:${cc}" title="Confidence in this value">${r.conf}%</span></span>
-    </button>`;
-  };
-  return `<div class="radar"><p class="chg-intro">${icon("target",12,"violet")} <b>Mispricing radar</b> \u2014 the items Supreme and MM2Values disagree on most. A big gap means the two lists are fighting over a price: room to buy on the low list and sell on the high one, or a sign the value is volatile. <b>TV</b> = reconciled True Value \u00b7 <b>%</b> = confidence in it. Tap a row to add it to <b>You get</b>.</p>
-    <div class="card radar-card">${rows.map(row).join("")}</div></div>`;
 }
 function changesView(){
   if(!CHANGELOG_URL) return `<div class="noTrade">${icon("history",30)}<p>Live change history appears here when the calculator is pulling values from a published <b>values.json</b>.</p></div>`;
@@ -2027,6 +2027,7 @@ function cardCopy(){ cardToBlob(async b=>{ try{ await navigator.clipboard.write(
    =========================================================================== */
 const app=document.getElementById("app");
 app.addEventListener("input",e=>{
+  const _pn=e.target.closest("#port-name"); if(_pn){ state.portName=_pn.value; return; }
   const _ps=e.target.closest("#port-search"); if(_ps){ state.portQ=_ps.value; const _r=document.getElementById("port-results"); if(_r) _r.innerHTML=portSearchHTML(_ps.value); return; }
   const inp=e.target.closest(".search-input"); if(!inp) return;
   const side=inp.dataset.side; state["q_"+side]=inp.value; state["active_"+side]=-1; showDropdown(side);
@@ -2055,7 +2056,7 @@ app.addEventListener("change",e=>{
 });
 app.addEventListener("click",e=>{
   const b=e.target.closest("[data-action]"); if(!b) return; const a=b.dataset.action;
-  if(a==="view"){ if(state.view!==b.dataset.view){ state.view=b.dataset.view; prevVerdictKey=null; render(); if(state.view==="changes") loadChanges(); } }
+  if(a==="view"){ if(state.view!==b.dataset.view){ state.view=b.dataset.view; prevVerdictKey=null; state.portConfirmDel=null; render(); if(state.view==="changes") loadChanges(); } }
   else if(a==="share"){ shareTrade(); }
   else if(a==="card"){ openCardModal(); }
   else if(a==="reloadChanges"){ changesLoaded=false; loadChanges(); }
@@ -2064,6 +2065,16 @@ app.addEventListener("click",e=>{
   else if(a==="pqty"){ const id=b.dataset.id, d=parseInt(b.dataset.d,10); const o=state.portfolio.find(x=>x.id===id); if(o){ const nq=o.qty+d; if(nq<1) state.portfolio=state.portfolio.filter(x=>x.id!==id); else o.qty=clampQty(nq); persist(); render(); } }
   else if(a==="prm"){ state.portfolio=state.portfolio.filter(x=>x.id!==b.dataset.id); persist(); render(); }
   else if(a==="pcat"){ if(state.portCat!==b.dataset.c){ state.portCat=b.dataset.c; render(); } }
+  else if(a==="psave"){ const nm=(state.portName||"").trim().replace(/\s+/g," ").slice(0,40);
+    if(!state.portfolio.length){ toast("Add items to your inventory first"); }
+    else { const name=nm||("Portfolio "+(state.savedPorts.length+1)); const items=state.portfolio.map(o=>({id:o.id,qty:o.qty}));
+      const ex=state.savedPorts.find(x=>x.name.toLowerCase()===name.toLowerCase());
+      if(ex){ ex.items=items; ex.ts=Date.now(); } else { state.savedPorts.unshift({id:Date.now(), name, items, ts:Date.now()}); state.savedPorts=state.savedPorts.slice(0,24); }
+      state.portName=""; state.portConfirmDel=null; persist(); toast("\u2713 Saved \u201c"+name+"\u201d"); render(); } }
+  else if(a==="pload"){ const x=state.savedPorts.find(z=>String(z.id)===b.dataset.id); if(x){ state.portfolio=x.items.filter(o=>BY_ID[o.id]).map(o=>({id:o.id,qty:clampQty(o.qty)})); state.portConfirmDel=null; persist(); toast("Loaded \u201c"+x.name+"\u201d"); render(); } }
+  else if(a==="pdel"){ state.portConfirmDel = (String(state.portConfirmDel)===b.dataset.id)?null:b.dataset.id; render(); }
+  else if(a==="pdelyes"){ const id=b.dataset.id; const x=state.savedPorts.find(z=>String(z.id)===id); state.savedPorts=state.savedPorts.filter(z=>String(z.id)!==id); state.portConfirmDel=null; persist(); if(x) toast("Deleted \u201c"+x.name+"\u201d"); render(); }
+  else if(a==="pdelno"){ state.portConfirmDel=null; render(); }
   else if(a==="clearq"){ const side=b.dataset.side; state["q_"+side]=""; render(); const si=document.getElementById("si-"+side); if(si) si.focus(); }
   else if(a==="qty"){ changeQty(b.dataset.side,b.dataset.id,parseInt(b.dataset.d,10)); }
   else if(a==="rm"){ removeItem(b.dataset.side,b.dataset.id); }
