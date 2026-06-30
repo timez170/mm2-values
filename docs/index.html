@@ -259,32 +259,6 @@
   .range-note b{color:#dce4f1;font-variant-numeric:tabular-nums}
   .badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;padding:2px 6px;border-radius:5px;white-space:nowrap}
   .witem-ic{display:inline-flex;align-items:center;flex:none;opacity:.92}
-  /* ===== Trade Safety ===== */
-  .safety .safe-card{margin-bottom:12px}
-  .safe-grid{display:flex;flex-direction:column;gap:7px}
-  .safe-factor{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:9px 12px;border-radius:11px;border:1px solid var(--line);background:rgba(14,19,32,.5);color:var(--muted2);font-size:13px;font-weight:500;cursor:pointer;font-family:var(--font);transition:border-color var(--fast),background var(--fast),color var(--fast)}
-  .safe-factor:hover{border-color:var(--line2);color:#dce4f1}
-  .safe-factor.on{border-color:rgba(251,113,133,.5);background:rgba(251,113,133,.12);color:#f3f6fc}
-  .safe-tick{width:18px;height:18px;border-radius:6px;border:1.5px solid var(--line2);display:inline-flex;align-items:center;justify-content:center;flex:none;color:#fb7185}
-  .safe-factor.on .safe-tick{background:rgba(251,113,133,.22);border-color:rgba(251,113,133,.6)}
-  .safe-flabel{min-width:0}
-  .safe-verdict{font-size:13px;font-weight:700;display:inline-flex;align-items:center;gap:6px}
-  .safe-score{font-size:18px;font-weight:800;font-variant-numeric:tabular-nums}
-  .safe-score-max{font-size:11px;font-weight:600;color:var(--muted);margin-left:2px}
-  .safe-warns{list-style:none;margin:13px 0 0;padding:0;display:flex;flex-direction:column;gap:8px}
-  .safe-warns li{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:#cdd6e8;line-height:1.45}
-  .safe-wd{width:6px;height:6px;border-radius:9999px;margin-top:6px;flex:none}
-  .safe-chat{width:100%;box-sizing:border-box;resize:vertical;border-radius:11px;border:1px solid var(--line2);background:rgba(10,14,24,.7);color:var(--text);font-family:var(--font);font-size:13px;padding:10px 12px;line-height:1.45}
-  .safe-chat:focus{outline:none;border-color:#384664}
-  .scan-out{margin-top:11px}
-  .scan-empty,.scan-clear{font-size:12.5px;color:var(--muted2);display:flex;align-items:flex-start;gap:8px;line-height:1.45}
-  .scan-clear{color:#6ee7b7}
-  .scan-head{font-size:13px;font-weight:700;display:flex;align-items:center;gap:7px}
-  .scan-list{list-style:none;margin:9px 0 0;padding:0;display:flex;flex-direction:column;gap:7px}
-  .scan-flag{display:flex;align-items:flex-start;gap:9px;font-size:12.5px;color:#cdd6e8;line-height:1.4}
-  .scan-dot{width:7px;height:7px;border-radius:9999px;margin-top:5px;flex:none}
-  .safe-check{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
-  .safe-check li{display:flex;align-items:flex-start;gap:9px;font-size:13px;color:#cdd6e8;line-height:1.45}
   .radar-card{padding:6px}
   .radar-row{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;background:transparent;border:none;border-radius:9px;padding:9px 10px;cursor:pointer;color:var(--text);font-family:var(--font);transition:background var(--fast)}
   .radar-row+.radar-row{border-top:1px solid var(--line)}
@@ -1125,7 +1099,6 @@ const state={ view:"calc", your:[], their:[],
   favorites: store.get("mm2.favorites",[]).filter(id=>BY_ID[id]),
   history: store.get("mm2.history",[]),
   recents: store.get("mm2.recents",[]).filter(id=>BY_ID[id]),
-  safety:{ flags:{}, chat:"" },
   theme: store.get("mm2.theme","midnight"),
   q_you:"", q_them:"", cat_you:"All", cat_them:"All", sort:"value",
   active_you:-1, active_them:-1 };
@@ -1460,7 +1433,7 @@ function headerHTML(){
       <div class="logo"><img class="logo-img" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgdmlld0JveD0iMCAwIDI1NiAyNTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMmMxZDUwIi8+PHN0b3Agb2Zmc2V0PSIwLjU1IiBzdG9wLWNvbG9yPSIjMWExMzMwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMTAwYzFjIi8+PC9saW5lYXJHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0icGlua0dsb3ciIGN4PSIwLjQyIiBjeT0iMC40IiByPSIwLjU1Ij48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmNDcyYjYiIHN0b3Atb3BhY2l0eT0iMC4zMiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2Y0NzJiNiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iY29vbEdsb3ciIGN4PSIwLjY2IiBjeT0iMC4zMiIgcj0iMC41Ij48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNjZmUwZmYiIHN0b3Atb3BhY2l0eT0iMC4yMCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2NmZTBmZiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic3RlZWwiIHgxPSIwIiB5MT0iMSIgeDI9IjEiIHkyPSIwIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM3Yzg4OWUiLz48c3RvcCBvZmZzZXQ9IjAuNSIgc3RvcC1jb2xvcj0iI2MyY2NkZCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2VlZjNmYiIvPjwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImdvbGQiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmN2NkNmIiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNjZjhhMmEiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJncmlwIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMzMyOTNmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMWMxNjI2Ii8+PC9saW5lYXJHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0icGV0YWwiIGN4PSIwLjUiIGN5PSIwLjIiIHI9IjAuOSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmZkOWVjIi8+PHN0b3Agb2Zmc2V0PSIwLjU1IiBzdG9wLWNvbG9yPSIjZjlhOGQ0Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZWM1ZmE2Ii8+PC9yYWRpYWxHcmFkaWVudD4KICAgIDxnIGlkPSJwZXRhbFNoYXBlIj48cGF0aCBkPSJNMCAwIEMgNiAtOSA2IC0xOSAwLjYgLTIzIEMgMC4yIC0yMiAwLjIgLTIyIDAgLTIxLjQgQyAtMC4yIC0yMiAtMC4yIC0yMiAtMC42IC0yMyBDIC02IC0xOSAtNiAtOSAwIDAgWiIvPjwvZz4KICA8L2RlZnM+CiAgPHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjI0NCIgaGVpZ2h0PSIyNDQiIHJ4PSI2MCIgZmlsbD0idXJsKCNiZykiLz4KICA8cmVjdCB4PSI2IiB5PSI2IiB3aWR0aD0iMjQ0IiBoZWlnaHQ9IjI0NCIgcng9IjYwIiBmaWxsPSJ1cmwoI3BpbmtHbG93KSIvPgogIDxyZWN0IHg9IjYiIHk9IjYiIHdpZHRoPSIyNDQiIGhlaWdodD0iMjQ0IiByeD0iNjAiIGZpbGw9InVybCgjY29vbEdsb3cpIi8+CiAgPHJlY3QgeD0iNi41IiB5PSI2LjUiIHdpZHRoPSIyNDMiIGhlaWdodD0iMjQzIiByeD0iNTkuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utb3BhY2l0eT0iMC4xMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KCiAgPCEtLSBrYXRhbmEgLS0+CiAgPGc+CiAgICA8IS0tIGJsYWRlIGJvZHkgLS0+CiAgICA8cGF0aCBkPSJNODQgMTcyIFExMzIgMTA0IDE5NiA2MiBMMjA4IDUwIEwyMDAgNzAgUTE0MCAxMTAgOTQgMTgyIFoiIGZpbGw9InVybCgjc3RlZWwpIiAvPgogICAgPCEtLSB5YWtpLWJhIChoYXJkZW5lZCBlZGdlLCBicmlnaHRlcikgLS0+CiAgICA8cGF0aCBkPSJNIDIwMC4wIDcwLjAgTCAxOTUuNCA3My4xIEwgMTkwLjkgNzYuMyBMIDE4Ni4zIDc5LjcgTCAxODEuOSA4My4xIEwgMTc3LjQgODYuNiBMIDE3My4xIDkwLjIgTCAxNjguNyA5My45IEwgMTY0LjQgOTcuNiBMIDE2MC4xIDEwMS41IEwgMTU1LjkgMTA1LjUgTCAxNTEuNyAxMDkuNiBMIDE0Ny42IDExMy43IEwgMTQzLjUgMTE4LjAgTCAxMzkuNCAxMjIuNCBMIDEzNS40IDEyNi44IEwgMTMxLjUgMTMxLjMgTCAxMjcuNSAxMzYuMCBMIDEyMy42IDE0MC43IEwgMTE5LjggMTQ1LjYgTCAxMTYuMCAxNTAuNSBMIDExMi4yIDE1NS41IEwgMTA4LjUgMTYwLjYgTCAxMDQuOCAxNjUuOCBMIDEwMS4yIDE3MS4xIEwgOTcuNiAxNzYuNSBMIDk0LjAgMTgyLjAgTCA4NS42IDE3Ni42IEwgOTEuMiAxNzIuMyBMIDk0LjUgMTY2LjYgTCA5Ni4yIDE1OS44IEwgOTkuMiAxNTMuOSBMIDEwNC42IDE0OS44IEwgMTEwLjUgMTQ2LjMgTCAxMTQuNiAxNDEuNSBMIDExNi43IDEzNS4xIEwgMTE5LjYgMTI5LjMgTCAxMjQuNyAxMjUuNSBMIDEzMC44IDEyMi43IEwgMTM1LjUgMTE4LjggTCAxMzguMiAxMTMuMCBMIDE0MS4wIDEwNy4zIEwgMTQ1LjkgMTAzLjYgTCAxNTIuMSAxMDEuNSBMIDE1Ny4zIDk4LjUgTCAxNjAuNiA5My40IEwgMTYzLjYgODcuOSBMIDE2OC4xIDg0LjMgTCAxNzQuMyA4Mi43IEwgMTgwLjAgODAuNiBMIDE4My45IDc2LjQgTCAxODcuMSA3MS4xIEwgMTkxLjUgNjcuNSBMIDE5Ny41IDY2LjMgWiIgZmlsbD0iI2ZmZmZmZiIgZmlsbC1vcGFjaXR5PSIwLjMwIi8+CiAgICA8IS0tIGhhbW9uICh3YXZ5IHRlbXBlciBsaW5lKSAtLT4KICAgIDxwYXRoIGQ9Ik0gMTk3LjUgNjYuMyBMIDE5MS41IDY3LjUgTCAxODcuMSA3MS4xIEwgMTgzLjkgNzYuNCBMIDE4MC4wIDgwLjYgTCAxNzQuMyA4Mi43IEwgMTY4LjEgODQuMyBMIDE2My42IDg3LjkgTCAxNjAuNiA5My40IEwgMTU3LjMgOTguNSBMIDE1Mi4xIDEwMS41IEwgMTQ1LjkgMTAzLjYgTCAxNDEuMCAxMDcuMyBMIDEzOC4yIDExMy4wIEwgMTM1LjUgMTE4LjggTCAxMzAuOCAxMjIuNyBMIDEyNC43IDEyNS41IEwgMTE5LjYgMTI5LjMgTCAxMTYuNyAxMzUuMSBMIDExNC42IDE0MS41IEwgMTEwLjUgMTQ2LjMgTCAxMDQuNiAxNDkuOCBMIDk5LjIgMTUzLjkgTCA5Ni4yIDE1OS44IEwgOTQuNSAxNjYuNiBMIDkxLjIgMTcyLjMgTCA4NS42IDE3Ni42IiBmaWxsPSJub25lIiBzdHJva2U9IiNlOGVlZmIiIHN0cm9rZS1vcGFjaXR5PSIwLjY1IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgICA8IS0tIGJyaWdodCBlZGdlIGhpZ2hsaWdodCAtLT4KICAgIDxwYXRoIGQ9Ik0yMDAgNzAgUTE0MCAxMTAgOTUgMTgxIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjg1IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogICAgPCEtLSBzdWJ0bGUgc3BpbmUgc2hhZGUgZm9yIGZvcm0gLS0+CiAgICA8cGF0aCBkPSJNODQgMTcyIFExMzIgMTA0IDE5NiA2MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNWI2Njc4IiBzdHJva2Utb3BhY2l0eT0iMC41IiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogICAgPCEtLSB0c3VrYSAoaGFuZGxlKSBkaWFtb25kIGl0byB3cmFwICsgbWVudWtpIGRpYW1vbmRzIC0tPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoODkgMTc3KSByb3RhdGUoMTMzLjYpIj4KICAgICAgPHJlY3QgeD0iMiIgeT0iLTgiIHdpZHRoPSI1MCIgaGVpZ2h0PSIxNiIgcng9IjQuNSIgZmlsbD0idXJsKCNncmlwKSIvPgogICAgICA8ZyBzdHJva2U9IiMxMDBjMTciIHN0cm9rZS13aWR0aD0iMS42IiBzdHJva2Utb3BhY2l0eT0iMC45IiBzdHJva2UtbGluZWNhcD0icm91bmQiPgogICAgICAgIDxwYXRoIGQ9Ik03IC04IDE2IDggTTE2IC04IDI1IDggTTI1IC04IDM0IDggTTM0IC04IDQzIDggTTQzIC04IDUwIDUiLz4KICAgICAgICA8cGF0aCBkPSJNMTYgLTggNyA4IE0yNSAtOCAxNiA4IE0zNCAtOCAyNSA4IE00MyAtOCAzNCA4IE01MCAtNSA0MyA4Ii8+CiAgICAgIDwvZz4KICAgICAgPGcgZmlsbD0iI2VmM2U1NyI+CiAgICAgICAgPHBhdGggZD0iTTExLjUgLTMuMSBMMTQuNiAwIEwxMS41IDMuMSBMOC40IDAgWiIvPjxwYXRoIGQ9Ik0yMC41IC0zLjEgTDIzLjYgMCBMMjAuNSAzLjEgTDE3LjQgMCBaIi8+PHBhdGggZD0iTTI5LjUgLTMuMSBMMzIuNiAwIEwyOS41IDMuMSBMMjYuNCAwIFoiLz48cGF0aCBkPSJNMzguNSAtMy4xIEw0MS42IDAgTDM4LjUgMy4xIEwzNS40IDAgWiIvPgogICAgICA8L2c+CiAgICAgIDwhLS0gZnVjaGkgKGNvbGxhcikgKyBrYXNoaXJhIChjYXApIC0tPgogICAgICA8cmVjdCB4PSIxLjUiIHk9Ii04IiB3aWR0aD0iNC41IiBoZWlnaHQ9IjE2IiByeD0iMS44IiBmaWxsPSJ1cmwoI2dvbGQpIi8+CiAgICAgIDxyZWN0IHg9IjQ4LjUiIHk9Ii04IiB3aWR0aD0iNS41IiBoZWlnaHQ9IjE2IiByeD0iMi42IiBmaWxsPSJ1cmwoI2dvbGQpIi8+CiAgICA8L2c+CgogICAgPCEtLSB0c3ViYSAoYm9sZCBzcXVhcmVkIGd1YXJkIGFjcm9zcyB0aGUgYmxhZGUpIC0tPgogICAgPGcgdHJhbnNmb3JtPSJyb3RhdGUoLTQ2LjQgODkgMTc3KSI+CiAgICAgIDxyZWN0IHg9IjgzLjUiIHk9IjE2MyIgd2lkdGg9IjExIiBoZWlnaHQ9IjI4IiByeD0iMy41IiBmaWxsPSJ1cmwoI2dvbGQpIi8+CiAgICAgIDxyZWN0IHg9Ijg2LjYiIHk9IjE2MyIgd2lkdGg9IjQuOCIgaGVpZ2h0PSIyOCIgcng9IjIiIGZpbGw9IiM3YzNhMjQiIGZpbGwtb3BhY2l0eT0iMC41Ii8+CiAgICA8L2c+CiAgPC9nPgoKICA8IS0tIHNha3VyYTogc21hbGwgYmxvc3NvbSArIGRyaWZ0aW5nIHBldGFscyAtLT4KICA8ZyBmaWxsPSJ1cmwoI3BldGFsKSI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNTAgODApIj4KICAgICAgPHVzZSBocmVmPSIjcGV0YWxTaGFwZSIgdHJhbnNmb3JtPSJyb3RhdGUoMCkgc2NhbGUoMC42MikiLz48dXNlIGhyZWY9IiNwZXRhbFNoYXBlIiB0cmFuc2Zvcm09InJvdGF0ZSg3Mikgc2NhbGUoMC42MikiLz48dXNlIGhyZWY9IiNwZXRhbFNoYXBlIiB0cmFuc2Zvcm09InJvdGF0ZSgxNDQpIHNjYWxlKDAuNjIpIi8+PHVzZSBocmVmPSIjcGV0YWxTaGFwZSIgdHJhbnNmb3JtPSJyb3RhdGUoMjE2KSBzY2FsZSgwLjYyKSIvPjx1c2UgaHJlZj0iI3BldGFsU2hhcGUiIHRyYW5zZm9ybT0icm90YXRlKDI4OCkgc2NhbGUoMC42MikiLz4KICAgICAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjIuNiIgZmlsbD0iI2ZmZjNkNiIvPgogICAgPC9nPgogICAgPHVzZSBocmVmPSIjcGV0YWxTaGFwZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAwIDY0KSByb3RhdGUoMzUpIHNjYWxlKDAuODIpIiBvcGFjaXR5PSIwLjk1Ii8+CiAgICA8dXNlIGhyZWY9IiNwZXRhbFNoYXBlIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3NCAxMTYpIHJvdGF0ZSgtMjUpIHNjYWxlKDAuNjYpIiBvcGFjaXR5PSIwLjkiLz4KICAgIDx1c2UgaHJlZj0iI3BldGFsU2hhcGUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MiAxNTApIHJvdGF0ZSgxMjUpIHNjYWxlKDAuNTgpIiBvcGFjaXR5PSIwLjgyIi8+CiAgPC9nPgo8L3N2Zz4=" alt="Lifenz MM2 Trade Calculator logo" width="38" height="38"/></div>
       <div><h1 class="title"><span class="brandmark">LIFENZ</span> MM2 Trade Calculator</h1><p class="tagline">${icon("sparkles",11,"violet")} Dual-source · value · demand · rarity · trend</p></div>
     </div>
-    <div class="row gap8 wrap">${themeSel}<div class="tabs">${tab("calc","calculator","Calculator",0)}${tab("history","history","Saved",state.history.length)}${tab("favorites","star","Favorites",state.favorites.length)}${tab("changes","activity","Changes",0)}${tab("radar","target","Radar",0)}${tab("safety","shield","Safety",0)}</div></div>
+    <div class="row gap8 wrap">${themeSel}<div class="tabs">${tab("calc","calculator","Calculator",0)}${tab("history","history","Saved",state.history.length)}${tab("favorites","star","Favorites",state.favorites.length)}${tab("changes","activity","Changes",0)}${tab("radar","target","Radar",0)}</div></div>
   </header>`;
 }
 function footerHTML(){
@@ -1548,7 +1521,7 @@ function render(){
   const app=document.getElementById("app");
   const sc={}; ["you","them"].forEach(s=>{ const el=document.getElementById("items-"+s); if(el) sc[s]=el.scrollTop; });
   const entering = state.view!==lastView;
-  const body = state.view==="calc"?calcView(entering) : state.view==="history"?historyView() : state.view==="changes"?changesView() : state.view==="radar"?radarView() : state.view==="safety"?safetyView() : favoritesView();
+  const body = state.view==="calc"?calcView(entering) : state.view==="history"?historyView() : state.view==="changes"?changesView() : state.view==="radar"?radarView() : favoritesView();
   app.innerHTML = headerHTML()+`<div class="${entering?'view-in':''}" id="view">${body}</div>`+footerHTML();
   ["you","them"].forEach(s=>{ const el=document.getElementById("items-"+s); if(el&&sc[s]) el.scrollTop=sc[s]; });
   // gauge marker glides only when the verdict category changes
@@ -1666,96 +1639,6 @@ async function loadChanges(){
     CHANGES_STATE=CHANGES.length?"ok":"empty";
   }catch(e){ CHANGES_STATE="error"; changesLoaded=false; console.warn("[mm2] changelog unavailable:",e&&e.message); }
   if(state.view==="changes") render();
-}
-/* ===========================================================================
-   TRADE SAFETY  —  client-side scam-risk tooling (heuristic + educational).
-   No accounts/server, so this is pattern-matching + education, never identity
-   checks. Trade-structure risk score from documented MM2 scam red flags, a
-   pasted-chat red-flag scanner (regex; advisory), and a safe-trade checklist.
-   Pure functions; the view reads state.safety. =========================================================================== */
-const RISK_FACTORS=[
-  {k:"gofirst",  w:42, label:"They want me to send first / \u201cgo first\u201d", warn:"Never send first. The in-game trade window swaps both items at the same instant \u2014 use only that."},
-  {k:"trust",    w:40, label:"\u201cTrust trade\u201d / IOU / \u201cI\u2019ll send it back\u201d", warn:"Trust trades are the most common scam setup. If they don\u2019t send back, there is no way to recover your item."},
-  {k:"cross",    w:36, label:"Cross-trade \u2014 Robux, gift cards, or another game", warn:"Cross-trades can\u2019t use the secure trade window and break Roblox\u2019s rules. Extremely high scam risk."},
-  {k:"swap",     w:30, label:"An item changed at the last second", warn:"Last-second swaps replace a high-value item with a look-alike right before you accept. Re-read every row before confirming."},
-  {k:"offsite",  w:26, label:"Moving to Discord / another site, or a link", warn:"Off-platform links can be phishing or malware. Keep the whole trade in-game."},
-  {k:"middleman",w:24, label:"A \u201cmiddleman\u201d is handling the trade", warn:"Many \u201cmiddleman\u201d scams are two accounts working together. Only use an MM you personally trust \u2014 or none at all."},
-  {k:"rushing",  w:16, label:"They\u2019re rushing or pressuring me", warn:"Pressure is a manipulation tactic. A fair trade can wait \u2014 slow down."},
-  {k:"newacct",  w:14, label:"Brand-new / no-badge / suspicious account", warn:"Fresh accounts are often alts made for scamming. Be extra careful."},
-  {k:"toogood",  w:12, label:"The offer looks too good to be true", warn:"Huge \u201cfree\u201d overpays are bait \u2014 verify the real items and values."}
-];
-const SCAM_PATTERNS=[
-  {re:/\b(go|you|u)\s*first\b|send\s*(it\s*)?first|put\s*(yours|it)\s*(in\s*)?first/i, sev:"high", note:"\u201cGo first\u201d / send-first request"},
-  {re:/trust\s*trade|trust\s*me|i\s*('|\u2019| wi)?ll\s*(send|give|trade)\s*(it\s*)?back|\biou\b/i, sev:"high", note:"Trust / IOU language"},
-  {re:/\b(robux|rbx|gift\s*card|paypal|cash\s*app|cashapp|venmo|real\s*money)\b|\$\d/i, sev:"high", note:"Cross-trade / real money (against the rules)"},
-  {re:/\bdupe(d|s)?\b|duplicat|free\s*dupe/i, sev:"high", note:"\u201cDupe\u201d talk (scam & ban bait)"},
-  {re:/discord\.gg|t\.me\/|join\s*(my|the|our)\s*(server|disc|discord)|https?:\/\/|bit\.ly/i, sev:"med", note:"Off-platform link / redirect"},
-  {re:/\bmiddle\s*man\b|middleman/i, sev:"med", note:"Middleman mentioned \u2014 verify independently"},
-  {re:/giving\s*away|giveaway|\bfree\b\s*(godly|knife|gun|set|item)/i, sev:"med", note:"\u201cFree / giveaway\u201d bait"},
-  {re:/add\s*(me\s*)?(for\s*)?proof|\bfor\s*proof\b/i, sev:"low", note:"\u201cAdd for proof\u201d \u2014 verify in-game instead"},
-  {re:/\b(hurry|quick(ly)?|fast|right\s*now|last\s*chance|limited|asap)\b/i, sev:"low", note:"Urgency / pressure language"}
-];
-function safetyScore(flags){
-  flags=flags||{}; let s=0; const hits=[];
-  for(const f of RISK_FACTORS){ if(flags[f.k]){ s+=f.w; hits.push(f); } }
-  s=Math.min(100,s);
-  let level,label,color;
-  if(!hits.length){ level="none"; label="No red flags selected yet"; color="#76849f"; }
-  else if(s>=50){ level="danger"; label="High scam risk \u2014 don\u2019t proceed"; color="#fb7185"; }
-  else if(s>=25){ level="risky"; label="Risky \u2014 only with strong caution"; color="#fb923c"; }
-  else { level="caution"; label="Some caution warranted"; color="#fbbf24"; }
-  return {score:s, level, label, color, hits};
-}
-function scanChat(text){
-  text=(text||"").trim(); if(!text) return {flags:[], level:"empty"};
-  const seen=new Set(), flags=[];
-  for(const p of SCAM_PATTERNS){ if(p.re.test(text) && !seen.has(p.note)){ seen.add(p.note); flags.push({sev:p.sev,note:p.note}); } }
-  const level = flags.some(f=>f.sev==="high")?"high" : flags.some(f=>f.sev==="med")?"med" : flags.length?"low":"clear";
-  return {flags, level};
-}
-const SEV_COLOR={high:"#fb7185", med:"#fb923c", low:"#fbbf24"};
-function scanResultHTML(res){
-  if(res.level==="empty") return `<p class="scan-empty">${icon("info",13,"mut")} Paste what the other trader said and I\u2019ll flag known scam phrasing. Advisory only \u2014 it can miss new tricks and is never a verdict.</p>`;
-  if(res.level==="clear") return `<p class="scan-clear">${icon("check",14)} No known scam phrases found. Still verify everything in-game \u2014 a clean message doesn\u2019t prove a safe trade.</p>`;
-  const H = res.level==="high"?{c:"#fb7185",t:"High-risk language detected"} : res.level==="med"?{c:"#fb923c",t:"Some risky language detected"} : {c:"#fbbf24",t:"Minor flags detected"};
-  return `<div class="scan-head" style="color:${H.c}">${icon("alert",14)} ${H.t}</div><ul class="scan-list">`
-    + res.flags.map(f=>`<li class="scan-flag"><span class="scan-dot" style="background:${SEV_COLOR[f.sev]}"></span><span><b style="color:${SEV_COLOR[f.sev]};text-transform:uppercase;font-size:10px;letter-spacing:.04em">${f.sev}</b> \u00b7 ${f.note}</span></li>`).join("")
-    + `</ul>`;
-}
-const SAFE_CHECKS=[
-  "Trade only in the in-game trade window \u2014 it swaps both items at once. Never \u201csend first.\u201d",
-  "Make them prove ownership: join a server and see the item in their inventory, live.",
-  "Re-read every row right before you hit Accept \u2014 watch for last-second swaps.",
-  "No Robux, gift cards, real money, or other-game items \u2014 those can\u2019t be done safely.",
-  "Avoid middlemen you don\u2019t personally trust; most \u201cMM\u201d offers are scams.",
-  "Ignore pressure, screenshot the trade, and walk away if anything feels off."
-];
-function safetyView(){
-  const f=state.safety.flags, sc=safetyScore(f);
-  const factor=x=>`<button class="safe-factor${f[x.k]?' on':''}" data-action="safeflag" data-k="${x.k}" aria-pressed="${!!f[x.k]}"><span class="safe-tick">${f[x.k]?icon("check",13):""}</span><span class="safe-flabel">${x.label}</span></button>`;
-  const warns = sc.hits.length?`<ul class="safe-warns">`+sc.hits.map(h=>`<li><span class="safe-wd" style="background:${sc.color}"></span>${h.warn}</li>`).join("")+`</ul>`:"";
-  const scan=scanChat(state.safety.chat||"");
-  return `<div class="safety">
-    <p class="chg-intro">${icon("shield",12,"violet")} <b>Trade safety check</b> \u2014 MM2 has no trade insurance, so a scammed item is gone for good. Tick what the other person is doing, scan their chat, and run the checklist <b>before</b> you accept. Heuristics &amp; education \u2014 not identity checks.</p>
-    <div class="card safe-card">
-      <div class="b sm mb12 row gap8">${icon("alert",16,"mut")} Trade structure \u2014 tick what applies</div>
-      <div class="safe-grid">${RISK_FACTORS.map(factor).join("")}</div>
-      <div class="safe-scorebar mt12">
-        <div class="row between"><span class="safe-verdict" style="color:${sc.color}">${icon(sc.level==="danger"?"alert":"shield",14)} ${sc.label}</span><span class="safe-score" style="color:${sc.color}">${sc.score}<span class="safe-score-max">/100 risk</span></span></div>
-        <div class="bar-track mt8"><span class="bar-fill" style="width:${sc.score}%;background:${sc.color}"></span></div>
-      </div>
-      ${warns}
-    </div>
-    <div class="card safe-card">
-      <div class="b sm mb12 row gap8">${icon("search",16,"mut")} Scan a chat message</div>
-      <textarea id="safety-chat" class="safe-chat" rows="3" placeholder="Paste what the other trader said\u2026" spellcheck="false">${esc(state.safety.chat||"")}</textarea>
-      <div id="scan-out" class="scan-out">${scanResultHTML(scan)}</div>
-    </div>
-    <div class="card safe-card">
-      <div class="b sm mb12 row gap8">${icon("check",16,"mut")} Safe-trade checklist</div>
-      <ul class="safe-check">${SAFE_CHECKS.map(c=>`<li>${icon("check",13,"mut")}<span>${c}</span></li>`).join("")}</ul>
-    </div>
-  </div>`;
 }
 function radarView(){
   const rows = ALL.filter(it=> !it.placeholder && it.supreme!=null && it.mm2!=null)
@@ -1935,7 +1818,6 @@ function cardCopy(){ cardToBlob(async b=>{ try{ await navigator.clipboard.write(
    =========================================================================== */
 const app=document.getElementById("app");
 app.addEventListener("input",e=>{
-  const _ta=e.target.closest("#safety-chat"); if(_ta){ state.safety.chat=_ta.value; const _o=document.getElementById("scan-out"); if(_o) _o.innerHTML=scanResultHTML(scanChat(_ta.value)); return; }
   const inp=e.target.closest(".search-input"); if(!inp) return;
   const side=inp.dataset.side; state["q_"+side]=inp.value; state["active_"+side]=-1; showDropdown(side);
 });
@@ -1968,7 +1850,6 @@ app.addEventListener("click",e=>{
   else if(a==="card"){ openCardModal(); }
   else if(a==="reloadChanges"){ changesLoaded=false; loadChanges(); }
   else if(a==="qadd"){ addItem(b.dataset.side,b.dataset.id); }
-  else if(a==="safeflag"){ const k=b.dataset.k; state.safety.flags[k]=!state.safety.flags[k]; render(); }
   else if(a==="clearq"){ const side=b.dataset.side; state["q_"+side]=""; render(); const si=document.getElementById("si-"+side); if(si) si.focus(); }
   else if(a==="qty"){ changeQty(b.dataset.side,b.dataset.id,parseInt(b.dataset.d,10)); }
   else if(a==="rm"){ removeItem(b.dataset.side,b.dataset.id); }
