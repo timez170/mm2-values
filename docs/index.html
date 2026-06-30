@@ -478,6 +478,27 @@
   @keyframes vibeBreath{0%,100%{opacity:.6}50%{opacity:1}}
   .vibe-fx .vmote{position:absolute;bottom:-6%;border-radius:50%;background:radial-gradient(circle,rgba(255,224,180,.95),rgba(255,198,150,0));opacity:var(--o);animation-name:vibeRise;animation-timing-function:linear;animation-iteration-count:infinite;will-change:transform,opacity}
   @keyframes vibeRise{0%{transform:translateY(0) translateX(0)}100%{transform:translateY(-118vh) translateX(12px)}}
+  /* ---- Theme centerpieces (silhouette scenes; ride the FX crossfade + visibility-unload) ---- */
+  .cp{position:absolute;left:0;right:0;bottom:0;top:auto;height:48%;pointer-events:none;overflow:hidden}
+  .cp svg{position:absolute;left:0;bottom:0;width:100%;height:100%;display:block}
+  .cp-breathe{animation:cpBreathe 7s ease-in-out infinite;transform-origin:center;will-change:opacity}
+  @keyframes cpBreathe{0%,100%{opacity:.82}50%{opacity:1}}
+  .cp-flame{transform-origin:200px 172px;animation:cpFlame 2.4s ease-in-out infinite;will-change:transform}
+  @keyframes cpFlame{0%,100%{transform:scaleY(1) scaleX(1)}50%{transform:scaleY(1.09) scaleX(.97) translateY(-2px)}}
+  .cp-window{animation:cpWin 5s ease-in-out infinite;will-change:opacity}
+  @keyframes cpWin{0%,100%{opacity:.78}50%{opacity:1}}
+  .cp-sway{transform-origin:80px 96px;animation:cpSway 7s ease-in-out infinite;will-change:transform}
+  @keyframes cpSway{0%,100%{transform:rotate(-1.3deg)}50%{transform:rotate(1.3deg)}}
+  .cp-sway2{transform-origin:center bottom;animation:cpSway2 9s ease-in-out infinite;will-change:transform}
+  @keyframes cpSway2{0%,100%{transform:translateX(-4px)}50%{transform:translateX(4px)}}
+  .cp-vine{transform-origin:top center;animation:cpSway 8s ease-in-out infinite}
+  .cp-note{animation:cpNote 4.5s ease-in-out infinite;will-change:transform,opacity}
+  @keyframes cpNote{0%{transform:translateY(2px);opacity:.15}45%{opacity:.6}100%{transform:translateY(-12px);opacity:0}}
+  .cp-windows{animation:cpBreathe 6s ease-in-out infinite}
+  @media (prefers-reduced-motion: reduce){ .cp *{animation:none!important} }
+  .snd-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;border:1px solid var(--line2);background:var(--card2);color:var(--muted2);cursor:pointer;transition:color .2s,border-color .2s,background .2s}
+  .snd-btn:hover{color:var(--violet);border-color:var(--violet)}
+  .snd-btn.on{color:var(--violet);border-color:var(--violet);background:rgba(139,92,246,.14)}
   .changes{display:flex;flex-direction:column;gap:12px}
   .chg-intro{font-size:12px;color:var(--muted2);display:flex;align-items:center;gap:6px;margin:2px 2px 0}
   .chg-card{padding:14px 16px}
@@ -1514,17 +1535,21 @@ function headerHTML(){
   const tab=(id,ic,label,n)=>`<button class="tab${state.view===id?' tab-on':''}" data-action="view" data-view="${id}">${icon(ic,15)} ${label}${n>0?`<span class="tab-n">${n}</span>`:""}</button>`;
   const tOpt=(v,l)=>`<option value="${v}"${state.theme===v?" selected":""}>${l}</option>`;
   const themeSel=`<select class="theme-sel" data-action="theme" aria-label="Theme">${THEME_KEYS.map(k=>tOpt(k,THEME_LABELS[k])).join("")}</select>`;
+  const _sON='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg>';
+  const _sOFF='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="m23 9-6 6M17 9l6 6"/></svg>';
+  const _sndOn=(typeof AUDIO!=="undefined")&&AUDIO.on;
+  const soundBtn=`<button class="snd-btn${_sndOn?' on':''}" data-action="sound" aria-label="Ambient sound" title="Ambient sound (${_sndOn?'on':'off'})">${_sndOn?_sON:_sOFF}</button>`;
   return `<header class="hdr">
     <div class="brand">
       <div class="logo"><img class="logo-img" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgdmlld0JveD0iMCAwIDI1NiAyNTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMmMxZDUwIi8+PHN0b3Agb2Zmc2V0PSIwLjU1IiBzdG9wLWNvbG9yPSIjMWExMzMwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMTAwYzFjIi8+PC9saW5lYXJHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0icGlua0dsb3ciIGN4PSIwLjQyIiBjeT0iMC40IiByPSIwLjU1Ij48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmNDcyYjYiIHN0b3Atb3BhY2l0eT0iMC4zMiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2Y0NzJiNiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iY29vbEdsb3ciIGN4PSIwLjY2IiBjeT0iMC4zMiIgcj0iMC41Ij48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNjZmUwZmYiIHN0b3Atb3BhY2l0eT0iMC4yMCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2NmZTBmZiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic3RlZWwiIHgxPSIwIiB5MT0iMSIgeDI9IjEiIHkyPSIwIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM3Yzg4OWUiLz48c3RvcCBvZmZzZXQ9IjAuNSIgc3RvcC1jb2xvcj0iI2MyY2NkZCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2VlZjNmYiIvPjwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImdvbGQiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmN2NkNmIiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNjZjhhMmEiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJncmlwIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMzMyOTNmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMWMxNjI2Ii8+PC9saW5lYXJHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0icGV0YWwiIGN4PSIwLjUiIGN5PSIwLjIiIHI9IjAuOSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmZkOWVjIi8+PHN0b3Agb2Zmc2V0PSIwLjU1IiBzdG9wLWNvbG9yPSIjZjlhOGQ0Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZWM1ZmE2Ii8+PC9yYWRpYWxHcmFkaWVudD4KICAgIDxnIGlkPSJwZXRhbFNoYXBlIj48cGF0aCBkPSJNMCAwIEMgNiAtOSA2IC0xOSAwLjYgLTIzIEMgMC4yIC0yMiAwLjIgLTIyIDAgLTIxLjQgQyAtMC4yIC0yMiAtMC4yIC0yMiAtMC42IC0yMyBDIC02IC0xOSAtNiAtOSAwIDAgWiIvPjwvZz4KICA8L2RlZnM+CiAgPHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjI0NCIgaGVpZ2h0PSIyNDQiIHJ4PSI2MCIgZmlsbD0idXJsKCNiZykiLz4KICA8cmVjdCB4PSI2IiB5PSI2IiB3aWR0aD0iMjQ0IiBoZWlnaHQ9IjI0NCIgcng9IjYwIiBmaWxsPSJ1cmwoI3BpbmtHbG93KSIvPgogIDxyZWN0IHg9IjYiIHk9IjYiIHdpZHRoPSIyNDQiIGhlaWdodD0iMjQ0IiByeD0iNjAiIGZpbGw9InVybCgjY29vbEdsb3cpIi8+CiAgPHJlY3QgeD0iNi41IiB5PSI2LjUiIHdpZHRoPSIyNDMiIGhlaWdodD0iMjQzIiByeD0iNTkuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utb3BhY2l0eT0iMC4xMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KCiAgPCEtLSBrYXRhbmEgLS0+CiAgPGc+CiAgICA8IS0tIGJsYWRlIGJvZHkgLS0+CiAgICA8cGF0aCBkPSJNODQgMTcyIFExMzIgMTA0IDE5NiA2MiBMMjA4IDUwIEwyMDAgNzAgUTE0MCAxMTAgOTQgMTgyIFoiIGZpbGw9InVybCgjc3RlZWwpIiAvPgogICAgPCEtLSB5YWtpLWJhIChoYXJkZW5lZCBlZGdlLCBicmlnaHRlcikgLS0+CiAgICA8cGF0aCBkPSJNIDIwMC4wIDcwLjAgTCAxOTUuNCA3My4xIEwgMTkwLjkgNzYuMyBMIDE4Ni4zIDc5LjcgTCAxODEuOSA4My4xIEwgMTc3LjQgODYuNiBMIDE3My4xIDkwLjIgTCAxNjguNyA5My45IEwgMTY0LjQgOTcuNiBMIDE2MC4xIDEwMS41IEwgMTU1LjkgMTA1LjUgTCAxNTEuNyAxMDkuNiBMIDE0Ny42IDExMy43IEwgMTQzLjUgMTE4LjAgTCAxMzkuNCAxMjIuNCBMIDEzNS40IDEyNi44IEwgMTMxLjUgMTMxLjMgTCAxMjcuNSAxMzYuMCBMIDEyMy42IDE0MC43IEwgMTE5LjggMTQ1LjYgTCAxMTYuMCAxNTAuNSBMIDExMi4yIDE1NS41IEwgMTA4LjUgMTYwLjYgTCAxMDQuOCAxNjUuOCBMIDEwMS4yIDE3MS4xIEwgOTcuNiAxNzYuNSBMIDk0LjAgMTgyLjAgTCA4NS42IDE3Ni42IEwgOTEuMiAxNzIuMyBMIDk0LjUgMTY2LjYgTCA5Ni4yIDE1OS44IEwgOTkuMiAxNTMuOSBMIDEwNC42IDE0OS44IEwgMTEwLjUgMTQ2LjMgTCAxMTQuNiAxNDEuNSBMIDExNi43IDEzNS4xIEwgMTE5LjYgMTI5LjMgTCAxMjQuNyAxMjUuNSBMIDEzMC44IDEyMi43IEwgMTM1LjUgMTE4LjggTCAxMzguMiAxMTMuMCBMIDE0MS4wIDEwNy4zIEwgMTQ1LjkgMTAzLjYgTCAxNTIuMSAxMDEuNSBMIDE1Ny4zIDk4LjUgTCAxNjAuNiA5My40IEwgMTYzLjYgODcuOSBMIDE2OC4xIDg0LjMgTCAxNzQuMyA4Mi43IEwgMTgwLjAgODAuNiBMIDE4My45IDc2LjQgTCAxODcuMSA3MS4xIEwgMTkxLjUgNjcuNSBMIDE5Ny41IDY2LjMgWiIgZmlsbD0iI2ZmZmZmZiIgZmlsbC1vcGFjaXR5PSIwLjMwIi8+CiAgICA8IS0tIGhhbW9uICh3YXZ5IHRlbXBlciBsaW5lKSAtLT4KICAgIDxwYXRoIGQ9Ik0gMTk3LjUgNjYuMyBMIDE5MS41IDY3LjUgTCAxODcuMSA3MS4xIEwgMTgzLjkgNzYuNCBMIDE4MC4wIDgwLjYgTCAxNzQuMyA4Mi43IEwgMTY4LjEgODQuMyBMIDE2My42IDg3LjkgTCAxNjAuNiA5My40IEwgMTU3LjMgOTguNSBMIDE1Mi4xIDEwMS41IEwgMTQ1LjkgMTAzLjYgTCAxNDEuMCAxMDcuMyBMIDEzOC4yIDExMy4wIEwgMTM1LjUgMTE4LjggTCAxMzAuOCAxMjIuNyBMIDEyNC43IDEyNS41IEwgMTE5LjYgMTI5LjMgTCAxMTYuNyAxMzUuMSBMIDExNC42IDE0MS41IEwgMTEwLjUgMTQ2LjMgTCAxMDQuNiAxNDkuOCBMIDk5LjIgMTUzLjkgTCA5Ni4yIDE1OS44IEwgOTQuNSAxNjYuNiBMIDkxLjIgMTcyLjMgTCA4NS42IDE3Ni42IiBmaWxsPSJub25lIiBzdHJva2U9IiNlOGVlZmIiIHN0cm9rZS1vcGFjaXR5PSIwLjY1IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgICA8IS0tIGJyaWdodCBlZGdlIGhpZ2hsaWdodCAtLT4KICAgIDxwYXRoIGQ9Ik0yMDAgNzAgUTE0MCAxMTAgOTUgMTgxIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjg1IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogICAgPCEtLSBzdWJ0bGUgc3BpbmUgc2hhZGUgZm9yIGZvcm0gLS0+CiAgICA8cGF0aCBkPSJNODQgMTcyIFExMzIgMTA0IDE5NiA2MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNWI2Njc4IiBzdHJva2Utb3BhY2l0eT0iMC41IiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogICAgPCEtLSB0c3VrYSAoaGFuZGxlKSBkaWFtb25kIGl0byB3cmFwICsgbWVudWtpIGRpYW1vbmRzIC0tPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoODkgMTc3KSByb3RhdGUoMTMzLjYpIj4KICAgICAgPHJlY3QgeD0iMiIgeT0iLTgiIHdpZHRoPSI1MCIgaGVpZ2h0PSIxNiIgcng9IjQuNSIgZmlsbD0idXJsKCNncmlwKSIvPgogICAgICA8ZyBzdHJva2U9IiMxMDBjMTciIHN0cm9rZS13aWR0aD0iMS42IiBzdHJva2Utb3BhY2l0eT0iMC45IiBzdHJva2UtbGluZWNhcD0icm91bmQiPgogICAgICAgIDxwYXRoIGQ9Ik03IC04IDE2IDggTTE2IC04IDI1IDggTTI1IC04IDM0IDggTTM0IC04IDQzIDggTTQzIC04IDUwIDUiLz4KICAgICAgICA8cGF0aCBkPSJNMTYgLTggNyA4IE0yNSAtOCAxNiA4IE0zNCAtOCAyNSA4IE00MyAtOCAzNCA4IE01MCAtNSA0MyA4Ii8+CiAgICAgIDwvZz4KICAgICAgPGcgZmlsbD0iI2VmM2U1NyI+CiAgICAgICAgPHBhdGggZD0iTTExLjUgLTMuMSBMMTQuNiAwIEwxMS41IDMuMSBMOC40IDAgWiIvPjxwYXRoIGQ9Ik0yMC41IC0zLjEgTDIzLjYgMCBMMjAuNSAzLjEgTDE3LjQgMCBaIi8+PHBhdGggZD0iTTI5LjUgLTMuMSBMMzIuNiAwIEwyOS41IDMuMSBMMjYuNCAwIFoiLz48cGF0aCBkPSJNMzguNSAtMy4xIEw0MS42IDAgTDM4LjUgMy4xIEwzNS40IDAgWiIvPgogICAgICA8L2c+CiAgICAgIDwhLS0gZnVjaGkgKGNvbGxhcikgKyBrYXNoaXJhIChjYXApIC0tPgogICAgICA8cmVjdCB4PSIxLjUiIHk9Ii04IiB3aWR0aD0iNC41IiBoZWlnaHQ9IjE2IiByeD0iMS44IiBmaWxsPSJ1cmwoI2dvbGQpIi8+CiAgICAgIDxyZWN0IHg9IjQ4LjUiIHk9Ii04IiB3aWR0aD0iNS41IiBoZWlnaHQ9IjE2IiByeD0iMi42IiBmaWxsPSJ1cmwoI2dvbGQpIi8+CiAgICA8L2c+CgogICAgPCEtLSB0c3ViYSAoYm9sZCBzcXVhcmVkIGd1YXJkIGFjcm9zcyB0aGUgYmxhZGUpIC0tPgogICAgPGcgdHJhbnNmb3JtPSJyb3RhdGUoLTQ2LjQgODkgMTc3KSI+CiAgICAgIDxyZWN0IHg9IjgzLjUiIHk9IjE2MyIgd2lkdGg9IjExIiBoZWlnaHQ9IjI4IiByeD0iMy41IiBmaWxsPSJ1cmwoI2dvbGQpIi8+CiAgICAgIDxyZWN0IHg9Ijg2LjYiIHk9IjE2MyIgd2lkdGg9IjQuOCIgaGVpZ2h0PSIyOCIgcng9IjIiIGZpbGw9IiM3YzNhMjQiIGZpbGwtb3BhY2l0eT0iMC41Ii8+CiAgICA8L2c+CiAgPC9nPgoKICA8IS0tIHNha3VyYTogc21hbGwgYmxvc3NvbSArIGRyaWZ0aW5nIHBldGFscyAtLT4KICA8ZyBmaWxsPSJ1cmwoI3BldGFsKSI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNTAgODApIj4KICAgICAgPHVzZSBocmVmPSIjcGV0YWxTaGFwZSIgdHJhbnNmb3JtPSJyb3RhdGUoMCkgc2NhbGUoMC42MikiLz48dXNlIGhyZWY9IiNwZXRhbFNoYXBlIiB0cmFuc2Zvcm09InJvdGF0ZSg3Mikgc2NhbGUoMC42MikiLz48dXNlIGhyZWY9IiNwZXRhbFNoYXBlIiB0cmFuc2Zvcm09InJvdGF0ZSgxNDQpIHNjYWxlKDAuNjIpIi8+PHVzZSBocmVmPSIjcGV0YWxTaGFwZSIgdHJhbnNmb3JtPSJyb3RhdGUoMjE2KSBzY2FsZSgwLjYyKSIvPjx1c2UgaHJlZj0iI3BldGFsU2hhcGUiIHRyYW5zZm9ybT0icm90YXRlKDI4OCkgc2NhbGUoMC42MikiLz4KICAgICAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjIuNiIgZmlsbD0iI2ZmZjNkNiIvPgogICAgPC9nPgogICAgPHVzZSBocmVmPSIjcGV0YWxTaGFwZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAwIDY0KSByb3RhdGUoMzUpIHNjYWxlKDAuODIpIiBvcGFjaXR5PSIwLjk1Ii8+CiAgICA8dXNlIGhyZWY9IiNwZXRhbFNoYXBlIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3NCAxMTYpIHJvdGF0ZSgtMjUpIHNjYWxlKDAuNjYpIiBvcGFjaXR5PSIwLjkiLz4KICAgIDx1c2UgaHJlZj0iI3BldGFsU2hhcGUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MiAxNTApIHJvdGF0ZSgxMjUpIHNjYWxlKDAuNTgpIiBvcGFjaXR5PSIwLjgyIi8+CiAgPC9nPgo8L3N2Zz4=" alt="Lifenz MM2 Trade Calculator logo" width="38" height="38"/></div>
       <div><h1 class="title"><span class="brandmark">LIFENZ</span> MM2 Trade Calculator</h1><p class="tagline">${icon("sparkles",11,"violet")} Dual-source · value · demand · rarity · trend</p></div>
     </div>
-    <div class="row gap8 wrap">${themeSel}<div class="tabs">${tab("calc","calculator","Calculator",0)}${tab("history","history","Saved",state.history.length)}${tab("favorites","star","Favorites",state.favorites.length)}${tab("portfolio","box","Portfolio",state.portfolio.length)}${tab("changes","activity","Changes",0)}${tab("trends","trendingUp","Trends",0)}</div></div>
+    <div class="row gap8 wrap">${themeSel}${soundBtn}<div class="tabs">${tab("calc","calculator","Calculator",0)}${tab("history","history","Saved",state.history.length)}${tab("favorites","star","Favorites",state.favorites.length)}${tab("portfolio","box","Portfolio",state.portfolio.length)}${tab("changes","activity","Changes",0)}${tab("trends","trendingUp","Trends",0)}</div></div>
   </header>`;
 }
 function footerHTML(){
   return `<footer class="ftr">
-    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30d</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Demand, rarity, stability & ranged values are sourced from <b>Supreme Values</b> (published per item); each site's value drives its own verdict. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
+    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30e</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Demand, rarity, stability & ranged values are sourced from <b>Supreme Values</b> (published per item); each site's value drives its own verdict. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
     <p>Community estimates — not endorsed by Roblox or Nikilis. Demand/hype/duping shift fast; confirm live before high-value trades. Saved trades & favorites are stored locally on this device only.</p>
     <div class="ftr-social">
       <a href="https://youtube.com/@wyalife" target="_blank" rel="noopener noreferrer" aria-label="YouTube">${icon("youtube",15)} YouTube</a>
@@ -1599,6 +1624,62 @@ const FX={
     return `<div class="fxw snow-fx"><div class="frost"></div><div>${fl}</div></div>`;
   }
 };
+/* ===== Theme centerpieces: per-theme silhouette scenes, prepended into #fx so they inherit the
+   crossfade + page-visibility unload pipeline for free. Pure SVG, no assets, transform/opacity only. ===== */
+const SCENE={
+  vibe(){ return `<div class="cp cp-vibe"><svg viewBox="0 0 400 200" preserveAspectRatio="xMaxYMax meet"><defs><radialGradient id="cpVlamp" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffd9a0" stop-opacity=".55"/><stop offset="1" stop-color="#ffd9a0" stop-opacity="0"/></radialGradient></defs><circle class="cp-breathe" cx="332" cy="64" r="74" fill="url(#cpVlamp)"/><g fill="#241a2e"><rect x="150" y="150" width="184" height="50" rx="14"/><rect x="150" y="120" width="30" height="52" rx="12"/><rect x="304" y="120" width="30" height="52" rx="12"/><rect x="182" y="126" width="120" height="32" rx="13"/><rect x="338" y="58" width="6" height="94" rx="3"/><path d="M324 38 h40 l-7 22 h-26 Z"/></g><g fill="#352642"><ellipse cx="226" cy="138" rx="27" ry="15"/><circle cx="205" cy="131" r="11"/><path d="M198 123 l3 -10 6 8 Z"/><path d="M210 122 l3 -10 6 9 Z"/></g><path d="M250 140 q16 -3 11 13 q-2 7 -9 3" fill="none" stroke="#352642" stroke-width="4" stroke-linecap="round"/><g class="cp-note"><path d="M250 94 v-22 l11 -3 v22" stroke="#c6a9ff" stroke-width="2.4" fill="none" stroke-linecap="round"/><circle cx="247.6" cy="96" r="3.6" fill="#c6a9ff"/><circle cx="258.6" cy="93" r="3.6" fill="#c6a9ff"/></g></svg></div>`; },
+  sakura(){ return `<div class="cp cp-sakura"><svg viewBox="0 0 400 200" preserveAspectRatio="xMinYMax meet"><path d="M58 200 L70 96 q4 -10 9 -4 L84 200 Z" fill="#3a2233" opacity=".6"/><g class="cp-sway" fill="#f7b8d0" opacity=".5"><ellipse cx="70" cy="70" rx="48" ry="30"/><ellipse cx="112" cy="58" rx="40" ry="25"/><ellipse cx="36" cy="80" rx="33" ry="21"/><ellipse cx="94" cy="92" rx="38" ry="21"/><ellipse cx="138" cy="84" rx="26" ry="16"/></g></svg></div>`; },
+  rainforest(){ return `<div class="cp cp-rainforest"><svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice"><path d="M0 200 V118 q42 -30 82 -10 q42 -42 92 -8 q52 -30 102 0 q42 -22 124 -6 V200 Z" fill="#0e2417" opacity=".62"/><g class="cp-sway2"><path d="M0 200 V150 q52 -26 112 -6 q60 -30 132 0 q60 -22 156 -2 V200 Z" fill="#13351f" opacity=".72"/></g><g stroke="#1c4a2b" stroke-width="3" fill="none" opacity=".5" stroke-linecap="round" class="cp-vine"><path d="M118 0 q9 42 -2 72 q-6 18 4 30"/><path d="M298 0 q-9 52 2 86"/></g></svg></div>`; },
+  meteor(){ return `<div class="cp cp-meteor"><svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice"><path d="M0 200 V150 L60 110 L112 150 L150 120 L210 165 L262 124 L320 160 L400 130 V200 Z" fill="#0a1430" opacity=".78"/><path d="M0 200 V172 L80 142 L142 170 L222 138 L300 172 L400 150 V200 Z" fill="#060d22" opacity=".88"/></svg></div>`; },
+  firewarm(){ return `<div class="cp cp-firewarm"><svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMax meet"><defs><radialGradient id="cpFglow" cx="50%" cy="62%" r="55%"><stop offset="0" stop-color="#ff8a3d" stop-opacity=".5"/><stop offset="1" stop-color="#ff8a3d" stop-opacity="0"/></radialGradient></defs><ellipse class="cp-breathe" cx="200" cy="172" rx="128" ry="62" fill="url(#cpFglow)"/><g fill="#3a241a"><rect x="158" y="174" width="84" height="13" rx="6" transform="rotate(-13 200 180)"/><rect x="158" y="174" width="84" height="13" rx="6" transform="rotate(13 200 180)"/></g><g class="cp-flame"><path d="M200 172 q-24 -28 -6 -58 q-2 24 13 21 q-7 -24 9 -43 q-4 32 15 38 q15 24 -5 43 Z" fill="#ff7a2d" opacity=".92"/><path d="M200 170 q-13 -18 -3 -37 q0 15 9 13 q-2 -15 7 -26 q-2 19 9 26 q9 15 -4 26 Z" fill="#ffd24a" opacity=".95"/></g></svg></div>`; },
+  snowy(){ return `<div class="cp cp-snowy"><svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice"><path d="M0 200 V160 Q120 130 230 158 T400 150 V200 Z" fill="#cdd8ec" opacity=".5"/><g fill="#1a2740" opacity=".72"><path d="M70 170 l-15 0 7 -17 -9 0 9 -17 -7 0 13 -21 13 21 -7 0 9 17 -9 0 7 17 z"/><path d="M334 172 l-12 0 6 -14 -8 0 8 -14 -6 0 10 -16 10 16 -6 0 8 14 -8 0 6 14 z"/></g><g><rect x="160" y="138" width="82" height="44" fill="#241a14"/><path d="M152 138 L201 108 L250 138 Z" fill="#1a120e"/><rect class="cp-window" x="178" y="150" width="20" height="20" fill="#ffcf7a"/><rect x="212" y="152" width="15" height="30" fill="#120c09"/></g></svg></div>`; },
+  rain(){ return `<div class="cp cp-rain"><svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice"><g fill="#0c1426" opacity=".72"><rect x="0" y="120" width="46" height="80"/><rect x="52" y="90" width="38" height="110"/><rect x="96" y="140" width="40" height="60"/><rect x="142" y="70" width="42" height="130"/><rect x="190" y="110" width="36" height="90"/><rect x="232" y="135" width="46" height="65"/><rect x="284" y="86" width="40" height="114"/><rect x="330" y="125" width="44" height="75"/><rect x="380" y="150" width="20" height="50"/></g><g fill="#5a7bb0" opacity=".4" class="cp-windows"><rect x="62" y="100" width="6" height="8"/><rect x="74" y="118" width="6" height="8"/><rect x="152" y="86" width="6" height="8"/><rect x="166" y="112" width="6" height="8"/><rect x="294" y="100" width="6" height="8"/><rect x="300" y="120" width="6" height="8"/></g></svg></div>`; },
+  horizon(){ return `<div class="cp cp-horizon"><svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice"><defs><radialGradient id="cpHsun" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffd08a" stop-opacity=".7"/><stop offset="1" stop-color="#ffd08a" stop-opacity="0"/></radialGradient></defs><circle class="cp-breathe" cx="300" cy="78" r="92" fill="url(#cpHsun)"/><circle cx="300" cy="78" r="34" fill="#ffcf86" opacity=".5"/><path d="M0 200 V160 Q100 138 200 156 T400 150 V200 Z" fill="#3a2a3f" opacity=".6"/><path d="M0 200 V178 Q120 160 240 176 T400 170 V200 Z" fill="#2a1f30" opacity=".75"/></svg></div>`; }
+};
+
+/* ===== Procedural ambient audio (Web Audio; zero assets, CSP-safe). Lazy-initialised on first
+   enable, gesture-gated (browsers block autoplay), and suspended whenever the tab is hidden. ===== */
+const AUDIO={
+  ctx:null, master:null, voices:[], on:false, vol:0.5, theme:"vibe", _nb:null,
+  ensure(){ if(this.ctx) return true; try{ const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return false;
+    this.ctx=new AC(); this.master=this.ctx.createGain(); this.master.gain.value=0.0001; this.master.connect(this.ctx.destination); return true; }catch(e){ return false; } },
+  noiseBuf(){ if(this._nb) return this._nb; const ctx=this.ctx, len=Math.floor(ctx.sampleRate*2), b=ctx.createBuffer(1,len,ctx.sampleRate), d=b.getChannelData(0);
+    let last=0; for(let i=0;i<len;i++){ const w=Math.random()*2-1; last=(last+0.02*w)/1.02; d[i]=Math.max(-1,Math.min(1,last*2.2)); } this._nb=b; return b; },
+  pad(freqs,ft,ff,g){ const ctx=this.ctx, out=ctx.createGain(); out.gain.value=0.0001;
+    const f=ctx.createBiquadFilter(); f.type=ft||"lowpass"; f.frequency.value=ff||800; f.connect(out); out.connect(this.master);
+    const oscs=freqs.map(fr=>{ const o=ctx.createOscillator(); o.type="sine"; o.frequency.value=fr; o.detune.value=Math.random()*10-5; o.connect(f); o.start(); return o; });
+    const lfo=ctx.createOscillator(), lg=ctx.createGain(); lfo.frequency.value=0.05+Math.random()*0.05; lg.gain.value=g*0.4; lfo.connect(lg); lg.connect(out.gain); lfo.start();
+    out.gain.setTargetAtTime(g, ctx.currentTime, 1.3);
+    return { stop:()=>{ try{ out.gain.setTargetAtTime(0.0001,ctx.currentTime,0.25); oscs.forEach(o=>o.stop(ctx.currentTime+0.45)); lfo.stop(ctx.currentTime+0.45);}catch(e){} } }; },
+  noise(ft,ff,q,g){ const ctx=this.ctx, src=ctx.createBufferSource(); src.buffer=this.noiseBuf(); src.loop=true;
+    const f=ctx.createBiquadFilter(); f.type=ft||"lowpass"; f.frequency.value=ff||1000; if(q) f.Q.value=q;
+    const out=ctx.createGain(); out.gain.value=0.0001; src.connect(f); f.connect(out); out.connect(this.master); src.start();
+    out.gain.setTargetAtTime(g, ctx.currentTime, 1.3);
+    return { stop:()=>{ try{ out.gain.setTargetAtTime(0.0001,ctx.currentTime,0.25); src.stop(ctx.currentTime+0.45);}catch(e){} } }; },
+  build(theme){ if(!this.ctx) return; const V=this; const S={
+    vibe:()=>[V.pad([110,164.8,220],"lowpass",560,0.06), V.noise("lowpass",380,0,0.012)],
+    rain:()=>[V.noise("lowpass",1300,0,0.05), V.pad([55,82.4],"lowpass",300,0.03)],
+    horizon:()=>[V.pad([130.8,196,261.6],"lowpass",760,0.055)],
+    rainforest:()=>[V.noise("bandpass",2100,1.1,0.03), V.pad([98,146.8],"lowpass",620,0.045)],
+    sakura:()=>[V.pad([220,277.2,329.6],"lowpass",1100,0.05), V.noise("highpass",4200,0,0.006)],
+    meteor:()=>[V.pad([329.6,440,554.4],"lowpass",1900,0.04), V.noise("highpass",5000,0,0.005)],
+    firewarm:()=>[V.noise("lowpass",520,0,0.055), V.pad([82.4,123.5],"lowpass",420,0.035)],
+    snowy:()=>[V.pad([261.6,329.6],"lowpass",1400,0.05), V.noise("highpass",4600,0,0.007)]
+  }; this.voices=(S[theme]||S.vibe)(); },
+  teardown(){ this.voices.forEach(v=>{ try{ v.stop(); }catch(e){} }); this.voices=[]; },
+  fadeMaster(to){ if(!this.master||!this.ctx) return; const t=this.ctx.currentTime; const cur=Math.max(0.0001,this.master.gain.value);
+    this.master.gain.cancelScheduledValues(t); this.master.gain.setValueAtTime(cur,t); this.master.gain.linearRampToValueAtTime(Math.max(0.0001,to),t+0.6); },
+  enable(){ if(!this.ensure()) return false; this.on=true; try{ this.ctx.resume(); }catch(e){} if(!this.voices.length) this.build(this.theme); this.fadeMaster(this.vol); try{ store.set("mm2.sound",true); }catch(e){} return true; },
+  disable(){ this.on=false; this.fadeMaster(0); setTimeout(()=>{ if(!this.on) this.teardown(); },720); try{ store.set("mm2.sound",false); }catch(e){} },
+  setTheme(t){ this.theme=t; if(this.on && this.ctx){ this.teardown(); this.build(t); this.fadeMaster(this.vol); } },
+  suspend(){ try{ if(this.ctx && this.ctx.state==="running") this.ctx.suspend(); }catch(e){} },
+  resume(){ try{ if(this.on && this.ctx && this.ctx.state==="suspended") this.ctx.resume(); }catch(e){} },
+  boot(){ try{ this.theme=state.theme; const v=store.get("mm2.vol",0.5); this.vol=(typeof v==="number"&&v>=0&&v<=1)?v:0.5;
+    if(store.get("mm2.sound",false)===true){ const start=()=>{ this.enable(); ["pointerdown","keydown","touchstart"].forEach(ev=>window.removeEventListener(ev,start)); };
+      ["pointerdown","keydown","touchstart"].forEach(ev=>window.addEventListener(ev,start,{once:true})); } }catch(e){} }
+};
+function toggleSound(){ if(AUDIO.on) AUDIO.disable(); else AUDIO.enable(); render(); }
+
 let _fxTimer=null;
 // Render the active theme's particle layer, crossfading on change. The layer is fully UNLOADED
 // (innerHTML emptied) whenever the page is hidden or reduced-motion is set — so a backgrounded
@@ -1606,7 +1687,7 @@ let _fxTimer=null;
 function paintFX(){
   const fx=document.getElementById("fx"); if(!fx) return;
   if(document.hidden || _reduceMotion()){ clearTimeout(_fxTimer); if(fx.innerHTML!=="") fx.innerHTML=""; fx.style.opacity="0"; return; }
-  let html=""; const g=FX[state.theme]; try{ if(g) html=g(); }catch(e){ html=""; }
+  let html=""; const g=FX[state.theme]; try{ const sc=(typeof SCENE!=="undefined"&&SCENE[state.theme])?SCENE[state.theme]():""; if(g) html=sc+g(); }catch(e){ html=""; }
   if(fx.innerHTML===html){ fx.style.opacity="1"; return; }
   clearTimeout(_fxTimer);
   const swap=()=>{ fx.innerHTML=html; requestAnimationFrame(()=>{ fx.style.opacity="1"; }); };
@@ -1617,6 +1698,7 @@ function applyTheme(){
   const t=THEME_KEYS.indexOf(state.theme)>=0?state.theme:"vibe";
   state.theme=t;
   const root=document.documentElement; if(root) root.setAttribute("data-theme",t);
+  try{ if(typeof AUDIO!=="undefined") AUDIO.setTheme(t); }catch(e){}
   paintFX();
 }
 let lastView=null;
@@ -2150,6 +2232,7 @@ app.addEventListener("click",e=>{
   const b=e.target.closest("[data-action]"); if(!b) return; const a=b.dataset.action;
   if(a==="view"){ if(state.view!==b.dataset.view){ state.view=b.dataset.view; prevVerdictKey=null; state.portConfirmDel=null; render(); if(state.view==="changes") loadChanges(); } }
   else if(a==="share"){ shareTrade(); }
+  else if(a==="sound"){ toggleSound(); }
   else if(a==="card"){ openCardModal(); }
   else if(a==="reloadChanges"){ changesLoaded=false; loadChanges(); }
   else if(a==="qadd"){ addItem(b.dataset.side,b.dataset.id); }
@@ -2237,13 +2320,14 @@ function __boot(){
   applyCachedData();   // instant freshness from last good pull
   loadFromHash();      // shared trade from URL (#t=...) if present
   applyTheme();        // theme attribute + FX layer
+  AUDIO.boot();        // ambient-audio prefs (gesture-gated; browsers block autoplay)
   render();            // build #app
   refreshData();       // background: latest values if configured
   loadHistory();       // background: sparkline history (graceful if absent)
   __lzGuard();         // soft "unauthorized copy" banner on non-allowlisted hosts
 }
 if(document.readyState==="loading"){ document.addEventListener("DOMContentLoaded",__boot,{once:true}); } else { __boot(); }
-try{ document.addEventListener("visibilitychange", paintFX); }catch(e){}  // pause/unload the FX layer for backgrounded tabs
+try{ document.addEventListener("visibilitychange", ()=>{ paintFX(); try{ if(document.hidden) AUDIO.suspend(); else AUDIO.resume(); }catch(e){} }); }catch(e){}  // pause/unload FX + audio for backgrounded tabs
 try{ const _mq=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)"); if(_mq&&_mq.addEventListener) _mq.addEventListener("change",applyTheme); }catch(e){}         // soft "unauthorized copy" banner on non-allowlisted hosts
 try { window.__lz = { wm: __LZ_WM, build: __LZ_BUILD, owner: "Lifenz", src: "youtube.com/@wyalife · discord.gg/resurrect" }; } catch (e) {}
 // Service worker intentionally DISABLED. Proactively remove any previously-installed worker and
