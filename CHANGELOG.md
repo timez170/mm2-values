@@ -1174,3 +1174,72 @@
 - `darkknife` **supreme**: 80 → 90
 - `darkknife` **range**: [80,90] → [90,100]
 - `brains` **supreme**: 65 → 75
+
+## 2026-06-30 — 67 change(s) [tiersOK 10, failed 0]
+- `chroma-bauble-set` **supreme**: 39800 → 38800
+- `chroma-alien-set` **supreme**: 39500 → 38500
+- `chroma-alien-set` **range**: [37500,39500] → [37500,38500]
+- `chroma-bauble` **supreme**: 38000 → 37000
+- `chroma-vampire-s-gun` **supreme**: 30000 → 29000
+- `chroma-vampire-s-gun` **trend**: Underpaid For → Stable
+- `chroma-constellation` **supreme**: 27000 → 26500
+- `chroma-constellation` **trend**: Underpaid For → Stable
+- `chroma-alienbeam` **supreme**: 25000 → 24000
+- `chroma-alienbeam` **range**: [23000,25000] → [23000,24000]
+- `traveler-s-set` **supreme**: 13900 → 13650
+- `ever-set` **supreme**: 5925 → 6000
+- `ever-set` **range**: [5925,6025] → [6000,6100]
+- `traveler-s-gun` **supreme**: 5500 → 5250
+- `evergun` **supreme**: 3400 → 3450
+- `evergun` **range**: [3400,3450] → [3450,3500]
+- `alien-set` **supreme**: 3225 → 3275
+- `alien-set` **demand**: 5 → 6
+- `alien-set` **range**: [3225,3275] → [3275,3325]
+- `dark-set` **supreme**: 2980 → 3000
+- `evergreen` **supreme**: 2525 → 2550
+- `evergreen` **range**: [2525,2575] → [2550,2600]
+- `sun-set` **supreme**: 1500 → 1475
+- `sun-set` **range**: [1475,1500] → [1450,1475]
+- `darkshot` **supreme**: 1500 → 1510
+- `darksword` **supreme**: 1480 → 1490
+- `raygun` **supreme**: 1225 → 1275
+- `raygun` **demand**: 5 → 6
+- `raygun` **range**: [1225,1275] → [1275,1325]
+- `snow-set` **supreme**: 1065 → 1075
+- `sunrise` **supreme**: 1000 → 975
+- `sunrise` **range**: [975,1000] → [950,975]
+- `cane-knife-2018` **supreme**: 700 → 675
+- `cane-knife-2018` **range**: [675,700] → [650,675]
+- `latte-set` **supreme**: 420 → 440
+- `latte-set` **trend**: Doing Well → Stable
+- `borealis-set` **supreme**: 315 → 305
+- `sweet-set` **supreme**: 275 → 285
+- `snow-dagger` **supreme**: 240 → 250
+- `dungeon` **supreme**: 225 → 300
+- `dungeon` **range**: [225,250] → [300,350]
+- `bones` **supreme**: 215 → 230
+- `bones` **range**: [215,230] → [230,250]
+- `latte-gun` **supreme**: 210 → 220
+- `latte-gun` **trend**: Doing Well → Stable
+- `latte-knife` **supreme**: 210 → 220
+- `latte-knife` **trend**: Doing Well → Stable
+- `borealis` **supreme**: 160 → 155
+- `ghoulish` **trend**: Doing Well → Stable
+- `australis` **supreme**: 155 → 150
+- `bats-set` **supreme**: 146 → 156
+- `bats-knife` **supreme**: 145 → 155
+- `treat` **supreme**: 140 → 145
+- `sweet` **supreme**: 135 → 140
+- `spectral-set` **trend**: Doing Well → Stable
+- `traveler-set` **trend**: Doing Well → Stable
+- `spectral-knife` **trend**: Doing Well → Stable
+- `traveler-gun` **trend**: Doing Well → Stable
+- `aurora-set-legend` **trend**: Doing Well → Stable
+- `vampire-set-legend` **trend**: Doing Well → Stable
+- `dark-set-rare` **trend**: Doing Well → Stable
+- `aurora-gun` **trend**: Doing Well → Stable
+- `vampire-gun` **trend**: Doing Well → Stable
+- `darkknife` **trend**: Doing Well → Stable
+- `brains` **supreme**: 75 → 85
+- `brains` **trend**: Stable → Doing Well
+- `brains` **range**: null → [85,100]
