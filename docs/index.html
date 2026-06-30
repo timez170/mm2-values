@@ -259,6 +259,67 @@
   .range-note b{color:#dce4f1;font-variant-numeric:tabular-nums}
   .badge{font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.03em;padding:2px 6px;border-radius:5px;white-space:nowrap}
   .witem-ic{display:inline-flex;align-items:center;flex:none;opacity:.92}
+  /* ===== Trends / Movers ===== */
+  .trends .mv-card{margin-bottom:12px}
+  .mv-h{font-size:13px;font-weight:800;display:flex;align-items:center;gap:7px;margin-bottom:10px}
+  .mv-n{font-size:11px;font-weight:700;color:var(--muted2);background:rgba(255,255,255,.06);padding:1px 8px;border-radius:9999px;margin-left:2px}
+  .mv-row{display:flex;align-items:center;gap:10px;width:100%;text-align:left;padding:8px 10px;border-radius:10px;border:1px solid transparent;background:transparent;color:var(--text);cursor:pointer;font-family:var(--font);transition:background var(--fast),border-color var(--fast)}
+  .mv-row:hover{background:rgba(255,255,255,.04);border-color:var(--line)}
+  .mv-row + .mv-row{margin-top:2px}
+  .mv-l{flex:1;min-width:0}
+  .mv-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .mv-spark{flex:none;display:flex;align-items:center;opacity:.92}
+  .mv-end{flex:none;display:flex;flex-direction:column;align-items:flex-end;gap:1px;min-width:64px}
+  .mv-chg{font-size:13px;font-weight:800;font-variant-numeric:tabular-nums}
+  .mv-conf{font-size:10px;font-weight:700;font-variant-numeric:tabular-nums;color:var(--muted2)}
+  .mv-empty{font-size:12.5px;color:var(--muted2);padding:3px 2px;margin:0}
+  .spark{display:block}
+  @media(max-width:520px){ .mv-spark{display:none} }
+  /* ===== Portfolio / recommendations ===== */
+  .portfolio .card{margin-bottom:12px}
+  .port-sum{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .port-sum-l{font-size:11px;color:var(--muted2);text-transform:uppercase;letter-spacing:.04em}
+  .port-sum-v{font-size:26px;font-weight:800;font-variant-numeric:tabular-nums;line-height:1.05;color:#e9d5ff}
+  .port-sum-band{font-size:11px;color:var(--muted2);font-variant-numeric:tabular-nums}
+  .port-sum-r{display:flex;flex-direction:column;align-items:flex-end;gap:4px}
+  .port-health{font-size:12.5px;font-weight:700;display:inline-flex;align-items:center;gap:5px}
+  .port-conf,.port-pl{font-size:11px;color:var(--muted2);font-variant-numeric:tabular-nums}
+  .port-add{margin-top:13px}
+  .port-search{flex:1;background:none;border:none;outline:none;color:var(--text);font-family:var(--font);font-size:13.5px}
+  .port-results{display:flex;flex-direction:column;gap:3px;margin-top:8px}
+  .port-hit{display:flex;align-items:center;gap:8px;width:100%;text-align:left;padding:7px 10px;border-radius:9px;border:1px solid var(--line);background:rgba(14,19,32,.5);color:var(--text);cursor:pointer;font-family:var(--font);font-size:13px;transition:border-color var(--fast),background var(--fast)}
+  .port-hit:hover{border-color:var(--line2);background:rgba(255,255,255,.04)}
+  .port-hit-n{flex:1;min-width:0;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .port-hit-v{font-size:12px;color:#e9d5ff;font-variant-numeric:tabular-nums}
+  .port-nohit{font-size:12.5px;color:var(--muted2);padding:6px 2px}
+  .port-list{margin-top:12px;display:flex;flex-direction:column;gap:4px}
+  .port-row{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:7px 8px;border-radius:9px}
+  .port-row:hover{background:rgba(255,255,255,.03)}
+  .port-name{font-size:13px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .port-row-end{display:flex;align-items:center;gap:8px;flex:none}
+  .port-tv{font-size:13px;font-weight:700;color:#e9d5ff;font-variant-numeric:tabular-nums;min-width:46px;text-align:right}
+  .qbtn.rm{color:#fb7185;margin-left:2px}
+  .port-empty{font-size:12.5px;color:var(--muted2);line-height:1.5;margin:4px 2px}
+  .rec-catbar{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:12px}
+  .pcat{font-size:12px;font-weight:600;padding:5px 11px;border-radius:9999px;border:1px solid var(--line);background:transparent;color:var(--muted2);cursor:pointer;font-family:var(--font);transition:border-color var(--fast),background var(--fast),color var(--fast)}
+  .pcat:hover{border-color:var(--line2);color:#dce4f1}
+  .pcat.on{border-color:rgba(139,92,246,.55);background:rgba(139,92,246,.15);color:#e9d5ff}
+  .rec-prof{margin-bottom:12px}
+  .rec-ph{font-size:13.5px;font-weight:800;display:flex;align-items:center;gap:7px;flex-wrap:wrap;margin-bottom:11px}
+  .rec-blurb{font-size:11.5px;font-weight:500;color:var(--muted2);flex-basis:100%}
+  .rec-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(188px,1fr));gap:9px}
+  .rec-card{border:1px solid var(--line);border-radius:12px;padding:11px;background:rgba(14,19,32,.4);display:flex;flex-direction:column;gap:8px}
+  .rec-top{display:flex;align-items:center;justify-content:space-between;gap:8px}
+  .rec-name{font-size:13px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .rec-val{font-size:13px;font-weight:800;color:#e9d5ff;font-variant-numeric:tabular-nums;flex:none}
+  .rec-mid{display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .rec-outlook{font-size:10px;font-weight:700;padding:2px 7px;border-radius:9999px}
+  .rec-score{margin-left:auto;font-size:14px;font-weight:800;font-variant-numeric:tabular-nums}
+  .rec-score-s{font-size:10px;font-weight:600;color:var(--muted)}
+  .rec-why{display:flex;flex-wrap:wrap;gap:4px}
+  .rec-chip{font-size:10.5px;color:#cdd6e8;background:rgba(255,255,255,.05);border:1px solid var(--line);padding:2px 7px;border-radius:6px}
+  .rec-add{margin-top:1px;display:inline-flex;align-items:center;justify-content:center;gap:5px;font-size:12px;font-weight:600;padding:6px 10px;border-radius:8px;border:1px solid var(--line2);background:transparent;color:#cdd6e8;cursor:pointer;font-family:var(--font);transition:border-color var(--fast),background var(--fast),color var(--fast)}
+  .rec-add:hover{border-color:rgba(139,92,246,.5);background:rgba(139,92,246,.12);color:#fff}
   .radar-card{padding:6px}
   .radar-row{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;text-align:left;background:transparent;border:none;border-radius:9px;padding:9px 10px;cursor:pointer;color:var(--text);font-family:var(--font);transition:background var(--fast)}
   .radar-row+.radar-row{border-top:1px solid var(--line)}
@@ -1099,10 +1160,11 @@ const state={ view:"calc", your:[], their:[],
   favorites: store.get("mm2.favorites",[]).filter(id=>BY_ID[id]),
   history: store.get("mm2.history",[]),
   recents: store.get("mm2.recents",[]).filter(id=>BY_ID[id]),
+  portfolio: store.get("mm2.portfolio",[]).filter(o=>o&&BY_ID[o.id]).map(o=>({id:o.id,qty:clampQty(o.qty)})), portQ:"", portCat:"All",
   theme: store.get("mm2.theme","midnight"),
   q_you:"", q_them:"", cat_you:"All", cat_them:"All", sort:"value",
   active_you:-1, active_them:-1 };
-function persist(){ store.set("mm2.favorites",state.favorites); store.set("mm2.history",state.history); store.set("mm2.theme",state.theme); store.set("mm2.recents",state.recents); }
+function persist(){ store.set("mm2.favorites",state.favorites); store.set("mm2.history",state.history); store.set("mm2.theme",state.theme); store.set("mm2.recents",state.recents); store.set("mm2.portfolio",state.portfolio); }
 
 // transient animation flags
 let prevVerdictKey=null, justAdded={you:null,them:null}, firstPaint=true;
@@ -1433,7 +1495,7 @@ function headerHTML(){
       <div class="logo"><img class="logo-img" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgdmlld0JveD0iMCAwIDI1NiAyNTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMmMxZDUwIi8+PHN0b3Agb2Zmc2V0PSIwLjU1IiBzdG9wLWNvbG9yPSIjMWExMzMwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMTAwYzFjIi8+PC9saW5lYXJHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0icGlua0dsb3ciIGN4PSIwLjQyIiBjeT0iMC40IiByPSIwLjU1Ij48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmNDcyYjYiIHN0b3Atb3BhY2l0eT0iMC4zMiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2Y0NzJiNiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iY29vbEdsb3ciIGN4PSIwLjY2IiBjeT0iMC4zMiIgcj0iMC41Ij48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNjZmUwZmYiIHN0b3Atb3BhY2l0eT0iMC4yMCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2NmZTBmZiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic3RlZWwiIHgxPSIwIiB5MT0iMSIgeDI9IjEiIHkyPSIwIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM3Yzg4OWUiLz48c3RvcCBvZmZzZXQ9IjAuNSIgc3RvcC1jb2xvcj0iI2MyY2NkZCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2VlZjNmYiIvPjwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImdvbGQiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmN2NkNmIiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNjZjhhMmEiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJncmlwIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMzMyOTNmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMWMxNjI2Ii8+PC9saW5lYXJHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0icGV0YWwiIGN4PSIwLjUiIGN5PSIwLjIiIHI9IjAuOSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmZkOWVjIi8+PHN0b3Agb2Zmc2V0PSIwLjU1IiBzdG9wLWNvbG9yPSIjZjlhOGQ0Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZWM1ZmE2Ii8+PC9yYWRpYWxHcmFkaWVudD4KICAgIDxnIGlkPSJwZXRhbFNoYXBlIj48cGF0aCBkPSJNMCAwIEMgNiAtOSA2IC0xOSAwLjYgLTIzIEMgMC4yIC0yMiAwLjIgLTIyIDAgLTIxLjQgQyAtMC4yIC0yMiAtMC4yIC0yMiAtMC42IC0yMyBDIC02IC0xOSAtNiAtOSAwIDAgWiIvPjwvZz4KICA8L2RlZnM+CiAgPHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjI0NCIgaGVpZ2h0PSIyNDQiIHJ4PSI2MCIgZmlsbD0idXJsKCNiZykiLz4KICA8cmVjdCB4PSI2IiB5PSI2IiB3aWR0aD0iMjQ0IiBoZWlnaHQ9IjI0NCIgcng9IjYwIiBmaWxsPSJ1cmwoI3BpbmtHbG93KSIvPgogIDxyZWN0IHg9IjYiIHk9IjYiIHdpZHRoPSIyNDQiIGhlaWdodD0iMjQ0IiByeD0iNjAiIGZpbGw9InVybCgjY29vbEdsb3cpIi8+CiAgPHJlY3QgeD0iNi41IiB5PSI2LjUiIHdpZHRoPSIyNDMiIGhlaWdodD0iMjQzIiByeD0iNTkuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utb3BhY2l0eT0iMC4xMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KCiAgPCEtLSBrYXRhbmEgLS0+CiAgPGc+CiAgICA8IS0tIGJsYWRlIGJvZHkgLS0+CiAgICA8cGF0aCBkPSJNODQgMTcyIFExMzIgMTA0IDE5NiA2MiBMMjA4IDUwIEwyMDAgNzAgUTE0MCAxMTAgOTQgMTgyIFoiIGZpbGw9InVybCgjc3RlZWwpIiAvPgogICAgPCEtLSB5YWtpLWJhIChoYXJkZW5lZCBlZGdlLCBicmlnaHRlcikgLS0+CiAgICA8cGF0aCBkPSJNIDIwMC4wIDcwLjAgTCAxOTUuNCA3My4xIEwgMTkwLjkgNzYuMyBMIDE4Ni4zIDc5LjcgTCAxODEuOSA4My4xIEwgMTc3LjQgODYuNiBMIDE3My4xIDkwLjIgTCAxNjguNyA5My45IEwgMTY0LjQgOTcuNiBMIDE2MC4xIDEwMS41IEwgMTU1LjkgMTA1LjUgTCAxNTEuNyAxMDkuNiBMIDE0Ny42IDExMy43IEwgMTQzLjUgMTE4LjAgTCAxMzkuNCAxMjIuNCBMIDEzNS40IDEyNi44IEwgMTMxLjUgMTMxLjMgTCAxMjcuNSAxMzYuMCBMIDEyMy42IDE0MC43IEwgMTE5LjggMTQ1LjYgTCAxMTYuMCAxNTAuNSBMIDExMi4yIDE1NS41IEwgMTA4LjUgMTYwLjYgTCAxMDQuOCAxNjUuOCBMIDEwMS4yIDE3MS4xIEwgOTcuNiAxNzYuNSBMIDk0LjAgMTgyLjAgTCA4NS42IDE3Ni42IEwgOTEuMiAxNzIuMyBMIDk0LjUgMTY2LjYgTCA5Ni4yIDE1OS44IEwgOTkuMiAxNTMuOSBMIDEwNC42IDE0OS44IEwgMTEwLjUgMTQ2LjMgTCAxMTQuNiAxNDEuNSBMIDExNi43IDEzNS4xIEwgMTE5LjYgMTI5LjMgTCAxMjQuNyAxMjUuNSBMIDEzMC44IDEyMi43IEwgMTM1LjUgMTE4LjggTCAxMzguMiAxMTMuMCBMIDE0MS4wIDEwNy4zIEwgMTQ1LjkgMTAzLjYgTCAxNTIuMSAxMDEuNSBMIDE1Ny4zIDk4LjUgTCAxNjAuNiA5My40IEwgMTYzLjYgODcuOSBMIDE2OC4xIDg0LjMgTCAxNzQuMyA4Mi43IEwgMTgwLjAgODAuNiBMIDE4My45IDc2LjQgTCAxODcuMSA3MS4xIEwgMTkxLjUgNjcuNSBMIDE5Ny41IDY2LjMgWiIgZmlsbD0iI2ZmZmZmZiIgZmlsbC1vcGFjaXR5PSIwLjMwIi8+CiAgICA8IS0tIGhhbW9uICh3YXZ5IHRlbXBlciBsaW5lKSAtLT4KICAgIDxwYXRoIGQ9Ik0gMTk3LjUgNjYuMyBMIDE5MS41IDY3LjUgTCAxODcuMSA3MS4xIEwgMTgzLjkgNzYuNCBMIDE4MC4wIDgwLjYgTCAxNzQuMyA4Mi43IEwgMTY4LjEgODQuMyBMIDE2My42IDg3LjkgTCAxNjAuNiA5My40IEwgMTU3LjMgOTguNSBMIDE1Mi4xIDEwMS41IEwgMTQ1LjkgMTAzLjYgTCAxNDEuMCAxMDcuMyBMIDEzOC4yIDExMy4wIEwgMTM1LjUgMTE4LjggTCAxMzAuOCAxMjIuNyBMIDEyNC43IDEyNS41IEwgMTE5LjYgMTI5LjMgTCAxMTYuNyAxMzUuMSBMIDExNC42IDE0MS41IEwgMTEwLjUgMTQ2LjMgTCAxMDQuNiAxNDkuOCBMIDk5LjIgMTUzLjkgTCA5Ni4yIDE1OS44IEwgOTQuNSAxNjYuNiBMIDkxLjIgMTcyLjMgTCA4NS42IDE3Ni42IiBmaWxsPSJub25lIiBzdHJva2U9IiNlOGVlZmIiIHN0cm9rZS1vcGFjaXR5PSIwLjY1IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgICA8IS0tIGJyaWdodCBlZGdlIGhpZ2hsaWdodCAtLT4KICAgIDxwYXRoIGQ9Ik0yMDAgNzAgUTE0MCAxMTAgOTUgMTgxIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjg1IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogICAgPCEtLSBzdWJ0bGUgc3BpbmUgc2hhZGUgZm9yIGZvcm0gLS0+CiAgICA8cGF0aCBkPSJNODQgMTcyIFExMzIgMTA0IDE5NiA2MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNWI2Njc4IiBzdHJva2Utb3BhY2l0eT0iMC41IiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogICAgPCEtLSB0c3VrYSAoaGFuZGxlKSBkaWFtb25kIGl0byB3cmFwICsgbWVudWtpIGRpYW1vbmRzIC0tPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoODkgMTc3KSByb3RhdGUoMTMzLjYpIj4KICAgICAgPHJlY3QgeD0iMiIgeT0iLTgiIHdpZHRoPSI1MCIgaGVpZ2h0PSIxNiIgcng9IjQuNSIgZmlsbD0idXJsKCNncmlwKSIvPgogICAgICA8ZyBzdHJva2U9IiMxMDBjMTciIHN0cm9rZS13aWR0aD0iMS42IiBzdHJva2Utb3BhY2l0eT0iMC45IiBzdHJva2UtbGluZWNhcD0icm91bmQiPgogICAgICAgIDxwYXRoIGQ9Ik03IC04IDE2IDggTTE2IC04IDI1IDggTTI1IC04IDM0IDggTTM0IC04IDQzIDggTTQzIC04IDUwIDUiLz4KICAgICAgICA8cGF0aCBkPSJNMTYgLTggNyA4IE0yNSAtOCAxNiA4IE0zNCAtOCAyNSA4IE00MyAtOCAzNCA4IE01MCAtNSA0MyA4Ii8+CiAgICAgIDwvZz4KICAgICAgPGcgZmlsbD0iI2VmM2U1NyI+CiAgICAgICAgPHBhdGggZD0iTTExLjUgLTMuMSBMMTQuNiAwIEwxMS41IDMuMSBMOC40IDAgWiIvPjxwYXRoIGQ9Ik0yMC41IC0zLjEgTDIzLjYgMCBMMjAuNSAzLjEgTDE3LjQgMCBaIi8+PHBhdGggZD0iTTI5LjUgLTMuMSBMMzIuNiAwIEwyOS41IDMuMSBMMjYuNCAwIFoiLz48cGF0aCBkPSJNMzguNSAtMy4xIEw0MS42IDAgTDM4LjUgMy4xIEwzNS40IDAgWiIvPgogICAgICA8L2c+CiAgICAgIDwhLS0gZnVjaGkgKGNvbGxhcikgKyBrYXNoaXJhIChjYXApIC0tPgogICAgICA8cmVjdCB4PSIxLjUiIHk9Ii04IiB3aWR0aD0iNC41IiBoZWlnaHQ9IjE2IiByeD0iMS44IiBmaWxsPSJ1cmwoI2dvbGQpIi8+CiAgICAgIDxyZWN0IHg9IjQ4LjUiIHk9Ii04IiB3aWR0aD0iNS41IiBoZWlnaHQ9IjE2IiByeD0iMi42IiBmaWxsPSJ1cmwoI2dvbGQpIi8+CiAgICA8L2c+CgogICAgPCEtLSB0c3ViYSAoYm9sZCBzcXVhcmVkIGd1YXJkIGFjcm9zcyB0aGUgYmxhZGUpIC0tPgogICAgPGcgdHJhbnNmb3JtPSJyb3RhdGUoLTQ2LjQgODkgMTc3KSI+CiAgICAgIDxyZWN0IHg9IjgzLjUiIHk9IjE2MyIgd2lkdGg9IjExIiBoZWlnaHQ9IjI4IiByeD0iMy41IiBmaWxsPSJ1cmwoI2dvbGQpIi8+CiAgICAgIDxyZWN0IHg9Ijg2LjYiIHk9IjE2MyIgd2lkdGg9IjQuOCIgaGVpZ2h0PSIyOCIgcng9IjIiIGZpbGw9IiM3YzNhMjQiIGZpbGwtb3BhY2l0eT0iMC41Ii8+CiAgICA8L2c+CiAgPC9nPgoKICA8IS0tIHNha3VyYTogc21hbGwgYmxvc3NvbSArIGRyaWZ0aW5nIHBldGFscyAtLT4KICA8ZyBmaWxsPSJ1cmwoI3BldGFsKSI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNTAgODApIj4KICAgICAgPHVzZSBocmVmPSIjcGV0YWxTaGFwZSIgdHJhbnNmb3JtPSJyb3RhdGUoMCkgc2NhbGUoMC42MikiLz48dXNlIGhyZWY9IiNwZXRhbFNoYXBlIiB0cmFuc2Zvcm09InJvdGF0ZSg3Mikgc2NhbGUoMC42MikiLz48dXNlIGhyZWY9IiNwZXRhbFNoYXBlIiB0cmFuc2Zvcm09InJvdGF0ZSgxNDQpIHNjYWxlKDAuNjIpIi8+PHVzZSBocmVmPSIjcGV0YWxTaGFwZSIgdHJhbnNmb3JtPSJyb3RhdGUoMjE2KSBzY2FsZSgwLjYyKSIvPjx1c2UgaHJlZj0iI3BldGFsU2hhcGUiIHRyYW5zZm9ybT0icm90YXRlKDI4OCkgc2NhbGUoMC42MikiLz4KICAgICAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjIuNiIgZmlsbD0iI2ZmZjNkNiIvPgogICAgPC9nPgogICAgPHVzZSBocmVmPSIjcGV0YWxTaGFwZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAwIDY0KSByb3RhdGUoMzUpIHNjYWxlKDAuODIpIiBvcGFjaXR5PSIwLjk1Ii8+CiAgICA8dXNlIGhyZWY9IiNwZXRhbFNoYXBlIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3NCAxMTYpIHJvdGF0ZSgtMjUpIHNjYWxlKDAuNjYpIiBvcGFjaXR5PSIwLjkiLz4KICAgIDx1c2UgaHJlZj0iI3BldGFsU2hhcGUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MiAxNTApIHJvdGF0ZSgxMjUpIHNjYWxlKDAuNTgpIiBvcGFjaXR5PSIwLjgyIi8+CiAgPC9nPgo8L3N2Zz4=" alt="Lifenz MM2 Trade Calculator logo" width="38" height="38"/></div>
       <div><h1 class="title"><span class="brandmark">LIFENZ</span> MM2 Trade Calculator</h1><p class="tagline">${icon("sparkles",11,"violet")} Dual-source · value · demand · rarity · trend</p></div>
     </div>
-    <div class="row gap8 wrap">${themeSel}<div class="tabs">${tab("calc","calculator","Calculator",0)}${tab("history","history","Saved",state.history.length)}${tab("favorites","star","Favorites",state.favorites.length)}${tab("changes","activity","Changes",0)}${tab("radar","target","Radar",0)}</div></div>
+    <div class="row gap8 wrap">${themeSel}<div class="tabs">${tab("calc","calculator","Calculator",0)}${tab("history","history","Saved",state.history.length)}${tab("favorites","star","Favorites",state.favorites.length)}${tab("portfolio","box","Portfolio",state.portfolio.length)}${tab("changes","activity","Changes",0)}${tab("trends","trendingUp","Trends",0)}${tab("radar","target","Radar",0)}</div></div>
   </header>`;
 }
 function footerHTML(){
@@ -1521,7 +1583,7 @@ function render(){
   const app=document.getElementById("app");
   const sc={}; ["you","them"].forEach(s=>{ const el=document.getElementById("items-"+s); if(el) sc[s]=el.scrollTop; });
   const entering = state.view!==lastView;
-  const body = state.view==="calc"?calcView(entering) : state.view==="history"?historyView() : state.view==="changes"?changesView() : state.view==="radar"?radarView() : favoritesView();
+  const body = state.view==="calc"?calcView(entering) : state.view==="history"?historyView() : state.view==="changes"?changesView() : state.view==="portfolio"?portfolioView() : state.view==="trends"?trendsView() : state.view==="radar"?radarView() : favoritesView();
   app.innerHTML = headerHTML()+`<div class="${entering?'view-in':''}" id="view">${body}</div>`+footerHTML();
   ["you","them"].forEach(s=>{ const el=document.getElementById("items-"+s); if(el&&sc[s]) el.scrollTop=sc[s]; });
   // gauge marker glides only when the verdict category changes
@@ -1640,6 +1702,153 @@ async function loadChanges(){
   }catch(e){ CHANGES_STATE="error"; changesLoaded=false; console.warn("[mm2] changelog unavailable:",e&&e.message); }
   if(state.view==="changes") render();
 }
+/* ===========================================================================
+   TRENDS / MOVERS  —  surfaces the value direction the recommendation engine
+   already measures (histMetrics: % move, momentum, volatility) but never showed.
+   Confidence = sample size + signal-to-noise (steady move vs choppy). Pure. =========================================================================== */
+/* ===========================================================================
+   PORTFOLIO / INVENTORY  +  upgrade recommender. Deterministic, explainable
+   scoring over existing signals (reconciled value, demand, liquidity, stability,
+   momentum & volatility from history). Three risk profiles, category-filtered,
+   each pick justified. No server, so "predictions" = transparent heuristics. =========================================================================== */
+function invSignals(it){
+  const liq=itemLiquidity01(it), des=itemDesire01(it), stab=stabScore01(it), trend=itemTrend01(it);
+  const m=histMetrics(it.id);
+  const mom = m? clamp01(0.5+m.normSlope*2) : 0.5;
+  const vol = m? clamp01(m.cv/0.5) : 0.35;
+  const r=reconcile(it); const vconf=r?r.conf/100:0.6, val=r?r.value:(combinedVal(it)||0);
+  return {liq,des,stab,trend,mom,vol,vconf,val,m};
+}
+const RISK_PROFILES=[
+  {k:"safe",label:"Safe",color:"#34d399",icon:"shield",blurb:"Liquid, in-demand, steady \u2014 easy to re-trade and unlikely to tank.",
+   score:x=>clamp100(100*clamp01(0.34*x.liq + 0.26*x.des + 0.24*x.stab + 0.16*x.vconf - 0.30*x.vol))},
+  {k:"balanced",label:"Balanced",color:"#a78bfa",icon:"scale",blurb:"A healthy mix of value retention and upside.",
+   score:x=>clamp100(100*clamp01(0.26*x.liq + 0.24*x.des + 0.22*x.trend + 0.16*x.mom + 0.12*x.vconf - 0.10*x.vol))},
+  {k:"aggressive",label:"High-risk",color:"#fb923c",icon:"trendingUp",blurb:"Momentum & swing potential \u2014 bigger upside, bigger risk.",
+   score:x=>clamp100(100*clamp01(0.45*x.mom + 0.20*x.des + 0.18*x.vol + 0.17*x.trend))}
+];
+const PORT_CATS=["All","Set","Godly","Chroma","Ancient","Collectibles","High-demand"];
+function catMatch(it,cat){
+  if(cat==="All") return true;
+  if(cat==="Collectibles") return ["Vintage","Unique","Legendary"].includes(it.category);
+  if(cat==="High-demand") return it.demand!=null && it.demand>=7;
+  return it.category===cat;
+}
+function recWhy(o){
+  const it=o.it, x=o.s, out=[];
+  if(it.demand!=null) out.push(`Demand ${it.demand}/10`);
+  out.push(x.liq>=0.66?"Very liquid":x.liq>=0.45?"Tradeable":"Thin market");
+  const tw=recTrendWord(it); out.push(tw.charAt(0).toUpperCase()+tw.slice(1));
+  if(x.m){ if(x.m.normSlope>=0.08) out.push("Momentum up"); else if(x.m.normSlope<=-0.08) out.push("Momentum down"); }
+  if(x.vol>=0.6) out.push("Volatile");
+  if(x.vconf>=0.78) out.push("Sources agree");
+  return out.slice(0,4);
+}
+function recOutlook(it){
+  const tw=recTrendWord(it);
+  if(tw==="rising") return {t:"Upside",c:"#34d399"};
+  if(tw==="falling") return {t:"Cooling risk",c:"#fb7185"};
+  if(tw==="volatile") return {t:"Swingy",c:"#fbbf24"};
+  return {t:"Holds value",c:"#8aa0c6"};
+}
+function recommendUpgrades(port,cat){
+  const V=reconciledSide(port).value;
+  const owned=new Set(port.map(o=>o.id));
+  let pool=ALL.filter(it=> !it.placeholder && !owned.has(it.id) && reconcile(it) && catMatch(it,cat));
+  if(V>0) pool=pool.filter(it=>{ const v=reconcile(it).value; return v>=V*0.65 && v<=V*1.5; });
+  const scored=pool.map(it=>({it, s:invSignals(it)}));
+  const out={};
+  for(const p of RISK_PROFILES){
+    const ranked=scored.map(o=>({...o, sc:p.score(o.s)})).sort((a,b)=>b.sc-a.sc);
+    const picks=[], seen=new Set();
+    for(const o of ranked){ if(picks.length>=3) break; if(seen.has(o.it.category)) continue; seen.add(o.it.category); picks.push(o); }
+    for(const o of ranked){ if(picks.length>=3) break; if(!picks.includes(o)) picks.push(o); }
+    out[p.k]=picks;
+  }
+  return {V, out, count:pool.length};
+}
+function portSearchHTML(q){
+  q=(q||"").trim().toLowerCase();
+  if(!q) return "";
+  const owned=new Set(state.portfolio.map(o=>o.id));
+  const hits=ALL.filter(it=>!owned.has(it.id) && (it.name.toLowerCase().includes(q) || (it.aliases&&it.aliases.some(a=>String(a).toLowerCase().includes(q))))).slice(0,8);
+  if(!hits.length) return `<div class="port-nohit">No match for \u201c${esc(q)}\u201d</div>`;
+  return hits.map(it=>{ const r=reconcile(it); return `<button class="port-hit" data-action="padd" data-id="${it.id}">${itemIconTag(it,14)}<span class="port-hit-n">${esc(it.name)}</span>${badge(it.category)}<span class="port-hit-v">${r?fmt(Math.round(r.value)):"\u2014"}</span></button>`; }).join("");
+}
+function portfolioView(){
+  const port=state.portfolio, inv=reconciledSide(port);
+  const health=sideAgg(port,itemTrend01);
+  const hLabel = health==null?"\u2014": health>=0.62?"Healthy":health>=0.45?"Mixed":"Soft";
+  const hCol = health==null?"#8aa0c6": health>=0.62?"#34d399":health>=0.45?"#fbbf24":"#fb7185";
+  const invRows = port.length? port.map(o=>{ const it=BY_ID[o.id], r=reconcile(it);
+    return `<div class="port-row"><span class="row gap8 min0">${itemIconTag(it,15)}<span class="port-name">${esc(it.name)}</span>${badge(it.category)}</span>
+      <span class="port-row-end"><span class="port-tv">${r?fmt(Math.round(r.value*o.qty)):"\u2014"}</span>
+      <span class="qty"><button class="qbtn" data-action="pqty" data-id="${o.id}" data-d="-1" aria-label="decrease">${icon("minus",12)}</button><span class="qn">${o.qty}</span><button class="qbtn" data-action="pqty" data-id="${o.id}" data-d="1" aria-label="increase">${icon("plus",12)}</button></span>
+      <button class="qbtn rm" data-action="prm" data-id="${o.id}" aria-label="remove">${icon("x",12)}</button></span></div>`;
+  }).join("") : `<p class="port-empty">No items yet. Search below to add what you own \u2014 then I\u2019ll value your inventory at reconciled True Value and suggest upgrade paths.</p>`;
+  const rec=recommendUpgrades(port, state.portCat);
+  const catChips=PORT_CATS.map(c=>`<button class="pcat${state.portCat===c?' on':''}" data-action="pcat" data-c="${c}">${c}</button>`).join("");
+  const card=(o)=>{ const it=o.it, r=reconcile(it), ol=recOutlook(it);
+    return `<div class="rec-card"><div class="rec-top"><span class="row gap8 min0">${itemIconTag(it,16)}<span class="rec-name">${esc(it.name)}</span></span><span class="rec-val">${r?fmt(Math.round(r.value)):"\u2014"}</span></div>
+      <div class="rec-mid">${badge(it.category)}<span class="rec-outlook" style="color:${ol.c};background:${ol.c}1f">${ol.t}</span><span class="rec-score" title="Match score for this profile">${Math.round(o.sc)}<span class="rec-score-s">/100</span></span></div>
+      <div class="rec-why">${recWhy(o).map(w=>`<span class="rec-chip">${esc(w)}</span>`).join("")}</div>
+      <button class="rec-add" data-action="addFav" data-side="them" data-id="${it.id}">${icon("plus",12)} Model in calculator</button></div>`;
+  };
+  const profSection=(pf)=>{ const picks=rec.out[pf.k]||[];
+    return `<div class="card rec-prof"><div class="rec-ph" style="color:${pf.color}">${icon(pf.icon,15)} ${pf.label}<span class="rec-blurb">${pf.blurb}</span></div>
+      ${picks.length?`<div class="rec-grid">${picks.map(card).join("")}</div>`:`<p class="port-empty">No ${state.portCat==="All"?"":esc(state.portCat)+" "}matches in your value range right now \u2014 try another category.</p>`}</div>`;
+  };
+  return `<div class="portfolio">
+    <p class="chg-intro">${icon("box",12,"violet")} <b>Portfolio &amp; upgrade ideas</b> \u2014 add what you own; I value it at reconciled True Value and suggest trade-up targets across risk levels and categories, weighing demand, liquidity, stability, momentum &amp; volatility. Heuristics, not guarantees \u2014 confirm live before high-value trades.</p>
+    <div class="card">
+      <div class="port-sum"><div><div class="port-sum-l">Inventory True Value</div><div class="port-sum-v">${fmt(Math.round(inv.value))}</div>${inv.hi>inv.lo?`<div class="port-sum-band">${fmt(Math.round(inv.lo))} \u2013 ${fmt(Math.round(inv.hi))}</div>`:""}</div>
+        <div class="port-sum-r"><span class="port-health" style="color:${hCol}">${icon("activity",13)} ${hLabel} holdings</span>${inv.value>0?`<span class="port-conf">${inv.conf}% conf</span>`:""}${inv.priceless?`<span class="port-pl">${inv.priceless} priceless</span>`:""}</div></div>
+      <div class="port-add"><div class="search-box">${icon("search",15,"mut")}<input class="port-search" id="port-search" placeholder="Search items you own\u2026" value="${esc(state.portQ||"")}" autocomplete="off" spellcheck="false"/></div><div id="port-results" class="port-results">${portSearchHTML(state.portQ)}</div></div>
+      <div class="port-list">${invRows}</div>
+    </div>
+    <div class="rec-catbar">${catChips}</div>
+    ${RISK_PROFILES.map(profSection).join("")}
+  </div>`;
+}
+function moverData(){
+  if(!HISTORY || !HISTORY.values) return null;
+  const rows=[];
+  for(const it of ALL){
+    if(it.placeholder) continue;
+    const m=histMetrics(it.id); if(!m) continue;
+    const raw=HISTORY.values[it.id]; const pts=raw.filter(v=>v!=null&&isFinite(v));
+    if(pts.length<2) continue;
+    const first=pts[0], last=pts[pts.length-1];
+    const chgPct = first>0 ? (last-first)/first*100 : 0;
+    const snr = Math.min(1, Math.abs(m.normSlope)/(m.cv*0.6+0.05));
+    const conf = Math.round(clamp100(45 + 35*snr + Math.min(15,(m.n-3)*3)));
+    rows.push({it, m, chgPct, conf});
+  }
+  return rows;
+}
+function trendsView(){
+  const data=moverData();
+  if(!data) return `<div class="noTrade">${icon("trendingUp",30)}<p>Trends appear once the calculator is pulling a live <b>history.json</b> feed. They track each item\u2019s value direction over time.</p></div>`;
+  if(!data.length) return `<div class="noTrade">${icon("activity",30)}<p>Not enough value history recorded yet to chart movement. Check back as the feed fills in.</p></div>`;
+  const risers=data.filter(r=>r.chgPct>=2).sort((a,b)=>b.chgPct-a.chgPct).slice(0,8);
+  const fallers=data.filter(r=>r.chgPct<=-2).sort((a,b)=>a.chgPct-b.chgPct).slice(0,8);
+  const volatile=data.slice().sort((a,b)=>b.m.cv-a.m.cv).slice(0,8);
+  const row=(r)=>{
+    const col = r.chgPct>0?"#34d399":r.chgPct<0?"#fb7185":"#8aa0c6";
+    const cc = r.conf>=70?"#34d399":r.conf>=50?"#fbbf24":"#fb7185";
+    return `<button class="mv-row" data-action="qadd" data-side="them" data-id="${r.it.id}" title="Add ${esc(r.it.name)} to You get">
+      <span class="mv-l row gap8 min0">${itemIconTag(r.it,15)}<span class="mv-name">${esc(r.it.name)}</span>${badge(r.it.category)}</span>
+      <span class="mv-spark">${sparkline(r.it.id)}</span>
+      <span class="mv-end"><span class="mv-chg" style="color:${col}">${r.chgPct>0?"\u25b2":r.chgPct<0?"\u25bc":""}${Math.abs(r.chgPct).toFixed(1)}%</span><span class="mv-conf" style="color:${cc}" title="Trend confidence: sample size + how steady the move is">${r.conf}% conf</span></span>
+    </button>`;
+  };
+  const sec=(title,ic,col,arr,empty)=> `<div class="card mv-card"><div class="mv-h" style="color:${col}">${icon(ic,14)} ${title}<span class="mv-n">${arr.length}</span></div>${arr.length?arr.map(row).join(""):`<p class="mv-empty">${empty}</p>`}</div>`;
+  return `<div class="trends"><p class="chg-intro">${icon("activity",12,"violet")} <b>Trends &amp; movers</b> \u2014 value direction over the tracked window from your live history feed. Left <b>%</b> = move since the window started \u00b7 right <b>%</b> = confidence (more data + a steadier move score higher). Tap a row to add it to <b>You get</b>.</p>
+    ${sec("Rising","trendingUp","#34d399",risers,"Nothing notably up right now.")}
+    ${sec("Falling","trendingDown","#fb7185",fallers,"Nothing notably down right now.")}
+    ${sec("Most volatile","activity","#fbbf24",volatile,"Not enough movement yet.")}
+  </div>`;
+}
 function radarView(){
   const rows = ALL.filter(it=> !it.placeholder && it.supreme!=null && it.mm2!=null)
     .map(it=>({it, r:reconcile(it)}))
@@ -1687,7 +1896,7 @@ async function loadHistory(){
     const res=await fetch(HISTORY_URL,{signal:ctrl.signal,cache:"no-store"}); clearTimeout(to);
     if(!res.ok) throw new Error("HTTP "+res.status);
     const h=await res.json();
-    if(h && h.values && typeof h.values==="object"){ HISTORY=h; if(state.view==="calc") render(); }
+    if(h && h.values && typeof h.values==="object"){ HISTORY=h; render(); }
   }catch(e){ /* no history yet — sparklines simply don't render */ }
 }
 function sparkline(id){
@@ -1818,6 +2027,7 @@ function cardCopy(){ cardToBlob(async b=>{ try{ await navigator.clipboard.write(
    =========================================================================== */
 const app=document.getElementById("app");
 app.addEventListener("input",e=>{
+  const _ps=e.target.closest("#port-search"); if(_ps){ state.portQ=_ps.value; const _r=document.getElementById("port-results"); if(_r) _r.innerHTML=portSearchHTML(_ps.value); return; }
   const inp=e.target.closest(".search-input"); if(!inp) return;
   const side=inp.dataset.side; state["q_"+side]=inp.value; state["active_"+side]=-1; showDropdown(side);
 });
@@ -1850,6 +2060,10 @@ app.addEventListener("click",e=>{
   else if(a==="card"){ openCardModal(); }
   else if(a==="reloadChanges"){ changesLoaded=false; loadChanges(); }
   else if(a==="qadd"){ addItem(b.dataset.side,b.dataset.id); }
+  else if(a==="padd"){ const id=b.dataset.id; const ex=state.portfolio.find(o=>o.id===id); if(ex) ex.qty=clampQty(ex.qty+1); else state.portfolio.push({id,qty:1}); state.portQ=""; persist(); render(); }
+  else if(a==="pqty"){ const id=b.dataset.id, d=parseInt(b.dataset.d,10); const o=state.portfolio.find(x=>x.id===id); if(o){ const nq=o.qty+d; if(nq<1) state.portfolio=state.portfolio.filter(x=>x.id!==id); else o.qty=clampQty(nq); persist(); render(); } }
+  else if(a==="prm"){ state.portfolio=state.portfolio.filter(x=>x.id!==b.dataset.id); persist(); render(); }
+  else if(a==="pcat"){ if(state.portCat!==b.dataset.c){ state.portCat=b.dataset.c; render(); } }
   else if(a==="clearq"){ const side=b.dataset.side; state["q_"+side]=""; render(); const si=document.getElementById("si-"+side); if(si) si.focus(); }
   else if(a==="qty"){ changeQty(b.dataset.side,b.dataset.id,parseInt(b.dataset.d,10)); }
   else if(a==="rm"){ removeItem(b.dataset.side,b.dataset.id); }
