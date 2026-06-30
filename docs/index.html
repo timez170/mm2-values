@@ -203,6 +203,11 @@
   .verdict-title{font-family:var(--round);font-size:24px;font-weight:800;letter-spacing:-.02em;line-height:1}
   .banner-sub{font-size:12.5px;color:#cdd6e8;margin:6px 0 0}.banner-sub b{font-variant-numeric:tabular-nums}
   .balance-hint{font-size:12px;display:inline-flex;align-items:center;gap:6px;padding:5px 12px;border-radius:9999px;background:rgba(0,0,0,.22)}
+  .bal-sug{display:flex;flex-wrap:wrap;align-items:center;justify-content:center;gap:6px;margin-top:8px}
+  .bal-sug-h{font-size:11.5px;color:var(--muted2);display:inline-flex;align-items:center;gap:5px}
+  .bal-chip{display:inline-flex;align-items:center;gap:6px;padding:5px 10px;border-radius:9999px;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.32);color:#f3f6fc;font-size:12px;font-weight:600;cursor:pointer;font-family:var(--font);transition:background var(--fast),border-color var(--fast),transform var(--fast)}
+  .bal-chip:hover{background:rgba(251,191,36,.2);border-color:rgba(251,191,36,.5);transform:translateY(-1px)}
+  .bal-chip-v{font-size:11px;color:#fcd34d;font-variant-numeric:tabular-nums}
 
   .gauge{margin:12px auto 0;max-width:380px}
   .gauge-track{position:relative;height:9px;border-radius:9999px;background:linear-gradient(90deg,rgba(251,113,133,.5),rgba(124,140,180,.22) 30%,rgba(124,140,180,.22) 70%,rgba(52,211,153,.5));overflow:hidden}
@@ -808,6 +813,17 @@ function balanceSuggestion(give,receive){
   if(v.diff<0){ const target=give*(1-FAIR/100); return {fair:false,side:"their",add:Math.max(1,Math.round(target-receive))}; }
   const target=receive*(1-FAIR/100); return {fair:false,side:"your",add:Math.max(1,Math.round(target-give))};
 }
+// specific item suggestions that bring the trade to Fair (tap to add to the lighter side)
+function balanceItems(bal){
+  if(!bal || bal.fair) return null;
+  const side = bal.side==="their" ? "them" : "you";
+  const present = new Set((side==="you"?state.your:state.their).map(x=>x.id));
+  const target = bal.add;
+  const scored = ALL.filter(it=> !it.placeholder && combinedVal(it)!=null && !present.has(it.id))
+    .map(it=>{ const v=combinedVal(it); return {it, v, d:Math.abs(v-target)}; })
+    .sort((a,b)=> a.d-b.d).slice(0,3);
+  return scored.length ? { side, items: scored.map(o=>({id:o.it.id, name:o.it.name, v:o.v, cat:o.it.category})) } : null;
+}
 function intel(your,their){
   const gD=sideDemand(your), rD=sideDemand(their), notes=[];
   if(rD!=null){
@@ -1007,10 +1023,11 @@ const store={
 const state={ view:"calc", your:[], their:[],
   favorites: store.get("mm2.favorites",[]).filter(id=>BY_ID[id]),
   history: store.get("mm2.history",[]),
+  recents: store.get("mm2.recents",[]).filter(id=>BY_ID[id]),
   theme: store.get("mm2.theme","midnight"),
   q_you:"", q_them:"", cat_you:"All", cat_them:"All", sort:"value",
   active_you:-1, active_them:-1 };
-function persist(){ store.set("mm2.favorites",state.favorites); store.set("mm2.history",state.history); store.set("mm2.theme",state.theme); }
+function persist(){ store.set("mm2.favorites",state.favorites); store.set("mm2.history",state.history); store.set("mm2.theme",state.theme); store.set("mm2.recents",state.recents); }
 
 // transient animation flags
 let prevVerdictKey=null, justAdded={you:null,them:null}, firstPaint=true;
@@ -1019,7 +1036,7 @@ let prevVerdictKey=null, justAdded={you:null,them:null}, firstPaint=true;
    SEARCH
    =========================================================================== */
 // POPULAR (curated quick-access list) is computed in buildData() from POPULAR_NAMES.
-const VIRTUAL={ "Popular":i=>POPULAR.includes(i.id), "High Demand":i=>(i.demand||0)>=5 };
+const VIRTUAL={ "Popular":i=>POPULAR.includes(i.id), "High Demand":i=>(i.demand||0)>=5, "Recent":i=>state.recents.includes(i.id) };
 function inCat(i,cat){ if(cat==="All") return true; if(VIRTUAL[cat]) return VIRTUAL[cat](i); return i.category===cat; }
 function sortKey(it){ return state.sort==="demand"?(it.demand??-1): state.sort==="rarity"?(it.rarity??-1): (it.supreme??it.mm2??0); }
 function searchItems(side){
@@ -1035,6 +1052,7 @@ function searchItems(side){
     return scored.map(x=>x[1]).slice(0,12);
   }
   // empty query → browse: Popular by default, High Demand by demand, else tier by chosen sort
+  if(cat==="Recent") return state.recents.map(id=>BY_ID[id]).filter(Boolean);
   if(cat==="All"||cat==="Popular") return POPULAR.map(id=>BY_ID[id]).filter(Boolean);
   if(cat==="High Demand") return pool.slice().sort((a,b)=>(b.demand||0)-(a.demand||0)).slice(0,50);
   return pool.slice().sort((a,b)=> sortKey(b)-sortKey(a)).slice(0,50);
@@ -1104,7 +1122,7 @@ function panelHTML(side){
   const q=state["q_"+side]||"", cat=state["cat_"+side]||"All";
   const opt=(v,l)=>`<option value="${v}"${v===cat?" selected":""}>${l}</option>`;
   const catSel=`<select class="cat-sel" data-action="catsel" data-side="${side}" aria-label="Category">
-    <optgroup label="Quick">${opt("All","All items")}${opt("Popular","\u2b50 Popular")}${opt("High Demand","\ud83d\udd25 High demand")}</optgroup>
+    <optgroup label="Quick">${opt("All","All items")}${opt("Popular","\u2b50 Popular")}${opt("High Demand","\ud83d\udd25 High demand")}${opt("Recent","\ud83d\udd52 Recent")}</optgroup>
     <optgroup label="Tiers">${["Godly","Chroma","Ancient","Set","Legendary","Unique","Vintage","Rare","Uncommon","Common"].map(c=>opt(c,c)).join("")}</optgroup>
   </select>`;
   const sortSel=`<select class="sort" data-action="sort" aria-label="Sort">${[["value","Value"],["demand","Demand"],["rarity","Rarity"]].map(([v,l])=>`<option value="${v}"${state.sort===v?" selected":""}>${l}</option>`).join("")}</select>`;
@@ -1112,11 +1130,14 @@ function panelHTML(side){
   if(items.length){
     body=`<div class="items" id="items-${side}">${items.map((o,i)=>itemRow(side,o,i)).join("")}</div>`;
   } else {
-    const browse=searchItems(side).slice(0,8);
-    const lbl = (cat==="All"||cat==="Popular")?"Popular": cat==="High Demand"?"High demand":cat;
-    body=`<div class="qa"><div class="qa-h">${icon("sparkles",12,"violet")} ${lbl} \u2014 tap to add</div>
-      <div class="qa-grid">${browse.map(it=>`<button class="qa-chip" data-action="qadd" data-side="${side}" data-id="${it.id}" title="${esc(it.name)} \u00b7 SV ${fmt(it.supreme)} / MM2 ${fmt(it.mm2)}">
-        <span class="qa-name">${esc(it.name)}</span><span class="qa-val">${fmt(it.supreme)}</span></button>`).join("")}</div></div>`;
+    const isDefault=(cat==="All"||cat==="Popular");
+    const recIds=isDefault?state.recents.filter(id=>BY_ID[id]).slice(0,6):[];
+    const recSet=new Set(recIds);
+    const browse=searchItems(side).filter(it=>!recSet.has(it.id)).slice(0,8);
+    const lbl = isDefault?"Popular": cat==="High Demand"?"High demand": cat==="Recent"?"Recent":cat;
+    const _chip=it=>`<button class="qa-chip" data-action="qadd" data-side="${side}" data-id="${it.id}" title="${esc(it.name)} \u00b7 SV ${fmt(it.supreme)} / MM2 ${fmt(it.mm2)}"><span class="qa-name">${esc(it.name)}</span><span class="qa-val">${fmt(it.supreme)}</span></button>`;
+    const _rec=recIds.length?`<div class="qa qa-rec"><div class="qa-h">${icon("history",12,"violet")} Recent \u2014 tap to add</div><div class="qa-grid">${recIds.map(id=>_chip(BY_ID[id])).join("")}</div></div>`:"";
+    body=_rec+`<div class="qa"><div class="qa-h">${icon("sparkles",12,"violet")} ${lbl} \u2014 tap to add</div><div class="qa-grid">${browse.map(_chip).join("")}</div></div>`;
   }
   return `<div class="card panel" style="--accent:${accent};border-color:${accent}33">
     <div class="panel-h">
@@ -1236,6 +1257,7 @@ function resultsHTML(A){
       <p class="banner-sub">Combined (average of both lists): you give <b>${fmt(A.combined.you)}</b>, you get <b>${fmt(A.combined.them)}</b> — ${A.combined.diff>=0?"gain":"deficit"} of <b style="color:${cR.t}">${fmt(Math.abs(A.combined.diff))}</b> (${Math.abs(A.combined.pct).toFixed(1)}%).</p>
       ${gaugeHTML(A.combined.pct,cR.t,animate)}
       <div class="row center wrap gap8" style="margin-top:6px">${bal}${flags.join("")}</div>
+      ${(function(){ const bi=A.balance?balanceItems(A.balance):null; if(!bi) return ""; const sl=bi.side==="you"?"your":"their"; return `<div class="bal-sug"><span class="bal-sug-h">${icon("plus",12)} Add to <b>${sl}</b> side:</span>`+bi.items.map(o=>`<button class="bal-chip" data-action="qadd" data-side="${bi.side}" data-id="${o.id}" title="${esc(o.name)} \u00b7 ~${fmt(o.v)} value">${itemIconTag({name:o.name,category:o.cat},13)}<span class="bal-chip-n">${esc(o.name)}</span><span class="bal-chip-v">${fmt(o.v)}</span></button>`).join("")+`</div>`; })()}
     </div>
   </div>`;
   const sites=`<div class="grid2">${siteCard("Supreme Values","#a78bfa",A.supreme)}${siteCard("MM2Values","#34d3ee",A.mm2)}</div>`;
@@ -1424,6 +1446,7 @@ function addItem(side,id){
   const ex=arr.find(x=>x.id===id);
   if(ex) ex.qty=clampQty(ex.qty+1); else arr.push({id,qty:1});
   justAdded[side]=id; state["q_"+side]=""; state["active_"+side]=-1;
+  state.recents=[id, ...state.recents.filter(x=>x!==id)].slice(0,16); persist();
   render();
 }
 function changeQty(side,id,d){
