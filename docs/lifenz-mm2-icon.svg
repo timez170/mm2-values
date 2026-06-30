@@ -1,0 +1,62 @@
+<svg width="256" height="256" viewBox="0 0 256 256" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#2c1d50"/><stop offset="0.55" stop-color="#1a1330"/><stop offset="1" stop-color="#100c1c"/></linearGradient>
+    <radialGradient id="pinkGlow" cx="0.42" cy="0.4" r="0.55"><stop offset="0" stop-color="#f472b6" stop-opacity="0.32"/><stop offset="1" stop-color="#f472b6" stop-opacity="0"/></radialGradient>
+    <radialGradient id="coolGlow" cx="0.66" cy="0.32" r="0.5"><stop offset="0" stop-color="#cfe0ff" stop-opacity="0.20"/><stop offset="1" stop-color="#cfe0ff" stop-opacity="0"/></radialGradient>
+    <linearGradient id="steel" x1="0" y1="1" x2="1" y2="0"><stop offset="0" stop-color="#7c889e"/><stop offset="0.5" stop-color="#c2ccdd"/><stop offset="1" stop-color="#eef3fb"/></linearGradient>
+    <linearGradient id="gold" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#f7cd6b"/><stop offset="1" stop-color="#cf8a2a"/></linearGradient>
+    <linearGradient id="grip" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#33293f"/><stop offset="1" stop-color="#1c1626"/></linearGradient>
+    <radialGradient id="petal" cx="0.5" cy="0.2" r="0.9"><stop offset="0" stop-color="#ffd9ec"/><stop offset="0.55" stop-color="#f9a8d4"/><stop offset="1" stop-color="#ec5fa6"/></radialGradient>
+    <g id="petalShape"><path d="M0 0 C 6 -9 6 -19 0.6 -23 C 0.2 -22 0.2 -22 0 -21.4 C -0.2 -22 -0.2 -22 -0.6 -23 C -6 -19 -6 -9 0 0 Z"/></g>
+  </defs>
+  <rect x="6" y="6" width="244" height="244" rx="60" fill="url(#bg)"/>
+  <rect x="6" y="6" width="244" height="244" rx="60" fill="url(#pinkGlow)"/>
+  <rect x="6" y="6" width="244" height="244" rx="60" fill="url(#coolGlow)"/>
+  <rect x="6.5" y="6.5" width="243" height="243" rx="59.5" fill="none" stroke="#ffffff" stroke-opacity="0.10" stroke-width="1.5"/>
+
+  <!-- katana -->
+  <g>
+    <!-- blade body -->
+    <path d="M84 172 Q132 104 196 62 L208 50 L200 70 Q140 110 94 182 Z" fill="url(#steel)" />
+    <!-- yaki-ba (hardened edge, brighter) -->
+    <path d="M 200.0 70.0 L 195.4 73.1 L 190.9 76.3 L 186.3 79.7 L 181.9 83.1 L 177.4 86.6 L 173.1 90.2 L 168.7 93.9 L 164.4 97.6 L 160.1 101.5 L 155.9 105.5 L 151.7 109.6 L 147.6 113.7 L 143.5 118.0 L 139.4 122.4 L 135.4 126.8 L 131.5 131.3 L 127.5 136.0 L 123.6 140.7 L 119.8 145.6 L 116.0 150.5 L 112.2 155.5 L 108.5 160.6 L 104.8 165.8 L 101.2 171.1 L 97.6 176.5 L 94.0 182.0 L 85.6 176.6 L 91.2 172.3 L 94.5 166.6 L 96.2 159.8 L 99.2 153.9 L 104.6 149.8 L 110.5 146.3 L 114.6 141.5 L 116.7 135.1 L 119.6 129.3 L 124.7 125.5 L 130.8 122.7 L 135.5 118.8 L 138.2 113.0 L 141.0 107.3 L 145.9 103.6 L 152.1 101.5 L 157.3 98.5 L 160.6 93.4 L 163.6 87.9 L 168.1 84.3 L 174.3 82.7 L 180.0 80.6 L 183.9 76.4 L 187.1 71.1 L 191.5 67.5 L 197.5 66.3 Z" fill="#ffffff" fill-opacity="0.30"/>
+    <!-- hamon (wavy temper line) -->
+    <path d="M 197.5 66.3 L 191.5 67.5 L 187.1 71.1 L 183.9 76.4 L 180.0 80.6 L 174.3 82.7 L 168.1 84.3 L 163.6 87.9 L 160.6 93.4 L 157.3 98.5 L 152.1 101.5 L 145.9 103.6 L 141.0 107.3 L 138.2 113.0 L 135.5 118.8 L 130.8 122.7 L 124.7 125.5 L 119.6 129.3 L 116.7 135.1 L 114.6 141.5 L 110.5 146.3 L 104.6 149.8 L 99.2 153.9 L 96.2 159.8 L 94.5 166.6 L 91.2 172.3 L 85.6 176.6" fill="none" stroke="#e8eefb" stroke-opacity="0.65" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    <!-- bright edge highlight -->
+    <path d="M200 70 Q140 110 95 181" fill="none" stroke="#ffffff" stroke-opacity="0.85" stroke-width="2" stroke-linecap="round"/>
+    <!-- subtle spine shade for form -->
+    <path d="M84 172 Q132 104 196 62" fill="none" stroke="#5b6678" stroke-opacity="0.5" stroke-width="1.4" stroke-linecap="round"/>
+
+    <!-- tsuka (handle) diamond ito wrap + menuki diamonds -->
+    <g transform="translate(89 177) rotate(133.6)">
+      <rect x="2" y="-8" width="50" height="16" rx="4.5" fill="url(#grip)"/>
+      <g stroke="#100c17" stroke-width="1.6" stroke-opacity="0.9" stroke-linecap="round">
+        <path d="M7 -8 16 8 M16 -8 25 8 M25 -8 34 8 M34 -8 43 8 M43 -8 50 5"/>
+        <path d="M16 -8 7 8 M25 -8 16 8 M34 -8 25 8 M43 -8 34 8 M50 -5 43 8"/>
+      </g>
+      <g fill="#ef3e57">
+        <path d="M11.5 -3.1 L14.6 0 L11.5 3.1 L8.4 0 Z"/><path d="M20.5 -3.1 L23.6 0 L20.5 3.1 L17.4 0 Z"/><path d="M29.5 -3.1 L32.6 0 L29.5 3.1 L26.4 0 Z"/><path d="M38.5 -3.1 L41.6 0 L38.5 3.1 L35.4 0 Z"/>
+      </g>
+      <!-- fuchi (collar) + kashira (cap) -->
+      <rect x="1.5" y="-8" width="4.5" height="16" rx="1.8" fill="url(#gold)"/>
+      <rect x="48.5" y="-8" width="5.5" height="16" rx="2.6" fill="url(#gold)"/>
+    </g>
+
+    <!-- tsuba (bold squared guard across the blade) -->
+    <g transform="rotate(-46.4 89 177)">
+      <rect x="83.5" y="163" width="11" height="28" rx="3.5" fill="url(#gold)"/>
+      <rect x="86.6" y="163" width="4.8" height="28" rx="2" fill="#7c3a24" fill-opacity="0.5"/>
+    </g>
+  </g>
+
+  <!-- sakura: small blossom + drifting petals -->
+  <g fill="url(#petal)">
+    <g transform="translate(150 80)">
+      <use href="#petalShape" transform="rotate(0) scale(0.62)"/><use href="#petalShape" transform="rotate(72) scale(0.62)"/><use href="#petalShape" transform="rotate(144) scale(0.62)"/><use href="#petalShape" transform="rotate(216) scale(0.62)"/><use href="#petalShape" transform="rotate(288) scale(0.62)"/>
+      <circle cx="0" cy="0" r="2.6" fill="#fff3d6"/>
+    </g>
+    <use href="#petalShape" transform="translate(100 64) rotate(35) scale(0.82)" opacity="0.95"/>
+    <use href="#petalShape" transform="translate(74 116) rotate(-25) scale(0.66)" opacity="0.9"/>
+    <use href="#petalShape" transform="translate(152 150) rotate(125) scale(0.58)" opacity="0.82"/>
+  </g>
+</svg>
