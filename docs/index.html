@@ -488,8 +488,12 @@
   .cp svg{position:absolute;left:0;bottom:0;width:100%;height:100%;display:block}
   .cp-breathe{animation:cpBreathe 7s ease-in-out infinite;transform-origin:center;will-change:opacity}
   @keyframes cpBreathe{0%,100%{opacity:.82}50%{opacity:1}}
-  .cp-flame{transform-origin:200px 172px;animation:cpFlame 2.4s ease-in-out infinite;will-change:transform}
-  @keyframes cpFlame{0%,100%{transform:scaleY(1) scaleX(1)}50%{transform:scaleY(1.09) scaleX(.97) translateY(-2px)}}
+  .cp-flame-o{transform-origin:200px 186px;animation:cpFlicker 2.3s ease-in-out infinite;will-change:transform}
+  .cp-flame-m{transform-origin:200px 184px;animation:cpFlicker 1.6s ease-in-out infinite;animation-delay:-.5s;will-change:transform}
+  .cp-flame-c{transform-origin:200px 180px;animation:cpFlicker 1.05s ease-in-out infinite;animation-delay:-.85s;will-change:transform}
+  .cp-flame-l{transform-origin:170px 186px;animation:cpFlicker 1.9s ease-in-out infinite;animation-delay:-.3s}
+  .cp-flame-r{transform-origin:230px 186px;animation:cpFlicker 1.7s ease-in-out infinite;animation-delay:-1.1s}
+  @keyframes cpFlicker{0%,100%{transform:scaleY(1) scaleX(1) translateY(0)}25%{transform:scaleY(1.07) scaleX(.96) translateY(-3px)}50%{transform:scaleY(.96) scaleX(1.03) translateY(0)}75%{transform:scaleY(1.04) scaleX(.98) translateY(-1px)}}
   .cp-window{animation:cpWin 5s ease-in-out infinite;will-change:opacity}
   @keyframes cpWin{0%,100%{opacity:.78}50%{opacity:1}}
   .cp-sway{transform-origin:80px 96px;animation:cpSway 7s ease-in-out infinite;will-change:transform}
@@ -501,9 +505,6 @@
   @keyframes cpNote{0%{transform:translateY(2px);opacity:.15}45%{opacity:.6}100%{transform:translateY(-12px);opacity:0}}
   .cp-windows{animation:cpBreathe 6s ease-in-out infinite}
   @media (prefers-reduced-motion: reduce){ .cp *{animation:none!important} }
-  .snd-btn{display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border-radius:10px;border:1px solid var(--line2);background:var(--card2);color:var(--muted2);cursor:pointer;transition:color .2s,border-color .2s,background .2s}
-  .snd-btn:hover{color:var(--violet);border-color:var(--violet)}
-  .snd-btn.on{color:var(--violet);border-color:var(--violet);background:rgba(139,92,246,.14)}
   .changes{display:flex;flex-direction:column;gap:12px}
   .chg-intro{font-size:12px;color:var(--muted2);display:flex;align-items:center;gap:6px;margin:2px 2px 0}
   .chg-card{padding:14px 16px}
@@ -1534,21 +1535,17 @@ function headerHTML(){
   const tab=(id,ic,label,n)=>`<button class="tab${state.view===id?' tab-on':''}" data-action="view" data-view="${id}">${icon(ic,15)} ${label}${n>0?`<span class="tab-n">${n}</span>`:""}</button>`;
   const tOpt=(v,l)=>`<option value="${v}"${state.theme===v?" selected":""}>${l}</option>`;
   const themeSel=`<select class="theme-sel" data-action="theme" aria-label="Theme">${THEME_KEYS.map(k=>tOpt(k,THEME_LABELS[k])).join("")}</select>`;
-  const _sON='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="M15.5 8.5a5 5 0 0 1 0 7M19 5a9 9 0 0 1 0 14"/></svg>';
-  const _sOFF='<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4z"/><path d="m23 9-6 6M17 9l6 6"/></svg>';
-  const _sndOn=(typeof AUDIO!=="undefined")&&AUDIO.on;
-  const soundBtn=`<button class="snd-btn${_sndOn?' on':''}" data-action="sound" aria-label="Ambient sound" title="Ambient sound (${_sndOn?'on':'off'})">${_sndOn?_sON:_sOFF}</button>`;
   return `<header class="hdr">
     <div class="brand">
       <div class="logo"><img class="logo-img" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjU2IiBoZWlnaHQ9IjI1NiIgdmlld0JveD0iMCAwIDI1NiAyNTYiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CiAgPGRlZnM+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImJnIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMmMxZDUwIi8+PHN0b3Agb2Zmc2V0PSIwLjU1IiBzdG9wLWNvbG9yPSIjMWExMzMwIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMTAwYzFjIi8+PC9saW5lYXJHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0icGlua0dsb3ciIGN4PSIwLjQyIiBjeT0iMC40IiByPSIwLjU1Ij48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmNDcyYjYiIHN0b3Atb3BhY2l0eT0iMC4zMiIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2Y0NzJiNiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0iY29vbEdsb3ciIGN4PSIwLjY2IiBjeT0iMC4zMiIgcj0iMC41Ij48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNjZmUwZmYiIHN0b3Atb3BhY2l0eT0iMC4yMCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2NmZTBmZiIgc3RvcC1vcGFjaXR5PSIwIi8+PC9yYWRpYWxHcmFkaWVudD4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic3RlZWwiIHgxPSIwIiB5MT0iMSIgeDI9IjEiIHkyPSIwIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiM3Yzg4OWUiLz48c3RvcCBvZmZzZXQ9IjAuNSIgc3RvcC1jb2xvcj0iI2MyY2NkZCIvPjxzdG9wIG9mZnNldD0iMSIgc3RvcC1jb2xvcj0iI2VlZjNmYiIvPjwvbGluZWFyR3JhZGllbnQ+CiAgICA8bGluZWFyR3JhZGllbnQgaWQ9ImdvbGQiIHgxPSIwIiB5MT0iMCIgeDI9IjEiIHkyPSIxIj48c3RvcCBvZmZzZXQ9IjAiIHN0b3AtY29sb3I9IiNmN2NkNmIiLz48c3RvcCBvZmZzZXQ9IjEiIHN0b3AtY29sb3I9IiNjZjhhMmEiLz48L2xpbmVhckdyYWRpZW50PgogICAgPGxpbmVhckdyYWRpZW50IGlkPSJncmlwIiB4MT0iMCIgeTE9IjAiIHgyPSIxIiB5Mj0iMSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjMzMyOTNmIi8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjMWMxNjI2Ii8+PC9saW5lYXJHcmFkaWVudD4KICAgIDxyYWRpYWxHcmFkaWVudCBpZD0icGV0YWwiIGN4PSIwLjUiIGN5PSIwLjIiIHI9IjAuOSI+PHN0b3Agb2Zmc2V0PSIwIiBzdG9wLWNvbG9yPSIjZmZkOWVjIi8+PHN0b3Agb2Zmc2V0PSIwLjU1IiBzdG9wLWNvbG9yPSIjZjlhOGQ0Ii8+PHN0b3Agb2Zmc2V0PSIxIiBzdG9wLWNvbG9yPSIjZWM1ZmE2Ii8+PC9yYWRpYWxHcmFkaWVudD4KICAgIDxnIGlkPSJwZXRhbFNoYXBlIj48cGF0aCBkPSJNMCAwIEMgNiAtOSA2IC0xOSAwLjYgLTIzIEMgMC4yIC0yMiAwLjIgLTIyIDAgLTIxLjQgQyAtMC4yIC0yMiAtMC4yIC0yMiAtMC42IC0yMyBDIC02IC0xOSAtNiAtOSAwIDAgWiIvPjwvZz4KICA8L2RlZnM+CiAgPHJlY3QgeD0iNiIgeT0iNiIgd2lkdGg9IjI0NCIgaGVpZ2h0PSIyNDQiIHJ4PSI2MCIgZmlsbD0idXJsKCNiZykiLz4KICA8cmVjdCB4PSI2IiB5PSI2IiB3aWR0aD0iMjQ0IiBoZWlnaHQ9IjI0NCIgcng9IjYwIiBmaWxsPSJ1cmwoI3BpbmtHbG93KSIvPgogIDxyZWN0IHg9IjYiIHk9IjYiIHdpZHRoPSIyNDQiIGhlaWdodD0iMjQ0IiByeD0iNjAiIGZpbGw9InVybCgjY29vbEdsb3cpIi8+CiAgPHJlY3QgeD0iNi41IiB5PSI2LjUiIHdpZHRoPSIyNDMiIGhlaWdodD0iMjQzIiByeD0iNTkuNSIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjZmZmZmZmIiBzdHJva2Utb3BhY2l0eT0iMC4xMCIgc3Ryb2tlLXdpZHRoPSIxLjUiLz4KCiAgPCEtLSBrYXRhbmEgLS0+CiAgPGc+CiAgICA8IS0tIGJsYWRlIGJvZHkgLS0+CiAgICA8cGF0aCBkPSJNODQgMTcyIFExMzIgMTA0IDE5NiA2MiBMMjA4IDUwIEwyMDAgNzAgUTE0MCAxMTAgOTQgMTgyIFoiIGZpbGw9InVybCgjc3RlZWwpIiAvPgogICAgPCEtLSB5YWtpLWJhIChoYXJkZW5lZCBlZGdlLCBicmlnaHRlcikgLS0+CiAgICA8cGF0aCBkPSJNIDIwMC4wIDcwLjAgTCAxOTUuNCA3My4xIEwgMTkwLjkgNzYuMyBMIDE4Ni4zIDc5LjcgTCAxODEuOSA4My4xIEwgMTc3LjQgODYuNiBMIDE3My4xIDkwLjIgTCAxNjguNyA5My45IEwgMTY0LjQgOTcuNiBMIDE2MC4xIDEwMS41IEwgMTU1LjkgMTA1LjUgTCAxNTEuNyAxMDkuNiBMIDE0Ny42IDExMy43IEwgMTQzLjUgMTE4LjAgTCAxMzkuNCAxMjIuNCBMIDEzNS40IDEyNi44IEwgMTMxLjUgMTMxLjMgTCAxMjcuNSAxMzYuMCBMIDEyMy42IDE0MC43IEwgMTE5LjggMTQ1LjYgTCAxMTYuMCAxNTAuNSBMIDExMi4yIDE1NS41IEwgMTA4LjUgMTYwLjYgTCAxMDQuOCAxNjUuOCBMIDEwMS4yIDE3MS4xIEwgOTcuNiAxNzYuNSBMIDk0LjAgMTgyLjAgTCA4NS42IDE3Ni42IEwgOTEuMiAxNzIuMyBMIDk0LjUgMTY2LjYgTCA5Ni4yIDE1OS44IEwgOTkuMiAxNTMuOSBMIDEwNC42IDE0OS44IEwgMTEwLjUgMTQ2LjMgTCAxMTQuNiAxNDEuNSBMIDExNi43IDEzNS4xIEwgMTE5LjYgMTI5LjMgTCAxMjQuNyAxMjUuNSBMIDEzMC44IDEyMi43IEwgMTM1LjUgMTE4LjggTCAxMzguMiAxMTMuMCBMIDE0MS4wIDEwNy4zIEwgMTQ1LjkgMTAzLjYgTCAxNTIuMSAxMDEuNSBMIDE1Ny4zIDk4LjUgTCAxNjAuNiA5My40IEwgMTYzLjYgODcuOSBMIDE2OC4xIDg0LjMgTCAxNzQuMyA4Mi43IEwgMTgwLjAgODAuNiBMIDE4My45IDc2LjQgTCAxODcuMSA3MS4xIEwgMTkxLjUgNjcuNSBMIDE5Ny41IDY2LjMgWiIgZmlsbD0iI2ZmZmZmZiIgZmlsbC1vcGFjaXR5PSIwLjMwIi8+CiAgICA8IS0tIGhhbW9uICh3YXZ5IHRlbXBlciBsaW5lKSAtLT4KICAgIDxwYXRoIGQ9Ik0gMTk3LjUgNjYuMyBMIDE5MS41IDY3LjUgTCAxODcuMSA3MS4xIEwgMTgzLjkgNzYuNCBMIDE4MC4wIDgwLjYgTCAxNzQuMyA4Mi43IEwgMTY4LjEgODQuMyBMIDE2My42IDg3LjkgTCAxNjAuNiA5My40IEwgMTU3LjMgOTguNSBMIDE1Mi4xIDEwMS41IEwgMTQ1LjkgMTAzLjYgTCAxNDEuMCAxMDcuMyBMIDEzOC4yIDExMy4wIEwgMTM1LjUgMTE4LjggTCAxMzAuOCAxMjIuNyBMIDEyNC43IDEyNS41IEwgMTE5LjYgMTI5LjMgTCAxMTYuNyAxMzUuMSBMIDExNC42IDE0MS41IEwgMTEwLjUgMTQ2LjMgTCAxMDQuNiAxNDkuOCBMIDk5LjIgMTUzLjkgTCA5Ni4yIDE1OS44IEwgOTQuNSAxNjYuNiBMIDkxLjIgMTcyLjMgTCA4NS42IDE3Ni42IiBmaWxsPSJub25lIiBzdHJva2U9IiNlOGVlZmIiIHN0cm9rZS1vcGFjaXR5PSIwLjY1IiBzdHJva2Utd2lkdGg9IjEuNSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIi8+CiAgICA8IS0tIGJyaWdodCBlZGdlIGhpZ2hsaWdodCAtLT4KICAgIDxwYXRoIGQ9Ik0yMDAgNzAgUTE0MCAxMTAgOTUgMTgxIiBmaWxsPSJub25lIiBzdHJva2U9IiNmZmZmZmYiIHN0cm9rZS1vcGFjaXR5PSIwLjg1IiBzdHJva2Utd2lkdGg9IjIiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIvPgogICAgPCEtLSBzdWJ0bGUgc3BpbmUgc2hhZGUgZm9yIGZvcm0gLS0+CiAgICA8cGF0aCBkPSJNODQgMTcyIFExMzIgMTA0IDE5NiA2MiIgZmlsbD0ibm9uZSIgc3Ryb2tlPSIjNWI2Njc4IiBzdHJva2Utb3BhY2l0eT0iMC41IiBzdHJva2Utd2lkdGg9IjEuNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIi8+CgogICAgPCEtLSB0c3VrYSAoaGFuZGxlKSBkaWFtb25kIGl0byB3cmFwICsgbWVudWtpIGRpYW1vbmRzIC0tPgogICAgPGcgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoODkgMTc3KSByb3RhdGUoMTMzLjYpIj4KICAgICAgPHJlY3QgeD0iMiIgeT0iLTgiIHdpZHRoPSI1MCIgaGVpZ2h0PSIxNiIgcng9IjQuNSIgZmlsbD0idXJsKCNncmlwKSIvPgogICAgICA8ZyBzdHJva2U9IiMxMDBjMTciIHN0cm9rZS13aWR0aD0iMS42IiBzdHJva2Utb3BhY2l0eT0iMC45IiBzdHJva2UtbGluZWNhcD0icm91bmQiPgogICAgICAgIDxwYXRoIGQ9Ik03IC04IDE2IDggTTE2IC04IDI1IDggTTI1IC04IDM0IDggTTM0IC04IDQzIDggTTQzIC04IDUwIDUiLz4KICAgICAgICA8cGF0aCBkPSJNMTYgLTggNyA4IE0yNSAtOCAxNiA4IE0zNCAtOCAyNSA4IE00MyAtOCAzNCA4IE01MCAtNSA0MyA4Ii8+CiAgICAgIDwvZz4KICAgICAgPGcgZmlsbD0iI2VmM2U1NyI+CiAgICAgICAgPHBhdGggZD0iTTExLjUgLTMuMSBMMTQuNiAwIEwxMS41IDMuMSBMOC40IDAgWiIvPjxwYXRoIGQ9Ik0yMC41IC0zLjEgTDIzLjYgMCBMMjAuNSAzLjEgTDE3LjQgMCBaIi8+PHBhdGggZD0iTTI5LjUgLTMuMSBMMzIuNiAwIEwyOS41IDMuMSBMMjYuNCAwIFoiLz48cGF0aCBkPSJNMzguNSAtMy4xIEw0MS42IDAgTDM4LjUgMy4xIEwzNS40IDAgWiIvPgogICAgICA8L2c+CiAgICAgIDwhLS0gZnVjaGkgKGNvbGxhcikgKyBrYXNoaXJhIChjYXApIC0tPgogICAgICA8cmVjdCB4PSIxLjUiIHk9Ii04IiB3aWR0aD0iNC41IiBoZWlnaHQ9IjE2IiByeD0iMS44IiBmaWxsPSJ1cmwoI2dvbGQpIi8+CiAgICAgIDxyZWN0IHg9IjQ4LjUiIHk9Ii04IiB3aWR0aD0iNS41IiBoZWlnaHQ9IjE2IiByeD0iMi42IiBmaWxsPSJ1cmwoI2dvbGQpIi8+CiAgICA8L2c+CgogICAgPCEtLSB0c3ViYSAoYm9sZCBzcXVhcmVkIGd1YXJkIGFjcm9zcyB0aGUgYmxhZGUpIC0tPgogICAgPGcgdHJhbnNmb3JtPSJyb3RhdGUoLTQ2LjQgODkgMTc3KSI+CiAgICAgIDxyZWN0IHg9IjgzLjUiIHk9IjE2MyIgd2lkdGg9IjExIiBoZWlnaHQ9IjI4IiByeD0iMy41IiBmaWxsPSJ1cmwoI2dvbGQpIi8+CiAgICAgIDxyZWN0IHg9Ijg2LjYiIHk9IjE2MyIgd2lkdGg9IjQuOCIgaGVpZ2h0PSIyOCIgcng9IjIiIGZpbGw9IiM3YzNhMjQiIGZpbGwtb3BhY2l0eT0iMC41Ii8+CiAgICA8L2c+CiAgPC9nPgoKICA8IS0tIHNha3VyYTogc21hbGwgYmxvc3NvbSArIGRyaWZ0aW5nIHBldGFscyAtLT4KICA8ZyBmaWxsPSJ1cmwoI3BldGFsKSI+CiAgICA8ZyB0cmFuc2Zvcm09InRyYW5zbGF0ZSgxNTAgODApIj4KICAgICAgPHVzZSBocmVmPSIjcGV0YWxTaGFwZSIgdHJhbnNmb3JtPSJyb3RhdGUoMCkgc2NhbGUoMC42MikiLz48dXNlIGhyZWY9IiNwZXRhbFNoYXBlIiB0cmFuc2Zvcm09InJvdGF0ZSg3Mikgc2NhbGUoMC42MikiLz48dXNlIGhyZWY9IiNwZXRhbFNoYXBlIiB0cmFuc2Zvcm09InJvdGF0ZSgxNDQpIHNjYWxlKDAuNjIpIi8+PHVzZSBocmVmPSIjcGV0YWxTaGFwZSIgdHJhbnNmb3JtPSJyb3RhdGUoMjE2KSBzY2FsZSgwLjYyKSIvPjx1c2UgaHJlZj0iI3BldGFsU2hhcGUiIHRyYW5zZm9ybT0icm90YXRlKDI4OCkgc2NhbGUoMC42MikiLz4KICAgICAgPGNpcmNsZSBjeD0iMCIgY3k9IjAiIHI9IjIuNiIgZmlsbD0iI2ZmZjNkNiIvPgogICAgPC9nPgogICAgPHVzZSBocmVmPSIjcGV0YWxTaGFwZSIgdHJhbnNmb3JtPSJ0cmFuc2xhdGUoMTAwIDY0KSByb3RhdGUoMzUpIHNjYWxlKDAuODIpIiBvcGFjaXR5PSIwLjk1Ii8+CiAgICA8dXNlIGhyZWY9IiNwZXRhbFNoYXBlIiB0cmFuc2Zvcm09InRyYW5zbGF0ZSg3NCAxMTYpIHJvdGF0ZSgtMjUpIHNjYWxlKDAuNjYpIiBvcGFjaXR5PSIwLjkiLz4KICAgIDx1c2UgaHJlZj0iI3BldGFsU2hhcGUiIHRyYW5zZm9ybT0idHJhbnNsYXRlKDE1MiAxNTApIHJvdGF0ZSgxMjUpIHNjYWxlKDAuNTgpIiBvcGFjaXR5PSIwLjgyIi8+CiAgPC9nPgo8L3N2Zz4=" alt="Lifenz MM2 Trade Calculator logo" width="38" height="38"/></div>
       <div><h1 class="title"><span class="brandmark">LIFENZ</span> MM2 Trade Calculator</h1><p class="tagline">${icon("sparkles",11,"violet")} Dual-source · value · demand · rarity · trend</p></div>
     </div>
-    <div class="row gap8 wrap">${themeSel}${soundBtn}<div class="tabs">${tab("calc","calculator","Calculator",0)}${tab("history","history","Saved",state.history.length)}${tab("favorites","star","Favorites",state.favorites.length)}${tab("portfolio","box","Portfolio",state.portfolio.length)}${tab("changes","activity","Changes",0)}${tab("trends","trendingUp","Trends",0)}</div></div>
+    <div class="row gap8 wrap">${themeSel}<div class="tabs">${tab("calc","calculator","Calculator",0)}${tab("history","history","Saved",state.history.length)}${tab("favorites","star","Favorites",state.favorites.length)}${tab("portfolio","box","Portfolio",state.portfolio.length)}${tab("changes","activity","Changes",0)}${tab("trends","trendingUp","Trends",0)}</div></div>
   </header>`;
 }
 function footerHTML(){
   return `<footer class="ftr">
-    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30m</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Values now follow <b>Supreme Values</b> (MM2Values is shown as a reference only); demand, rarity, stability & ranges are Supreme\u2019s. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
+    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30n</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Values now follow <b>Supreme Values</b> (MM2Values is shown as a reference only); demand, rarity, stability & ranges are Supreme\u2019s. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
     <p>Community estimates — not endorsed by Roblox or Nikilis. Demand/hype/duping shift fast; confirm live before high-value trades. Saved trades & favorites are stored locally on this device only.</p>
     <div class="ftr-social">
       <a href="https://youtube.com/@wyalife" target="_blank" rel="noopener noreferrer" aria-label="YouTube">${icon("youtube",15)} YouTube</a>
@@ -1630,7 +1627,7 @@ const SCENE={
   sakura(){ return `<div class="cp cp-sakura"><svg viewBox="0 0 400 200" preserveAspectRatio="xMinYMax meet"><path d="M58 200 L70 96 q4 -10 9 -4 L84 200 Z" fill="#3a2233" opacity=".6"/><g class="cp-sway" fill="#f7b8d0" opacity=".5"><ellipse cx="70" cy="70" rx="48" ry="30"/><ellipse cx="112" cy="58" rx="40" ry="25"/><ellipse cx="36" cy="80" rx="33" ry="21"/><ellipse cx="94" cy="92" rx="38" ry="21"/><ellipse cx="138" cy="84" rx="26" ry="16"/></g></svg></div>`; },
   rainforest(){ return `<div class="cp cp-rainforest"><svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice"><path d="M0 200 V118 q42 -30 82 -10 q42 -42 92 -8 q52 -30 102 0 q42 -22 124 -6 V200 Z" fill="#0e2417" opacity=".62"/><g class="cp-sway2"><path d="M0 200 V150 q52 -26 112 -6 q60 -30 132 0 q60 -22 156 -2 V200 Z" fill="#13351f" opacity=".72"/></g><g stroke="#1c4a2b" stroke-width="3" fill="none" opacity=".5" stroke-linecap="round" class="cp-vine"><path d="M118 0 q9 42 -2 72 q-6 18 4 30"/><path d="M298 0 q-9 52 2 86"/></g></svg></div>`; },
   meteor(){ return `<div class="cp cp-meteor"><svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice"><path d="M0 200 V150 L60 110 L112 150 L150 120 L210 165 L262 124 L320 160 L400 130 V200 Z" fill="#0a1430" opacity=".78"/><path d="M0 200 V172 L80 142 L142 170 L222 138 L300 172 L400 150 V200 Z" fill="#060d22" opacity=".88"/></svg></div>`; },
-  firewarm(){ return `<div class="cp cp-firewarm"><svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMax meet"><defs><radialGradient id="cpFglow" cx="50%" cy="62%" r="55%"><stop offset="0" stop-color="#ff8a3d" stop-opacity=".5"/><stop offset="1" stop-color="#ff8a3d" stop-opacity="0"/></radialGradient></defs><ellipse class="cp-breathe" cx="200" cy="172" rx="128" ry="62" fill="url(#cpFglow)"/><g fill="#3a241a"><rect x="158" y="174" width="84" height="13" rx="6" transform="rotate(-13 200 180)"/><rect x="158" y="174" width="84" height="13" rx="6" transform="rotate(13 200 180)"/></g><g class="cp-flame"><path d="M200 172 q-24 -28 -6 -58 q-2 24 13 21 q-7 -24 9 -43 q-4 32 15 38 q15 24 -5 43 Z" fill="#ff7a2d" opacity=".92"/><path d="M200 170 q-13 -18 -3 -37 q0 15 9 13 q-2 -15 7 -26 q-2 19 9 26 q9 15 -4 26 Z" fill="#ffd24a" opacity=".95"/></g></svg></div>`; },
+  firewarm(){ return `<div class="cp cp-firewarm"><svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMax meet"><defs><radialGradient id="cpFglow" cx="50%" cy="74%" r="58%"><stop offset="0" stop-color="#ff8a3d" stop-opacity=".42"/><stop offset="1" stop-color="#ff8a3d" stop-opacity="0"/></radialGradient><linearGradient id="cpFbody" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#ff4d17"/><stop offset="55%" stop-color="#ff852b"/><stop offset="100%" stop-color="#ffb347" stop-opacity=".15"/></linearGradient><radialGradient id="cpFcore" cx="50%" cy="74%" r="60%"><stop offset="0" stop-color="#fff4cf"/><stop offset="50%" stop-color="#ffd24a"/><stop offset="100%" stop-color="#ffd24a" stop-opacity="0"/></radialGradient></defs><ellipse class="cp-breathe" cx="200" cy="184" rx="118" ry="52" fill="url(#cpFglow)"/><g class="cp-flame-l"><path d="M170 186 C158 170 164 140 176 122 C182 142 184 170 170 186 Z" fill="#ff6a22" opacity=".5"/></g><g class="cp-flame-r"><path d="M230 186 C218 170 220 142 226 124 C236 144 242 170 230 186 Z" fill="#ff6a22" opacity=".5"/></g><g class="cp-flame-o"><path d="M200 186 C160 158 172 92 200 50 C228 92 240 158 200 186 Z" fill="url(#cpFbody)" opacity=".85"/></g><g class="cp-flame-m"><path d="M200 184 C176 162 182 112 200 80 C218 112 224 162 200 184 Z" fill="#ff7a2d" opacity=".9"/></g><g class="cp-flame-c"><path d="M200 180 C188 164 192 130 200 106 C208 130 212 164 200 180 Z" fill="url(#cpFcore)"/></g></svg></div>`; },
   snowy(){ return `<div class="cp cp-snowy"><svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice"><path d="M0 200 V160 Q120 130 230 158 T400 150 V200 Z" fill="#cdd8ec" opacity=".5"/><g fill="#1a2740" opacity=".72"><path d="M70 170 l-15 0 7 -17 -9 0 9 -17 -7 0 13 -21 13 21 -7 0 9 17 -9 0 7 17 z"/><path d="M334 172 l-12 0 6 -14 -8 0 8 -14 -6 0 10 -16 10 16 -6 0 8 14 -8 0 6 14 z"/></g><g><rect x="160" y="138" width="82" height="44" fill="#241a14"/><path d="M152 138 L201 108 L250 138 Z" fill="#1a120e"/><rect class="cp-window" x="178" y="150" width="20" height="20" fill="#ffcf7a"/><rect x="212" y="152" width="15" height="30" fill="#120c09"/></g></svg></div>`; },
   rain(){ return `<div class="cp cp-rain"><svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice"><g fill="#0c1426" opacity=".72"><rect x="0" y="120" width="46" height="80"/><rect x="52" y="90" width="38" height="110"/><rect x="96" y="140" width="40" height="60"/><rect x="142" y="70" width="42" height="130"/><rect x="190" y="110" width="36" height="90"/><rect x="232" y="135" width="46" height="65"/><rect x="284" y="86" width="40" height="114"/><rect x="330" y="125" width="44" height="75"/><rect x="380" y="150" width="20" height="50"/></g><g fill="#5a7bb0" opacity=".4" class="cp-windows"><rect x="62" y="100" width="6" height="8"/><rect x="74" y="118" width="6" height="8"/><rect x="152" y="86" width="6" height="8"/><rect x="166" y="112" width="6" height="8"/><rect x="294" y="100" width="6" height="8"/><rect x="300" y="120" width="6" height="8"/></g></svg></div>`; },
   horizon(){ return `<div class="cp cp-horizon"><svg viewBox="0 0 400 200" preserveAspectRatio="xMidYMax slice"><defs><radialGradient id="cpHsun" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffd08a" stop-opacity=".7"/><stop offset="1" stop-color="#ffd08a" stop-opacity="0"/></radialGradient></defs><circle class="cp-breathe" cx="300" cy="78" r="92" fill="url(#cpHsun)"/><circle cx="300" cy="78" r="34" fill="#ffcf86" opacity=".5"/><path d="M0 200 V160 Q100 138 200 156 T400 150 V200 Z" fill="#3a2a3f" opacity=".6"/><path d="M0 200 V178 Q120 160 240 176 T400 170 V200 Z" fill="#2a1f30" opacity=".75"/></svg></div>`; }
@@ -1638,79 +1635,6 @@ const SCENE={
 
 /* ===== Procedural ambient audio (Web Audio; zero assets, CSP-safe). Lazy-initialised on first
    enable, gesture-gated (browsers block autoplay), and suspended whenever the tab is hidden. ===== */
-const AUDIO={
-  ctx:null, master:null, rev:null, revRet:null, voices:[], timers:[], sceneEvents:[],
-  on:false, vol:0.5, theme:"vibe", _nb:null, _ir:null,
-  ensure(){ if(this.ctx) return true; try{ const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return false;
-    this.ctx=new AC(); this.master=this.ctx.createGain(); this.master.gain.value=0.0001; this.master.connect(this.ctx.destination);
-    this.rev=this.ctx.createConvolver(); this.rev.buffer=this.ir(); this.revRet=this.ctx.createGain(); this.revRet.gain.value=0.8; this.rev.connect(this.revRet); this.revRet.connect(this.master);
-    return true; }catch(e){ return false; } },
-  now(){ return this.ctx.currentTime; },
-  ir(){ if(this._ir) return this._ir; const ctx=this.ctx, rate=ctx.sampleRate, len=Math.floor(rate*2.2), b=ctx.createBuffer(2,len,rate);
-    for(let ch=0;ch<2;ch++){ const d=b.getChannelData(ch); for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6); } this._ir=b; return b; },
-  noiseBuf(){ if(this._nb) return this._nb; const ctx=this.ctx, len=Math.floor(ctx.sampleRate*3), b=ctx.createBuffer(1,len,ctx.sampleRate), d=b.getChannelData(0);
-    let last=0; for(let i=0;i<len;i++){ const w=Math.random()*2-1; last=(last+0.02*w)/1.02; d[i]=Math.max(-1,Math.min(1,last*2.4)); } this._nb=b; return b; },
-  _route(out,rev){ out.connect(this.master); if(rev>0){ const g=this.ctx.createGain(); g.gain.value=rev; out.connect(g); g.connect(this.rev); } },
-  // ---- continuous beds ----
-  pad(freqs,ff,g,rev){ const ctx=this.ctx, out=ctx.createGain(); out.gain.value=0.0001;
-    const f=ctx.createBiquadFilter(); f.type="lowpass"; f.frequency.value=ff; f.connect(out); this._route(out,rev||0);
-    const oscs=freqs.map(fr=>{ const o=ctx.createOscillator(); o.type="sine"; o.frequency.value=fr; o.detune.value=Math.random()*8-4; o.connect(f); o.start(); return o; });
-    const lfo=ctx.createOscillator(), lg=ctx.createGain(); lfo.frequency.value=0.05+Math.random()*0.06; lg.gain.value=g*0.45; lfo.connect(lg); lg.connect(out.gain); lfo.start();
-    out.gain.setTargetAtTime(g,this.now(),1.6);
-    this.voices.push({stop:()=>{ try{ out.gain.setTargetAtTime(0.0001,this.now(),0.4); oscs.forEach(o=>o.stop(this.now()+0.8)); lfo.stop(this.now()+0.8);}catch(e){} }}); },
-  noise(ft,ff,q,g,rev,gust){ const ctx=this.ctx, src=ctx.createBufferSource(); src.buffer=this.noiseBuf(); src.loop=true;
-    const f=ctx.createBiquadFilter(); f.type=ft; f.frequency.value=ff; if(q) f.Q.value=q;
-    const out=ctx.createGain(); out.gain.value=0.0001; src.connect(f); f.connect(out); this._route(out,rev||0); src.start();
-    out.gain.setTargetAtTime(g,this.now(),1.6);
-    let lfo; if(gust){ lfo=ctx.createOscillator(); const lg=ctx.createGain(); lfo.frequency.value=0.03+Math.random()*0.05; lg.gain.value=g*0.6; lfo.connect(lg); lg.connect(out.gain); lfo.start(); }
-    this.voices.push({stop:()=>{ try{ out.gain.setTargetAtTime(0.0001,this.now(),0.4); src.stop(this.now()+0.8); if(lfo) lfo.stop(this.now()+0.8);}catch(e){} }}); },
-  purr(g){ const ctx=this.ctx, o=ctx.createOscillator(); o.type="sawtooth"; o.frequency.value=26;
-    const f=ctx.createBiquadFilter(); f.type="lowpass"; f.frequency.value=180;
-    const out=ctx.createGain(); out.gain.value=0.0001; o.connect(f); f.connect(out); this._route(out,0.05); o.start();
-    const trem=ctx.createOscillator(), tg=ctx.createGain(); trem.type="sine"; trem.frequency.value=23; tg.gain.value=g*0.7; trem.connect(tg); tg.connect(out.gain); trem.start();
-    out.gain.setTargetAtTime(g,this.now(),2.0);
-    this.voices.push({stop:()=>{ try{ out.gain.setTargetAtTime(0.0001,this.now(),0.5); o.stop(this.now()+0.9); trem.stop(this.now()+0.9);}catch(e){} }}); },
-  // ---- one-shot events ----
-  tone(freq,dur,g,rev,type,partial){ const ctx=this.ctx, t=this.now(); const o=ctx.createOscillator(); o.type=type||"sine"; o.frequency.value=freq;
-    const env=ctx.createGain(); env.gain.setValueAtTime(0.0001,t); env.gain.exponentialRampToValueAtTime(g,t+0.02); env.gain.exponentialRampToValueAtTime(0.0001,t+dur);
-    o.connect(env); this._route(env,rev==null?0.4:rev); o.start(t); o.stop(t+dur+0.05);
-    if(partial){ const o2=ctx.createOscillator(); o2.type="sine"; o2.frequency.value=freq*partial; const e2=ctx.createGain(); e2.gain.setValueAtTime(0.0001,t); e2.gain.exponentialRampToValueAtTime(g*0.4,t+0.02); e2.gain.exponentialRampToValueAtTime(0.0001,t+dur*0.7); o2.connect(e2); this._route(e2,rev==null?0.4:rev); o2.start(t); o2.stop(t+dur); } },
-  melody(scale){ return ()=>{ const f=scale[Math.floor(Math.random()*scale.length)]; this.tone(f,1.6+Math.random()*1.4,0.05,0.45,"triangle",2.02); }; },
-  chime(scale){ return ()=>{ const f=scale[Math.floor(Math.random()*scale.length)]; this.tone(f,2.4,0.032,0.5,"sine",2.76); }; },
-  bird(){ return ()=>{ const ctx=this.ctx, n=2+Math.floor(Math.random()*2); for(let i=0;i<n;i++){ const t=this.now()+i*0.09; const o=ctx.createOscillator(); o.type="sine"; const base=2400+Math.random()*1200; o.frequency.setValueAtTime(base,t); o.frequency.linearRampToValueAtTime(base*1.15,t+0.05); const e=ctx.createGain(); e.gain.setValueAtTime(0.0001,t); e.gain.exponentialRampToValueAtTime(0.03,t+0.01); e.gain.exponentialRampToValueAtTime(0.0001,t+0.08); o.connect(e); this._route(e,0.5); o.start(t); o.stop(t+0.1); } }; },
-  pop(){ return ()=>{ const ctx=this.ctx, t=this.now(); const src=ctx.createBufferSource(); src.buffer=this.noiseBuf(); const f=ctx.createBiquadFilter(); f.type="bandpass"; f.frequency.value=800+Math.random()*1400; f.Q.value=1.2; const e=ctx.createGain(); e.gain.setValueAtTime(0.0001,t); e.gain.exponentialRampToValueAtTime(0.05+Math.random()*0.05,t+0.005); e.gain.exponentialRampToValueAtTime(0.0001,t+0.05+Math.random()*0.06); src.connect(f); f.connect(e); this._route(e,0.15); src.start(t); src.stop(t+0.2); }; },
-  click(){ return ()=>{ const ctx=this.ctx, t=this.now(); const src=ctx.createBufferSource(); src.buffer=this.noiseBuf(); const f=ctx.createBiquadFilter(); f.type="highpass"; f.frequency.value=1800; const e=ctx.createGain(); e.gain.setValueAtTime(0.0001,t); e.gain.exponentialRampToValueAtTime(0.02,t+0.002); e.gain.exponentialRampToValueAtTime(0.0001,t+0.03); src.connect(f); f.connect(e); this._route(e,0.1); src.start(t); src.stop(t+0.08); }; },
-  whoosh(){ return ()=>{ const ctx=this.ctx, t=this.now(); const src=ctx.createBufferSource(); src.buffer=this.noiseBuf(); src.loop=true; const f=ctx.createBiquadFilter(); f.type="bandpass"; f.Q.value=0.8; f.frequency.setValueAtTime(500,t); f.frequency.exponentialRampToValueAtTime(3000,t+1.1); f.frequency.exponentialRampToValueAtTime(400,t+2.2);
-    const e=ctx.createGain(); e.gain.setValueAtTime(0.0001,t); e.gain.linearRampToValueAtTime(0.05,t+0.6); e.gain.linearRampToValueAtTime(0.0001,t+2.2);
-    const pan=ctx.createStereoPanner?ctx.createStereoPanner():null; src.connect(f); if(pan){ pan.pan.setValueAtTime(-0.8,t); pan.pan.linearRampToValueAtTime(0.8,t+2.2); f.connect(pan); pan.connect(e);} else f.connect(e); this._route(e,0.4); src.start(t); src.stop(t+2.4); }; },
-  // ---- per-theme scenes: continuous beds + randomised ambient events ----
-  scene(theme){ const V=this, penta=[220,246.94,277.18,329.63,369.99], lo=[130.81,146.83,164.81,196,220]; const S={
-    vibe:{beds:()=>{ V.pad([110,164.81,220],620,0.05,0.22); V.noise("lowpass",1250,0,0.03,0); V.purr(0.018); }, events:[{fn:V.click(),min:1.4,max:4.5},{fn:V.melody(lo),min:4,max:9}]},
-    rain:{beds:()=>{ V.noise("lowpass",1400,0,0.055,0,true); V.pad([55,82.41],320,0.03,0.15); }, events:[]},
-    horizon:{beds:()=>{ V.pad([130.81,196,261.63],780,0.05,0.25); }, events:[{fn:V.chime(lo),min:9,max:20}]},
-    rainforest:{beds:()=>{ V.noise("lowpass",1500,0,0.05,0,true); V.noise("bandpass",2300,1,0.02,0); V.pad([98,146.83],700,0.03,0.2); }, events:[{fn:V.bird(),min:2.5,max:8}]},
-    sakura:{beds:()=>{ V.pad([246.94,329.63,369.99],1150,0.045,0.28); V.noise("lowpass",900,0,0.022,0,true); }, events:[{fn:V.melody(penta),min:2.5,max:6},{fn:V.bird(),min:7,max:17}]},
-    meteor:{beds:()=>{ V.pad([329.63,440,554.37],1900,0.038,0.42); V.noise("lowpass",480,0,0.015,0,true); }, events:[{fn:V.whoosh(),min:7,max:17},{fn:V.chime([523.25,659.25,783.99]),min:8,max:20}]},
-    firewarm:{beds:()=>{ V.noise("lowpass",520,0,0.05,0); V.noise("lowpass",1300,0,0.02,0); V.pad([82.41,123.47],420,0.03,0.15); }, events:[{fn:V.pop(),min:0.25,max:1.5}]},
-    snowy:{beds:()=>{ V.noise("lowpass",600,0,0.03,0,true); V.pad([261.63,329.63],1400,0.042,0.35); }, events:[{fn:V.chime([659.25,783.99,987.77,1174.66]),min:5,max:13}]}
-  }; return S[theme]||S.vibe; },
-  schedule(ev){ const gap=(ev.min+Math.random()*(ev.max-ev.min))*1000; const t=setTimeout(()=>{ if(this.on && !document.hidden){ try{ ev.fn(); }catch(e){} this.schedule(ev); } }, gap); this.timers.push(t); },
-  startEvents(){ (this.sceneEvents||[]).forEach(ev=>this.schedule(ev)); },
-  stopEvents(){ this.timers.forEach(clearTimeout); this.timers=[]; },
-  build(theme){ if(!this.ctx) return; const sc=this.scene(theme); this.sceneEvents=sc.events||[]; try{ sc.beds(); }catch(e){} this.startEvents(); },
-  teardown(){ this.stopEvents(); this.voices.forEach(v=>{ try{ v.stop(); }catch(e){} }); this.voices=[]; },
-  fadeMaster(to){ if(!this.master||!this.ctx) return; const t=this.now(), cur=Math.max(0.0001,this.master.gain.value); this.master.gain.cancelScheduledValues(t); this.master.gain.setValueAtTime(cur,t); this.master.gain.linearRampToValueAtTime(Math.max(0.0001,to),t+0.7); },
-  enable(){ if(!this.ensure()) return false; this.on=true; try{ this.ctx.resume(); }catch(e){} if(!this.voices.length) this.build(this.theme); this.fadeMaster(this.vol); try{ store.set("mm2.sound",true); }catch(e){} return true; },
-  disable(){ this.on=false; this.fadeMaster(0); setTimeout(()=>{ if(!this.on) this.teardown(); },780); try{ store.set("mm2.sound",false); }catch(e){} },
-  setTheme(t){ if(t===this.theme && this.voices.length) return; this.theme=t; if(this.on && this.ctx){ this.teardown(); this.build(t); this.fadeMaster(this.vol); } },
-  suspend(){ try{ this.stopEvents(); if(this.ctx && this.ctx.state==="running") this.ctx.suspend(); }catch(e){} },
-  resume(){ try{ if(this.on && this.ctx){ if(this.ctx.state==="suspended") this.ctx.resume(); this.stopEvents(); this.startEvents(); } }catch(e){} },
-  boot(){ try{ this.theme=state.theme; const v=store.get("mm2.vol",0.5); this.vol=(typeof v==="number"&&v>=0&&v<=1)?v:0.5;
-    if(store.get("mm2.sound",false)===true){ const start=()=>{ this.enable(); ["pointerdown","keydown","touchstart"].forEach(ev=>window.removeEventListener(ev,start)); };
-      ["pointerdown","keydown","touchstart"].forEach(ev=>window.addEventListener(ev,start,{once:true})); } }catch(e){} }
-};
-function toggleSound(){ if(AUDIO.on) AUDIO.disable(); else AUDIO.enable(); render(); }
-
 let _fxTimer=null;
 // Render the active theme's particle layer, crossfading on change. The layer is fully UNLOADED
 // (innerHTML emptied) whenever the page is hidden or reduced-motion is set — so a backgrounded
@@ -1729,7 +1653,6 @@ function applyTheme(){
   const t=THEME_KEYS.indexOf(state.theme)>=0?state.theme:"vibe";
   state.theme=t;
   const root=document.documentElement; if(root) root.setAttribute("data-theme",t);
-  try{ if(typeof AUDIO!=="undefined") AUDIO.setTheme(t); }catch(e){}
   paintFX();
 }
 let lastView=null;
@@ -2070,7 +1993,7 @@ function portfolioView(){
     <div class="sp-list">${savedList}</div>
   </div>`;
   return `<div class="portfolio">
-    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 single items and multi-item bundles are scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks aim to hold or grow your value; a loss only ranks when the item is genuinely elite. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-06-30m</b></p>
+    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 single items and multi-item bundles are scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks aim to hold or grow your value; a loss only ranks when the item is genuinely elite. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-06-30n</b></p>
     <div class="card">
       <div class="port-sum"><div><div class="port-sum-l">Inventory True Value</div><div class="port-sum-v">${fmt(Math.round(inv.value))}</div>${inv.hi>inv.lo?`<div class="port-sum-band">${fmt(Math.round(inv.lo))} \u2013 ${fmt(Math.round(inv.hi))}</div>`:""}</div>
         <div class="port-sum-r"><span class="port-health" style="color:${hCol}">${icon("activity",13)} ${hLabel} holdings</span>${inv.value>0?`<span class="port-conf">${inv.conf}% conf</span>`:""}${inv.priceless?`<span class="port-pl">${inv.priceless} priceless</span>`:""}</div></div>
@@ -2310,7 +2233,6 @@ app.addEventListener("click",e=>{
   const b=e.target.closest("[data-action]"); if(!b) return; const a=b.dataset.action;
   if(a==="view"){ if(state.view!==b.dataset.view){ state.view=b.dataset.view; prevVerdictKey=null; state.portConfirmDel=null; render(); if(state.view==="changes") loadChanges(); } }
   else if(a==="share"){ shareTrade(); }
-  else if(a==="sound"){ toggleSound(); }
   else if(a==="card"){ openCardModal(); }
   else if(a==="reloadChanges"){ changesLoaded=false; loadChanges(); }
   else if(a==="qadd"){ addItem(b.dataset.side,b.dataset.id); }
@@ -2399,14 +2321,13 @@ function __boot(){
   applyCachedData();   // instant freshness from last good pull
   loadFromHash();      // shared trade from URL (#t=...) if present
   applyTheme();        // theme attribute + FX layer
-  AUDIO.boot();        // ambient-audio prefs (gesture-gated; browsers block autoplay)
   render();            // build #app
   refreshData();       // background: latest values if configured
   loadHistory();       // background: sparkline history (graceful if absent)
   __lzGuard();         // soft "unauthorized copy" banner on non-allowlisted hosts
 }
 if(document.readyState==="loading"){ document.addEventListener("DOMContentLoaded",__boot,{once:true}); } else { __boot(); }
-try{ document.addEventListener("visibilitychange", ()=>{ paintFX(); try{ if(document.hidden) AUDIO.suspend(); else AUDIO.resume(); }catch(e){} }); }catch(e){}  // pause/unload FX + audio for backgrounded tabs
+try{ document.addEventListener("visibilitychange", paintFX); }catch(e){}  // unload the FX particle layer for backgrounded tabs
 try{ const _mq=window.matchMedia&&window.matchMedia("(prefers-reduced-motion: reduce)"); if(_mq&&_mq.addEventListener) _mq.addEventListener("change",applyTheme); }catch(e){}         // soft "unauthorized copy" banner on non-allowlisted hosts
 try { window.__lz = { wm: __LZ_WM, build: __LZ_BUILD, owner: "Lifenz", src: "youtube.com/@wyalife · discord.gg/resurrect" }; } catch (e) {}
 // Service worker intentionally DISABLED. Proactively remove any previously-installed worker and
