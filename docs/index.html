@@ -322,7 +322,7 @@
   .rec-add{margin-top:1px;display:inline-flex;align-items:center;justify-content:center;gap:5px;font-size:12px;font-weight:600;padding:6px 10px;border-radius:8px;border:1px solid var(--line2);background:transparent;color:#cdd6e8;cursor:pointer;font-family:var(--font);transition:border-color var(--fast),background var(--fast),color var(--fast)}
   .rec-add:hover{border-color:rgba(139,92,246,.5);background:rgba(139,92,246,.12);color:#fff}
   .rec-conf{margin-left:auto;font-size:10px;font-weight:700;display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:9999px;font-variant-numeric:tabular-nums}
-  .rec-fit{display:flex;align-items:center;gap:8px;margin-top:1px}
+  .rec-fit{display:flex;align-items:center;gap:8px;margin-top:auto;padding-top:3px}
   .rec-fitbar{flex:1;height:5px;border-radius:9999px;background:rgba(42,55,80,.5);overflow:hidden}
   .rec-fitbar>span{display:block;height:100%;border-radius:9999px}
   .rec-fitn{font-size:10px;font-weight:700;color:var(--muted2);font-variant-numeric:tabular-nums;flex:none}
@@ -1549,7 +1549,7 @@ function headerHTML(){
 }
 function footerHTML(){
   return `<footer class="ftr">
-    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30e</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Demand, rarity, stability & ranged values are sourced from <b>Supreme Values</b> (published per item); each site's value drives its own verdict. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
+    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30h</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Demand, rarity, stability & ranged values are sourced from <b>Supreme Values</b> (published per item); each site's value drives its own verdict. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
     <p>Community estimates — not endorsed by Roblox or Nikilis. Demand/hype/duping shift fast; confirm live before high-value trades. Saved trades & favorites are stored locally on this device only.</p>
     <div class="ftr-social">
       <a href="https://youtube.com/@wyalife" target="_blank" rel="noopener noreferrer" aria-label="YouTube">${icon("youtube",15)} YouTube</a>
@@ -1640,40 +1640,72 @@ const SCENE={
 /* ===== Procedural ambient audio (Web Audio; zero assets, CSP-safe). Lazy-initialised on first
    enable, gesture-gated (browsers block autoplay), and suspended whenever the tab is hidden. ===== */
 const AUDIO={
-  ctx:null, master:null, voices:[], on:false, vol:0.5, theme:"vibe", _nb:null,
+  ctx:null, master:null, rev:null, revRet:null, voices:[], timers:[], sceneEvents:[],
+  on:false, vol:0.5, theme:"vibe", _nb:null, _ir:null,
   ensure(){ if(this.ctx) return true; try{ const AC=window.AudioContext||window.webkitAudioContext; if(!AC) return false;
-    this.ctx=new AC(); this.master=this.ctx.createGain(); this.master.gain.value=0.0001; this.master.connect(this.ctx.destination); return true; }catch(e){ return false; } },
-  noiseBuf(){ if(this._nb) return this._nb; const ctx=this.ctx, len=Math.floor(ctx.sampleRate*2), b=ctx.createBuffer(1,len,ctx.sampleRate), d=b.getChannelData(0);
-    let last=0; for(let i=0;i<len;i++){ const w=Math.random()*2-1; last=(last+0.02*w)/1.02; d[i]=Math.max(-1,Math.min(1,last*2.2)); } this._nb=b; return b; },
-  pad(freqs,ft,ff,g){ const ctx=this.ctx, out=ctx.createGain(); out.gain.value=0.0001;
-    const f=ctx.createBiquadFilter(); f.type=ft||"lowpass"; f.frequency.value=ff||800; f.connect(out); out.connect(this.master);
-    const oscs=freqs.map(fr=>{ const o=ctx.createOscillator(); o.type="sine"; o.frequency.value=fr; o.detune.value=Math.random()*10-5; o.connect(f); o.start(); return o; });
-    const lfo=ctx.createOscillator(), lg=ctx.createGain(); lfo.frequency.value=0.05+Math.random()*0.05; lg.gain.value=g*0.4; lfo.connect(lg); lg.connect(out.gain); lfo.start();
-    out.gain.setTargetAtTime(g, ctx.currentTime, 1.3);
-    return { stop:()=>{ try{ out.gain.setTargetAtTime(0.0001,ctx.currentTime,0.25); oscs.forEach(o=>o.stop(ctx.currentTime+0.45)); lfo.stop(ctx.currentTime+0.45);}catch(e){} } }; },
-  noise(ft,ff,q,g){ const ctx=this.ctx, src=ctx.createBufferSource(); src.buffer=this.noiseBuf(); src.loop=true;
-    const f=ctx.createBiquadFilter(); f.type=ft||"lowpass"; f.frequency.value=ff||1000; if(q) f.Q.value=q;
-    const out=ctx.createGain(); out.gain.value=0.0001; src.connect(f); f.connect(out); out.connect(this.master); src.start();
-    out.gain.setTargetAtTime(g, ctx.currentTime, 1.3);
-    return { stop:()=>{ try{ out.gain.setTargetAtTime(0.0001,ctx.currentTime,0.25); src.stop(ctx.currentTime+0.45);}catch(e){} } }; },
-  build(theme){ if(!this.ctx) return; const V=this; const S={
-    vibe:()=>[V.pad([110,164.8,220],"lowpass",560,0.06), V.noise("lowpass",380,0,0.012)],
-    rain:()=>[V.noise("lowpass",1300,0,0.05), V.pad([55,82.4],"lowpass",300,0.03)],
-    horizon:()=>[V.pad([130.8,196,261.6],"lowpass",760,0.055)],
-    rainforest:()=>[V.noise("bandpass",2100,1.1,0.03), V.pad([98,146.8],"lowpass",620,0.045)],
-    sakura:()=>[V.pad([220,277.2,329.6],"lowpass",1100,0.05), V.noise("highpass",4200,0,0.006)],
-    meteor:()=>[V.pad([329.6,440,554.4],"lowpass",1900,0.04), V.noise("highpass",5000,0,0.005)],
-    firewarm:()=>[V.noise("lowpass",520,0,0.055), V.pad([82.4,123.5],"lowpass",420,0.035)],
-    snowy:()=>[V.pad([261.6,329.6],"lowpass",1400,0.05), V.noise("highpass",4600,0,0.007)]
-  }; this.voices=(S[theme]||S.vibe)(); },
-  teardown(){ this.voices.forEach(v=>{ try{ v.stop(); }catch(e){} }); this.voices=[]; },
-  fadeMaster(to){ if(!this.master||!this.ctx) return; const t=this.ctx.currentTime; const cur=Math.max(0.0001,this.master.gain.value);
-    this.master.gain.cancelScheduledValues(t); this.master.gain.setValueAtTime(cur,t); this.master.gain.linearRampToValueAtTime(Math.max(0.0001,to),t+0.6); },
+    this.ctx=new AC(); this.master=this.ctx.createGain(); this.master.gain.value=0.0001; this.master.connect(this.ctx.destination);
+    this.rev=this.ctx.createConvolver(); this.rev.buffer=this.ir(); this.revRet=this.ctx.createGain(); this.revRet.gain.value=0.8; this.rev.connect(this.revRet); this.revRet.connect(this.master);
+    return true; }catch(e){ return false; } },
+  now(){ return this.ctx.currentTime; },
+  ir(){ if(this._ir) return this._ir; const ctx=this.ctx, rate=ctx.sampleRate, len=Math.floor(rate*2.2), b=ctx.createBuffer(2,len,rate);
+    for(let ch=0;ch<2;ch++){ const d=b.getChannelData(ch); for(let i=0;i<len;i++) d[i]=(Math.random()*2-1)*Math.pow(1-i/len,2.6); } this._ir=b; return b; },
+  noiseBuf(){ if(this._nb) return this._nb; const ctx=this.ctx, len=Math.floor(ctx.sampleRate*3), b=ctx.createBuffer(1,len,ctx.sampleRate), d=b.getChannelData(0);
+    let last=0; for(let i=0;i<len;i++){ const w=Math.random()*2-1; last=(last+0.02*w)/1.02; d[i]=Math.max(-1,Math.min(1,last*2.4)); } this._nb=b; return b; },
+  _route(out,rev){ out.connect(this.master); if(rev>0){ const g=this.ctx.createGain(); g.gain.value=rev; out.connect(g); g.connect(this.rev); } },
+  // ---- continuous beds ----
+  pad(freqs,ff,g,rev){ const ctx=this.ctx, out=ctx.createGain(); out.gain.value=0.0001;
+    const f=ctx.createBiquadFilter(); f.type="lowpass"; f.frequency.value=ff; f.connect(out); this._route(out,rev||0);
+    const oscs=freqs.map(fr=>{ const o=ctx.createOscillator(); o.type="sine"; o.frequency.value=fr; o.detune.value=Math.random()*8-4; o.connect(f); o.start(); return o; });
+    const lfo=ctx.createOscillator(), lg=ctx.createGain(); lfo.frequency.value=0.05+Math.random()*0.06; lg.gain.value=g*0.45; lfo.connect(lg); lg.connect(out.gain); lfo.start();
+    out.gain.setTargetAtTime(g,this.now(),1.6);
+    this.voices.push({stop:()=>{ try{ out.gain.setTargetAtTime(0.0001,this.now(),0.4); oscs.forEach(o=>o.stop(this.now()+0.8)); lfo.stop(this.now()+0.8);}catch(e){} }}); },
+  noise(ft,ff,q,g,rev,gust){ const ctx=this.ctx, src=ctx.createBufferSource(); src.buffer=this.noiseBuf(); src.loop=true;
+    const f=ctx.createBiquadFilter(); f.type=ft; f.frequency.value=ff; if(q) f.Q.value=q;
+    const out=ctx.createGain(); out.gain.value=0.0001; src.connect(f); f.connect(out); this._route(out,rev||0); src.start();
+    out.gain.setTargetAtTime(g,this.now(),1.6);
+    let lfo; if(gust){ lfo=ctx.createOscillator(); const lg=ctx.createGain(); lfo.frequency.value=0.03+Math.random()*0.05; lg.gain.value=g*0.6; lfo.connect(lg); lg.connect(out.gain); lfo.start(); }
+    this.voices.push({stop:()=>{ try{ out.gain.setTargetAtTime(0.0001,this.now(),0.4); src.stop(this.now()+0.8); if(lfo) lfo.stop(this.now()+0.8);}catch(e){} }}); },
+  purr(g){ const ctx=this.ctx, o=ctx.createOscillator(); o.type="sawtooth"; o.frequency.value=26;
+    const f=ctx.createBiquadFilter(); f.type="lowpass"; f.frequency.value=180;
+    const out=ctx.createGain(); out.gain.value=0.0001; o.connect(f); f.connect(out); this._route(out,0.05); o.start();
+    const trem=ctx.createOscillator(), tg=ctx.createGain(); trem.type="sine"; trem.frequency.value=23; tg.gain.value=g*0.7; trem.connect(tg); tg.connect(out.gain); trem.start();
+    out.gain.setTargetAtTime(g,this.now(),2.0);
+    this.voices.push({stop:()=>{ try{ out.gain.setTargetAtTime(0.0001,this.now(),0.5); o.stop(this.now()+0.9); trem.stop(this.now()+0.9);}catch(e){} }}); },
+  // ---- one-shot events ----
+  tone(freq,dur,g,rev,type,partial){ const ctx=this.ctx, t=this.now(); const o=ctx.createOscillator(); o.type=type||"sine"; o.frequency.value=freq;
+    const env=ctx.createGain(); env.gain.setValueAtTime(0.0001,t); env.gain.exponentialRampToValueAtTime(g,t+0.02); env.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(env); this._route(env,rev==null?0.4:rev); o.start(t); o.stop(t+dur+0.05);
+    if(partial){ const o2=ctx.createOscillator(); o2.type="sine"; o2.frequency.value=freq*partial; const e2=ctx.createGain(); e2.gain.setValueAtTime(0.0001,t); e2.gain.exponentialRampToValueAtTime(g*0.4,t+0.02); e2.gain.exponentialRampToValueAtTime(0.0001,t+dur*0.7); o2.connect(e2); this._route(e2,rev==null?0.4:rev); o2.start(t); o2.stop(t+dur); } },
+  melody(scale){ return ()=>{ const f=scale[Math.floor(Math.random()*scale.length)]; this.tone(f,1.6+Math.random()*1.4,0.05,0.45,"triangle",2.02); }; },
+  chime(scale){ return ()=>{ const f=scale[Math.floor(Math.random()*scale.length)]; this.tone(f,2.4,0.032,0.5,"sine",2.76); }; },
+  bird(){ return ()=>{ const ctx=this.ctx, n=2+Math.floor(Math.random()*2); for(let i=0;i<n;i++){ const t=this.now()+i*0.09; const o=ctx.createOscillator(); o.type="sine"; const base=2400+Math.random()*1200; o.frequency.setValueAtTime(base,t); o.frequency.linearRampToValueAtTime(base*1.15,t+0.05); const e=ctx.createGain(); e.gain.setValueAtTime(0.0001,t); e.gain.exponentialRampToValueAtTime(0.03,t+0.01); e.gain.exponentialRampToValueAtTime(0.0001,t+0.08); o.connect(e); this._route(e,0.5); o.start(t); o.stop(t+0.1); } }; },
+  pop(){ return ()=>{ const ctx=this.ctx, t=this.now(); const src=ctx.createBufferSource(); src.buffer=this.noiseBuf(); const f=ctx.createBiquadFilter(); f.type="bandpass"; f.frequency.value=800+Math.random()*1400; f.Q.value=1.2; const e=ctx.createGain(); e.gain.setValueAtTime(0.0001,t); e.gain.exponentialRampToValueAtTime(0.05+Math.random()*0.05,t+0.005); e.gain.exponentialRampToValueAtTime(0.0001,t+0.05+Math.random()*0.06); src.connect(f); f.connect(e); this._route(e,0.15); src.start(t); src.stop(t+0.2); }; },
+  click(){ return ()=>{ const ctx=this.ctx, t=this.now(); const src=ctx.createBufferSource(); src.buffer=this.noiseBuf(); const f=ctx.createBiquadFilter(); f.type="highpass"; f.frequency.value=1800; const e=ctx.createGain(); e.gain.setValueAtTime(0.0001,t); e.gain.exponentialRampToValueAtTime(0.02,t+0.002); e.gain.exponentialRampToValueAtTime(0.0001,t+0.03); src.connect(f); f.connect(e); this._route(e,0.1); src.start(t); src.stop(t+0.08); }; },
+  whoosh(){ return ()=>{ const ctx=this.ctx, t=this.now(); const src=ctx.createBufferSource(); src.buffer=this.noiseBuf(); src.loop=true; const f=ctx.createBiquadFilter(); f.type="bandpass"; f.Q.value=0.8; f.frequency.setValueAtTime(500,t); f.frequency.exponentialRampToValueAtTime(3000,t+1.1); f.frequency.exponentialRampToValueAtTime(400,t+2.2);
+    const e=ctx.createGain(); e.gain.setValueAtTime(0.0001,t); e.gain.linearRampToValueAtTime(0.05,t+0.6); e.gain.linearRampToValueAtTime(0.0001,t+2.2);
+    const pan=ctx.createStereoPanner?ctx.createStereoPanner():null; src.connect(f); if(pan){ pan.pan.setValueAtTime(-0.8,t); pan.pan.linearRampToValueAtTime(0.8,t+2.2); f.connect(pan); pan.connect(e);} else f.connect(e); this._route(e,0.4); src.start(t); src.stop(t+2.4); }; },
+  // ---- per-theme scenes: continuous beds + randomised ambient events ----
+  scene(theme){ const V=this, penta=[220,246.94,277.18,329.63,369.99], lo=[130.81,146.83,164.81,196,220]; const S={
+    vibe:{beds:()=>{ V.pad([110,164.81,220],620,0.05,0.22); V.noise("lowpass",1250,0,0.03,0); V.purr(0.018); }, events:[{fn:V.click(),min:1.4,max:4.5},{fn:V.melody(lo),min:4,max:9}]},
+    rain:{beds:()=>{ V.noise("lowpass",1400,0,0.055,0,true); V.pad([55,82.41],320,0.03,0.15); }, events:[]},
+    horizon:{beds:()=>{ V.pad([130.81,196,261.63],780,0.05,0.25); }, events:[{fn:V.chime(lo),min:9,max:20}]},
+    rainforest:{beds:()=>{ V.noise("lowpass",1500,0,0.05,0,true); V.noise("bandpass",2300,1,0.02,0); V.pad([98,146.83],700,0.03,0.2); }, events:[{fn:V.bird(),min:2.5,max:8}]},
+    sakura:{beds:()=>{ V.pad([246.94,329.63,369.99],1150,0.045,0.28); V.noise("lowpass",900,0,0.022,0,true); }, events:[{fn:V.melody(penta),min:2.5,max:6},{fn:V.bird(),min:7,max:17}]},
+    meteor:{beds:()=>{ V.pad([329.63,440,554.37],1900,0.038,0.42); V.noise("lowpass",480,0,0.015,0,true); }, events:[{fn:V.whoosh(),min:7,max:17},{fn:V.chime([523.25,659.25,783.99]),min:8,max:20}]},
+    firewarm:{beds:()=>{ V.noise("lowpass",520,0,0.05,0); V.noise("lowpass",1300,0,0.02,0); V.pad([82.41,123.47],420,0.03,0.15); }, events:[{fn:V.pop(),min:0.25,max:1.5}]},
+    snowy:{beds:()=>{ V.noise("lowpass",600,0,0.03,0,true); V.pad([261.63,329.63],1400,0.042,0.35); }, events:[{fn:V.chime([659.25,783.99,987.77,1174.66]),min:5,max:13}]}
+  }; return S[theme]||S.vibe; },
+  schedule(ev){ const gap=(ev.min+Math.random()*(ev.max-ev.min))*1000; const t=setTimeout(()=>{ if(this.on && !document.hidden){ try{ ev.fn(); }catch(e){} this.schedule(ev); } }, gap); this.timers.push(t); },
+  startEvents(){ (this.sceneEvents||[]).forEach(ev=>this.schedule(ev)); },
+  stopEvents(){ this.timers.forEach(clearTimeout); this.timers=[]; },
+  build(theme){ if(!this.ctx) return; const sc=this.scene(theme); this.sceneEvents=sc.events||[]; try{ sc.beds(); }catch(e){} this.startEvents(); },
+  teardown(){ this.stopEvents(); this.voices.forEach(v=>{ try{ v.stop(); }catch(e){} }); this.voices=[]; },
+  fadeMaster(to){ if(!this.master||!this.ctx) return; const t=this.now(), cur=Math.max(0.0001,this.master.gain.value); this.master.gain.cancelScheduledValues(t); this.master.gain.setValueAtTime(cur,t); this.master.gain.linearRampToValueAtTime(Math.max(0.0001,to),t+0.7); },
   enable(){ if(!this.ensure()) return false; this.on=true; try{ this.ctx.resume(); }catch(e){} if(!this.voices.length) this.build(this.theme); this.fadeMaster(this.vol); try{ store.set("mm2.sound",true); }catch(e){} return true; },
-  disable(){ this.on=false; this.fadeMaster(0); setTimeout(()=>{ if(!this.on) this.teardown(); },720); try{ store.set("mm2.sound",false); }catch(e){} },
-  setTheme(t){ this.theme=t; if(this.on && this.ctx){ this.teardown(); this.build(t); this.fadeMaster(this.vol); } },
-  suspend(){ try{ if(this.ctx && this.ctx.state==="running") this.ctx.suspend(); }catch(e){} },
-  resume(){ try{ if(this.on && this.ctx && this.ctx.state==="suspended") this.ctx.resume(); }catch(e){} },
+  disable(){ this.on=false; this.fadeMaster(0); setTimeout(()=>{ if(!this.on) this.teardown(); },780); try{ store.set("mm2.sound",false); }catch(e){} },
+  setTheme(t){ if(t===this.theme && this.voices.length) return; this.theme=t; if(this.on && this.ctx){ this.teardown(); this.build(t); this.fadeMaster(this.vol); } },
+  suspend(){ try{ this.stopEvents(); if(this.ctx && this.ctx.state==="running") this.ctx.suspend(); }catch(e){} },
+  resume(){ try{ if(this.on && this.ctx){ if(this.ctx.state==="suspended") this.ctx.resume(); this.stopEvents(); this.startEvents(); } }catch(e){} },
   boot(){ try{ this.theme=state.theme; const v=store.get("mm2.vol",0.5); this.vol=(typeof v==="number"&&v>=0&&v<=1)?v:0.5;
     if(store.get("mm2.sound",false)===true){ const start=()=>{ this.enable(); ["pointerdown","keydown","touchstart"].forEach(ev=>window.removeEventListener(ev,start)); };
       ["pointerdown","keydown","touchstart"].forEach(ev=>window.addEventListener(ev,start,{once:true})); } }catch(e){} }
@@ -1860,12 +1892,15 @@ function invSignals(it){
   return {liq,des,stab,trend,mom,recentMom,chgPct,headroom,vol,mdd,vconf,val,both,dataN,d01,rar01,activity,popularity,histPerf,longTerm,growth,quality,m};
 }
 const RISK_PROFILES=[
-  {k:"safe",label:"Safe",color:"#34d399",icon:"shield",blurb:"Stable, popular, liquid \u2014 lowest risk, easy to re-trade.",
-   score:x=>clamp100(100*clamp01(0.26*x.liq + 0.22*x.des + 0.18*x.stab + 0.14*x.popularity + 0.12*x.histPerf + 0.08*x.vconf - 0.30*x.vol - 0.12*Math.max(0,0.5-x.recentMom)))},
-  {k:"balanced",label:"Balanced",color:"#a78bfa",icon:"scale",blurb:"Holds value with room to grow \u2014 stability plus upside.",
-   score:x=>clamp100(100*clamp01(0.20*x.liq + 0.18*x.des + 0.18*x.longTerm + 0.16*x.recentMom + 0.12*x.popularity + 0.10*x.stab + 0.06*x.vconf - 0.08*x.vol))},
-  {k:"aggressive",label:"High-risk",color:"#fb923c",icon:"trendingUp",blurb:"Momentum & growth potential \u2014 bigger upside, bigger swings.",
-   score:x=>clamp100(100*clamp01(0.30*x.recentMom + 0.22*x.growth + 0.16*x.vol + 0.16*x.des + 0.16*x.mom))}
+  {k:"safe",label:"Safe",color:"#34d399",icon:"shield",blurb:"Near your value, minimal downside \u2014 stable, popular, liquid.",
+   lo:0.82, hi:1.30, target:1.00,
+   q:x=>clamp01(0.28*x.liq + 0.24*x.des + 0.20*x.stab + 0.14*x.popularity + 0.14*x.histPerf - 0.26*x.vol)},
+  {k:"balanced",label:"Balanced",color:"#a78bfa",icon:"scale",blurb:"Around your value or a touch above \u2014 stability with upside.",
+   lo:0.92, hi:1.42, target:1.10,
+   q:x=>clamp01(0.22*x.liq + 0.18*x.des + 0.20*x.longTerm + 0.14*x.recentMom + 0.14*x.popularity + 0.12*x.stab - 0.08*x.vol)},
+  {k:"aggressive",label:"Risky",color:"#fb923c",icon:"trendingUp",blurb:"A step above your value \u2014 momentum & growth, still realistic.",
+   lo:1.00, hi:1.62, target:1.28,
+   q:x=>clamp01(0.30*x.growth + 0.24*x.recentMom + 0.16*x.headroom + 0.16*x.des + 0.14*x.mom)}
 ];
 const PORT_CATS=["All","Set","Godly","Chroma","Ancient","Collectibles","High-demand"];
 function catMatch(it,cat){
@@ -1875,23 +1910,17 @@ function catMatch(it,cat){
   return it.category===cat;
 }
 function recConfidence(x){ return Math.round(clamp100(38 + 26*x.vconf + 14*x.dataN + 12*(1-x.vol) + 10*x.histPerf)); }
-// Value-retention curve: 1.0 for even-or-upgrade trades (tapering for unrealistically large jumps);
-// below value, a small loss is tolerated in proportion to item quality (elite items justify ~18%,
-// ordinary items ~2-9%), and losses beyond tolerance fall off steeply. This is what stops the engine
-// from recommending downgrades.
-function valueRetention(r,q){
-  if(!isFinite(r)||r<=0) return 1;
-  if(r>=1) return r<=1.35?1:clamp01(1-(r-1.35)*0.45);
-  const loss=1-r, tol=0.02+0.16*q;
-  return loss<=tol ? clamp01(1-0.45*(loss/tol)) : clamp01(0.55-(loss-tol)*2.4);
-}
+// Per-strategy value fit: a bell centred on each strategy's target ratio (Safe ~1.0 = even, Balanced
+// ~1.10, Risky ~1.28 = slightly above), decreasing toward the window edges. Combined with the value
+// window filter in recommendUpgrades, this makes every strategy prefer near-value / slightly-above trades.
+function valueFit(r,p){ const h=(r>=p.target?(p.hi-p.target):(p.target-p.lo))||0.25; const d=Math.abs(r-p.target)/(h||0.25); return clamp01(1-0.6*d*d); }
 function recValue(o,V){
   if(!(V>0)) return null;
   const r=o.s.val/V, pct=Math.round((r-1)*100);
   if(r>=1.015) return {t:`\u25b2 +${pct}% value`, c:"#34d399"};
   if(r>=0.985) return {t:"Even value", c:"#5eead4"};
   const loss=Math.round((1-r)*100);
-  return o.valueR>=0.7 ? {t:`\u25bc ${loss}% \u00b7 elite`, c:"#fbbf24"} : {t:`\u25bc ${loss}% value`, c:"#fb7185"};
+  return (o.s.quality>=0.6 && loss<=15) ? {t:`\u25bc ${loss}% \u00b7 elite`, c:"#fbbf24"} : {t:`\u25bc ${loss}% value`, c:"#fb7185"};
 }
 function recWhy(o){
   const it=o.it, x=o.s, out=[];
@@ -1918,23 +1947,19 @@ function recOutlook(it){
 function recommendUpgrades(port,cat){
   const V=reconciledSide(port).value;
   const owned=new Set(port.map(o=>o.id));
-  let pool=ALL.filter(it=> !it.placeholder && !owned.has(it.id) && reconcile(it) && catMatch(it,cat));
-  // Trade-realistic value window: even-to-upgrade is the goal. Some sub-value items are kept in the
-  // pool so a genuinely elite item worth a small loss can still surface, but value-retention scoring
-  // below pushes losses down hard. Widen, then fall back to the whole category, if too few candidates.
-  if(V>0){
-    let band=pool.filter(it=>{ const v=reconcile(it).value; return v>=V*0.7 && v<=V*2.6; });
-    if(band.length<3) band=pool.filter(it=>{ const v=reconcile(it).value; return v>=V*0.5 && v<=V*4; });
-    if(band.length>=3) pool=band;
-  }
-  const scored=pool.map(it=>{ const sg=invSignals(it); const vr=V>0?valueRetention(sg.val/V, sg.quality):1;
-    return {it, s:sg, conf:recConfidence(sg), valueR:vr, ratio:V>0?sg.val/V:1}; });
-  const diversify = (cat==="All");
+  const pool=ALL.filter(it=> !it.placeholder && !owned.has(it.id) && reconcile(it) && catMatch(it,cat));
+  // Score every candidate once (values come straight from reconcile(), same engine as the calculator).
+  const scored=pool.map(it=>{ const sg=invSignals(it); return {it, s:sg, conf:recConfidence(sg), ratio:V>0?sg.val/V:1}; });
+  const diversify=(cat==="All");
   const out={};
   for(const p of RISK_PROFILES){
-    // final match prioritises value preservation: fit x value-retention. A strong-fit downgrade is
-    // docked; only an elite item (high value-retention despite a small loss) keeps most of its score.
-    const ranked=scored.map(o=>{ const fit=p.score(o.s); return {...o, fit, sc:clamp100(fit*o.valueR)}; }).sort((a,b)=>b.sc-a.sc);
+    // Each strategy draws only from its own value window (relative to inventory). Widen it once, with a
+    // hard ceiling near +75%, if too few near-value targets exist — never reach for huge jumps.
+    let cand = (V>0) ? scored.filter(o=> o.ratio>=p.lo && o.ratio<=p.hi) : scored.slice();
+    if(V>0 && cand.length<3){ const lo2=p.lo*0.85, hi2=Math.min(p.hi*1.15, 1.75); cand=scored.filter(o=> o.ratio>=lo2 && o.ratio<=hi2); }
+    const ranked=cand.map(o=>{ const qf=p.q(o.s), vf=(V>0)?valueFit(o.ratio,p):1;
+        return {...o, qf, vf, sc:clamp100(100*qf*(0.30+0.70*vf))}; })          // rank = quality x value-proximity
+      .sort((a,b)=> b.sc-a.sc);
     let picks=[];
     if(diversify){ const seen=new Set();
       for(const o of ranked){ if(picks.length>=3) break; if(seen.has(o.it.category)) continue; seen.add(o.it.category); picks.push(o); }
@@ -1976,7 +2001,7 @@ function portfolioView(){
   };
   const profSection=(pf)=>{ const picks=rec.out[pf.k]||[];
     return `<div class="card rec-prof"><div class="rec-ph" style="color:${pf.color}">${icon(pf.icon,15)} ${pf.label}<span class="rec-blurb">${pf.blurb}</span></div>
-      ${picks.length?`<div class="rec-grid">${picks.map(o=>card(o,pf)).join("")}</div>`:`<p class="port-empty">No ${state.portCat==="All"?"":esc(state.portCat)+" "}matches in your value range right now \u2014 try another category.</p>`}</div>`;
+      ${picks.length?`<div class="rec-grid">${picks.map(o=>card(o,pf)).join("")}</div>`:`<p class="port-empty">No ${state.portCat==="All"?"":esc(state.portCat)+" "}targets near your value for this strategy \u2014 try the All category.</p>`}</div>`;
   };
   const sp=state.savedPorts;
   const savedList = sp.length ? sp.map(x=>{ const rr=reconciledSide(x.items), cnt=x.items.length, pend=String(state.portConfirmDel)===String(x.id);
@@ -1992,7 +2017,7 @@ function portfolioView(){
     <div class="sp-list">${savedList}</div>
   </div>`;
   return `<div class="portfolio">
-    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 every target is scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks aim to hold or grow your value; a loss only ranks when the item is genuinely elite. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades.</p>
+    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 every target is scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks aim to hold or grow your value; a loss only ranks when the item is genuinely elite. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-06-30h</b></p>
     <div class="card">
       <div class="port-sum"><div><div class="port-sum-l">Inventory True Value</div><div class="port-sum-v">${fmt(Math.round(inv.value))}</div>${inv.hi>inv.lo?`<div class="port-sum-band">${fmt(Math.round(inv.lo))} \u2013 ${fmt(Math.round(inv.hi))}</div>`:""}</div>
         <div class="port-sum-r"><span class="port-health" style="color:${hCol}">${icon("activity",13)} ${hLabel} holdings</span>${inv.value>0?`<span class="port-conf">${inv.conf}% conf</span>`:""}${inv.priceless?`<span class="port-pl">${inv.priceless} priceless</span>`:""}</div></div>
