@@ -1548,7 +1548,7 @@ function headerHTML(){
 }
 function footerHTML(){
   return `<footer class="ftr">
-    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30l</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Values now follow <b>Supreme Values</b> (MM2Values is shown as a reference only); demand, rarity, stability & ranges are Supreme\u2019s. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
+    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30m</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Values now follow <b>Supreme Values</b> (MM2Values is shown as a reference only); demand, rarity, stability & ranges are Supreme\u2019s. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
     <p>Community estimates — not endorsed by Roblox or Nikilis. Demand/hype/duping shift fast; confirm live before high-value trades. Saved trades & favorites are stored locally on this device only.</p>
     <div class="ftr-social">
       <a href="https://youtube.com/@wyalife" target="_blank" rel="noopener noreferrer" aria-label="YouTube">${icon("youtube",15)} YouTube</a>
@@ -1957,47 +1957,60 @@ function comboSignals(members){
 // singles + a windowed pair search (binary search per anchor) + triples drawn only from top-quality items.
 function buildCombos(items, V){
   const arr=items.slice().sort((a,b)=>a.val-b.val), n=arr.length;
-  const out=[], seen=new Set(), CAP=600;
+  const out=[], seen=new Set(), CAP=700;
   const add=(m)=>{ if(out.length>=CAP) return; const sig=m.map(x=>x.it.id).sort().join("|"); if(seen.has(sig)) return; seen.add(sig);
     out.push({items:m, s:comboSignals(m), val:m.reduce((s,c)=>s+c.s.val,0)}); };
   const bs=(t)=>{ let lo=0,hi=n; while(lo<hi){ const mid=(lo+hi)>>1; if(arr[mid].val<t) lo=mid+1; else hi=mid; } return lo; };
   // singles near value
   for(const c of arr){ if(c.val>=V*0.5 && c.val<=V*1.75) add([c]); }
-  // pairs: each anchor a paired with complements near (V - a.val)
+  // pairs: each anchor paired with complements near (V - anchor)
   for(let a=0;a<n;a++){ if(out.length>=CAP) break; if(arr[a].val>=V*0.98) break;
     const idx=bs(V-arr[a].val);
     for(let k=Math.max(a+1,idx-2); k<=Math.min(n-1,idx+2); k++){ if(k<=a) continue;
       const sum=arr[a].val+arr[k].val; if(sum>=V*0.82 && sum<=V*1.35) add([arr[a],arr[k]]); } }
-  // triples: from the top ~26 items by quality only (keeps the cubic term tiny)
-  const top=arr.slice().sort((x,y)=>(y.s.quality||0)-(x.s.quality||0)).slice(0,26).sort((a,b)=>a.val-b.val), tn=top.length;
-  for(let a=0;a<tn && out.length<CAP;a++){ for(let b=a+1;b<tn;b++){ const base=top[a].val+top[b].val; if(base>=V*1.2) break;
+  // higher-order bundles drawn from top-quality items only (keeps the combinatorics tiny)
+  const topByQ=arr.slice().sort((x,y)=>(y.s.quality||0)-(x.s.quality||0));
+  const t3set=topByQ.slice(0,24).sort((a,b)=>a.val-b.val), t3=t3set.length;
+  for(let a=0;a<t3 && out.length<CAP;a++){ for(let b=a+1;b<t3;b++){ const base=t3set[a].val+t3set[b].val; if(base>=V*1.2) break;
       const idx=bs(V-base);
       for(let k=Math.max(0,idx-1); k<=Math.min(n-1,idx+1); k++){ const c=arr[k];
-        if(c.it.id===top[a].it.id||c.it.id===top[b].it.id) continue;
-        const sum=base+c.val; if(sum>=V*0.85 && sum<=V*1.25) add([top[a],top[b],c]); } } }
+        if(c.it.id===t3set[a].it.id||c.it.id===t3set[b].it.id) continue;
+        const sum=base+c.val; if(sum>=V*0.85 && sum<=V*1.25) add([t3set[a],t3set[b],c]); } } }
+  // quads from a tighter top set
+  const t4set=topByQ.slice(0,16).sort((a,b)=>a.val-b.val), t4=t4set.length;
+  for(let a=0;a<t4 && out.length<CAP;a++){ for(let b=a+1;b<t4;b++){ if(t4set[a].val+t4set[b].val>=V*1.1) break;
+    for(let c=b+1;c<t4;c++){ const base=t4set[a].val+t4set[b].val+t4set[c].val; if(base>=V*1.15) break;
+      const idx=bs(V-base);
+      for(let d=Math.max(0,idx-1); d<=Math.min(n-1,idx+1); d++){ const e=arr[d], eid=e.it.id;
+        if(eid===t4set[a].it.id||eid===t4set[b].it.id||eid===t4set[c].it.id) continue;
+        const sum=base+e.val; if(sum>=V*0.88 && sum<=V*1.22) add([t4set[a],t4set[b],t4set[c],e]); } } } }
   return out;
 }
 function recommendUpgrades(port,cat){
   const V=reconciledSide(port).value;
   const owned=new Set(port.map(o=>o.id));
   const items=ALL.filter(it=> !it.placeholder && !owned.has(it.id) && reconcile(it) && catMatch(it,cat))
-    .map(it=>{ const sg=invSignals(it); return {it, s:sg, val:sg.val}; });   // values from reconcile() — same engine as calculator
+    .map(it=>{ const sg=invSignals(it); return {it, s:sg, val:sg.val}; });   // values from reconcile() = calculator engine
   const REC_LO=0.72, REC_HI=1.70;
   const combos = (V>0) ? buildCombos(items, V) : items.slice(0,40).map(c=>({items:[c], s:c.s, val:c.val}));
   for(const cb of combos){ cb.ratio = V>0? cb.val/V : 1; cb.conf = recConfidence(cb.s); }
   const near = (V>0) ? combos.filter(cb=> cb.ratio>=REC_LO && cb.ratio<=REC_HI).length : combos.length;
+  // Simplicity preference: with quality & value equal, fewer items win — so an equal-value single beats a
+  // bundle. But a clearly stronger multi-item bundle still wins, so bundle size adapts to what trades best.
+  const sizeFactor = sz => 1 - 0.05*(sz-1);
   const out={};
   for(const p of RISK_PROFILES){
     let cand = (V>0) ? combos.filter(cb=> cb.ratio>=p.lo && cb.ratio<=p.hi) : combos.slice();
     if(V>0 && cand.length<3){ const hi2=Math.min(p.wideHi, REC_HI); cand=combos.filter(cb=> cb.ratio>=p.lo && cb.ratio<=hi2); }
     const ranked=cand.map(o=>{ const qf=p.q(o.s), vf=(V>0)?valueFit(o.ratio,p):1;
-        return {...o, qf, vf, sc:clamp100(100*qf*(0.28+0.72*vf))}; })
+        return {...o, qf, vf, sc:clamp100(100*qf*(0.28+0.72*vf)*sizeFactor(o.items.length))}; })
       .sort((a,b)=> b.sc-a.sc);
-    // pick top 3 for variety: each pick must introduce at least one item not already shown
-    const picks=[], used=new Set();
-    for(const o of ranked){ if(picks.length>=3) break; const ids=o.items.map(c=>c.it.id);
-      if(picks.length>0 && !ids.some(id=>!used.has(id))) continue;
-      ids.forEach(id=>used.add(id)); picks.push(o); }
+    // Diverse pick: each pick adds an item the others don't, and no bundle size appears more than twice —
+    // so the three suggestions vary in size (e.g. a single, a pair, a triple) instead of repeating.
+    const picks=[], used=new Set(), bySize={};
+    for(const o of ranked){ if(picks.length>=3) break; const ids=o.items.map(c=>c.it.id), sz=o.items.length;
+      if(picks.length>0 && (!ids.some(id=>!used.has(id)) || (bySize[sz]||0)>=2)) continue;
+      ids.forEach(id=>used.add(id)); bySize[sz]=(bySize[sz]||0)+1; picks.push(o); }
     for(const o of ranked){ if(picks.length>=3) break; if(!picks.includes(o)) picks.push(o); }
     out[p.k]=picks;
   }
@@ -2057,7 +2070,7 @@ function portfolioView(){
     <div class="sp-list">${savedList}</div>
   </div>`;
   return `<div class="portfolio">
-    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 single items and multi-item bundles are scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks aim to hold or grow your value; a loss only ranks when the item is genuinely elite. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-06-30l</b></p>
+    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 single items and multi-item bundles are scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks aim to hold or grow your value; a loss only ranks when the item is genuinely elite. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-06-30m</b></p>
     <div class="card">
       <div class="port-sum"><div><div class="port-sum-l">Inventory True Value</div><div class="port-sum-v">${fmt(Math.round(inv.value))}</div>${inv.hi>inv.lo?`<div class="port-sum-band">${fmt(Math.round(inv.lo))} \u2013 ${fmt(Math.round(inv.hi))}</div>`:""}</div>
         <div class="port-sum-r"><span class="port-health" style="color:${hCol}">${icon("activity",13)} ${hLabel} holdings</span>${inv.value>0?`<span class="port-conf">${inv.conf}% conf</span>`:""}${inv.priceless?`<span class="port-pl">${inv.priceless} priceless</span>`:""}</div></div>
