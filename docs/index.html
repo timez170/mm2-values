@@ -1543,7 +1543,7 @@ function headerHTML(){
 }
 function footerHTML(){
   return `<footer class="ftr">
-    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30r</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Values now follow <b>Supreme Values</b> (MM2Values is shown as a reference only); demand, rarity, stability & ranges are Supreme\u2019s. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
+    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30u</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Values now follow <b>Supreme Values</b> (MM2Values is shown as a reference only); demand, rarity, stability & ranges are Supreme\u2019s. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
     <p>Community estimates — not endorsed by Roblox or Nikilis. Demand/hype/duping shift fast; confirm live before high-value trades. Saved trades & favorites are stored locally on this device only.</p>
     <div class="ftr-social">
       <a href="https://youtube.com/@wyalife" target="_blank" rel="noopener noreferrer" aria-label="YouTube">${icon("youtube",15)} YouTube</a>
@@ -1825,15 +1825,15 @@ function invSignals(it){
   return {liq,des,stab,trend,mom,recentMom,chgPct,headroom,vol,mdd,vconf,val,both,dataN,d01,rar01,activity,popularity,histPerf,longTerm,growth,quality,m};
 }
 const RISK_PROFILES=[
-  {k:"safe",label:"Safe",color:"#34d399",icon:"shield",blurb:"Near your value, minimal downside \u2014 stable, popular, liquid.",
-   lo:0.85, hi:1.14, target:1.02, lossAv:0.90, wideHi:1.20,
-   q:x=>clamp01(0.28*x.liq + 0.24*x.des + 0.20*x.stab + 0.14*x.popularity + 0.14*x.histPerf - 0.26*x.vol)},
-  {k:"balanced",label:"Balanced",color:"#a78bfa",icon:"scale",blurb:"Around your value or a touch above \u2014 stability with upside.",
-   lo:0.95, hi:1.34, target:1.15, lossAv:0.45, wideHi:1.42,
-   q:x=>clamp01(0.22*x.liq + 0.18*x.des + 0.20*x.longTerm + 0.14*x.recentMom + 0.14*x.popularity + 0.12*x.stab - 0.08*x.vol)},
-  {k:"aggressive",label:"Risky",color:"#fb923c",icon:"trendingUp",blurb:"A step above your value \u2014 momentum & growth, still realistic.",
-   lo:1.12, hi:1.70, target:1.44, lossAv:0.10, wideHi:1.70,
-   q:x=>clamp01(0.30*x.growth + 0.24*x.recentMom + 0.16*x.headroom + 0.16*x.des + 0.14*x.mom)}
+  {k:"safe",label:"Safe",color:"#34d399",icon:"shield",blurb:"An even, fair trade \u2014 stable, popular, liquid items.",
+   lo:0.92, hi:1.05, target:1.00, spread:0.08, wideLo:0.86,
+   q:x=>clamp01(0.28*x.liq + 0.24*x.des + 0.20*x.stab + 0.16*x.popularity + 0.12*x.histPerf - 0.22*x.vol)},
+  {k:"balanced",label:"Balanced",color:"#a78bfa",icon:"scale",blurb:"An even trade for an item that holds value with upside.",
+   lo:0.90, hi:1.05, target:0.99, spread:0.10, wideLo:0.84,
+   q:x=>clamp01(0.22*x.liq + 0.20*x.des + 0.20*x.longTerm + 0.14*x.popularity + 0.14*x.stab + 0.10*x.growth - 0.08*x.vol)},
+  {k:"aggressive",label:"Risky",color:"#fb923c",icon:"trendingUp",blurb:"A fair trade for a high-momentum item likely to climb.",
+   lo:0.85, hi:1.04, target:0.96, spread:0.12, wideLo:0.80,
+   q:x=>clamp01(0.30*x.growth + 0.26*x.recentMom + 0.16*x.mom + 0.16*x.des + 0.12*x.headroom)}
 ];
 const REC_CATS=["Godly","Ancient","Chroma","Vintage"];   // recommendation universe: high-tier tradeable only
 const PORT_CATS=["All","Godly","Ancient","Chroma","Vintage","High-demand"];
@@ -1847,14 +1847,14 @@ function recConfidence(x){ return Math.round(clamp100(38 + 26*x.vconf + 14*x.dat
 // Per-strategy value fit: a bell centred on each strategy's target ratio (Safe ~1.0 = even, Balanced
 // ~1.10, Risky ~1.28 = slightly above), decreasing toward the window edges. Combined with the value
 // window filter in recommendUpgrades, this makes every strategy prefer near-value / slightly-above trades.
-function valueFit(r,p){ const h=(r>=p.target?(p.hi-p.target):(p.target-p.lo))||0.25; const d=Math.abs(r-p.target)/(h||0.25); let f=clamp01(1-0.6*d*d); if(r<1 && p.lossAv) f*=clamp01(1-p.lossAv*(1-r)*3); return f; }
+function valueFit(r,p){ if(!isFinite(r)||r<=0) return 1; if(r>1.06) return 0; const sp=p.spread||0.10; let f=clamp01(1-0.6*Math.pow((r-p.target)/sp,2)); if(r>1.0) f*=clamp01(1-(r-1.0)*7); return f; }  // realistic: peaks at even, above-even is unrealistic
 function recValue(o,V){
   if(!(V>0)) return null;
   const r=o.s.val/V, pct=Math.round((r-1)*100);
-  if(r>=1.015) return {t:`\u25b2 +${pct}% value`, c:"#34d399"};
-  if(r>=0.985) return {t:"Even value", c:"#5eead4"};
+  if(r>=1.03) return {t:`\u25b2 +${pct}% value`, c:"#34d399"};
+  if(r>=0.96) return {t:"Even value", c:"#5eead4"};
   const loss=Math.round((1-r)*100);
-  return (o.s.quality>=0.6 && loss<=15) ? {t:`\u25bc ${loss}% \u00b7 elite`, c:"#fbbf24"} : {t:`\u25bc ${loss}% value`, c:"#fb7185"};
+  return (o.s.quality>=0.6 && loss<=12) ? {t:`\u25bc ${loss}% \u00b7 for upside`, c:"#fbbf24"} : {t:`\u25bc ${loss}% value`, c:"#fb7185"};
 }
 function recWhy(o){
   const x=o.s, out=[];
@@ -1893,22 +1893,22 @@ function comboSignals(members){
 function buildCombos(items, V){
   const arr=items.slice().sort((a,b)=>a.val-b.val), n=arr.length;
   const out=[], seen=new Set();
-  const add=(m)=>{ const sig=m.map(x=>x.it.id).sort().join("|"); if(seen.has(sig)) return false; seen.add(sig);
+  const add=(m)=>{ if(m.length>1 && m.some(x=>x.val>=V*0.9)) return false; const sig=m.map(x=>x.it.id).sort().join("|"); if(seen.has(sig)) return false; seen.add(sig);
     out.push({items:m, s:comboSignals(m), val:m.reduce((s,c)=>s+c.s.val,0)}); return true; };
   const bs=(t)=>{ let lo=0,hi=n; while(lo<hi){ const mid=(lo+hi)>>1; if(arr[mid].val<t) lo=mid+1; else hi=mid; } return lo; };
   // singles near value
-  for(const c of arr) if(c.val>=V*0.5 && c.val<=V*1.75) add([c]);
+  for(const c of arr) if(c.val>=V*0.85 && c.val<=V*1.16) add([c]);
   // pairs: each anchor + complement near (V - anchor)
   let nP=0; for(let a=0;a<n && nP<320;a++){ if(arr[a].val>=V*0.98) break; const idx=bs(V-arr[a].val);
     for(let k=Math.max(a+1,idx-2);k<=Math.min(n-1,idx+2) && nP<320;k++){ if(k<=a) continue;
-      const sum=arr[a].val+arr[k].val; if(sum>=V*0.82 && sum<=V*1.35){ if(add([arr[a],arr[k]])) nP++; } } }
+      const sum=arr[a].val+arr[k].val; if(sum>=V*0.85 && sum<=V*1.16){ if(add([arr[a],arr[k]])) nP++; } } }
   // triples: TWO small-value anchors (so several can sum to V) + a third found near the remainder.
   let T=arr.filter(c=> c.val>0 && c.val<=V*0.72); if(T.length>32){ const st=Math.ceil(T.length/32); T=T.filter((_,i)=>i%st===0); }
   let nT=0; for(let a=0;a<T.length && nT<320;a++){ for(let b=a+1;b<T.length && nT<320;b++){ const base=T[a].val+T[b].val; if(base>=V*1.12) break;
     const idx=bs(V-base);
     for(let k=Math.max(0,idx-1);k<=Math.min(n-1,idx+1);k++){ const c=arr[k], id=c.it.id;
       if(id===T[a].it.id||id===T[b].it.id) continue; const sum=base+c.val;
-      if(sum>=V*0.85 && sum<=V*1.22){ if(add([T[a],T[b],c])) nT++; } } } }
+      if(sum>=V*0.85 && sum<=V*1.16){ if(add([T[a],T[b],c])) nT++; } } } }
   // quads: THREE small-value anchors + a fourth near the remainder.
   let Q=arr.filter(c=> c.val>0 && c.val<=V*0.52); if(Q.length>24){ const st=Math.ceil(Q.length/24); Q=Q.filter((_,i)=>i%st===0); }
   let nQ=0; for(let a=0;a<Q.length && nQ<240;a++){ for(let b=a+1;b<Q.length && nQ<240;b++){ if(Q[a].val+Q[b].val>=V*1.05) break;
@@ -1916,7 +1916,7 @@ function buildCombos(items, V){
       const idx=bs(V-base);
       for(let d=Math.max(0,idx-1);d<=Math.min(n-1,idx+1);d++){ const e=arr[d], eid=e.it.id;
         if(eid===Q[a].it.id||eid===Q[b].it.id||eid===Q[c].it.id) continue; const sum=base+e.val;
-        if(sum>=V*0.88 && sum<=V*1.2){ if(add([Q[a],Q[b],Q[c],e])) nQ++; } } } } }
+        if(sum>=V*0.86 && sum<=V*1.16){ if(add([Q[a],Q[b],Q[c],e])) nQ++; } } } } }
   return out;
 }
 function recommendUpgrades(port,cat){
@@ -1924,7 +1924,7 @@ function recommendUpgrades(port,cat){
   const owned=new Set(port.map(o=>o.id));
   const items=ALL.filter(it=> !it.placeholder && !owned.has(it.id) && REC_CATS.includes(it.category) && reconcile(it) && catMatch(it,cat))
     .map(it=>{ const sg=invSignals(it); return {it, s:sg, val:sg.val}; });   // values from reconcile() = calculator engine
-  const REC_LO=0.72, REC_HI=1.70;
+  const REC_LO=0.84, REC_HI=1.06;   // realistic trades: target ~= your inventory value (never much more; never a lopsided giveaway)
   const combos = (V>0) ? buildCombos(items, V) : items.slice(0,40).map(c=>({items:[c], s:c.s, val:c.val}));
   for(const cb of combos){ cb.ratio = V>0? cb.val/V : 1; cb.conf = recConfidence(cb.s); }
   const near = (V>0) ? combos.filter(cb=> cb.ratio>=REC_LO && cb.ratio<=REC_HI).length : combos.length;
@@ -1933,7 +1933,7 @@ function recommendUpgrades(port,cat){
   const out={};
   for(const p of RISK_PROFILES){
     let cand = (V>0) ? combos.filter(cb=> cb.ratio>=p.lo && cb.ratio<=p.hi) : combos.slice();
-    if(V>0 && cand.length<3){ const hi2=Math.min(p.wideHi, REC_HI); cand=combos.filter(cb=> cb.ratio>=p.lo && cb.ratio<=hi2); }
+    if(V>0 && cand.length<3){ const lo2=Math.max(REC_LO, p.wideLo); cand=combos.filter(cb=> cb.ratio>=lo2 && cb.ratio<=p.hi); }  // widen DOWNWARD, never toward worth-more
     const ranked=cand.map(o=>{ const qf=p.q(o.s), vf=(V>0)?valueFit(o.ratio,p):1;
         return {...o, qf, vf, sc:clamp100(100*qf*(0.28+0.72*vf))}; })      // no size penalty — every bundle size competes fairly
       .sort((a,b)=> b.sc-a.sc);
@@ -2004,7 +2004,7 @@ function portfolioView(){
     <div class="sp-list">${savedList}</div>
   </div>`;
   return `<div class="portfolio">
-    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 single items and multi-item bundles are scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks aim to hold or grow your value; a loss only ranks when the item is genuinely elite. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-06-30r</b></p>
+    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 single items and multi-item bundles are scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks are realistic, roughly even-value trades the other trader would actually accept — worth about what your inventory is worth, never much more. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-06-30u</b></p>
     <div class="card">
       <div class="port-sum"><div><div class="port-sum-l">Inventory True Value</div><div class="port-sum-v">${fmt(Math.round(inv.value))}</div>${inv.hi>inv.lo?`<div class="port-sum-band">${fmt(Math.round(inv.lo))} \u2013 ${fmt(Math.round(inv.hi))}</div>`:""}</div>
         <div class="port-sum-r"><span class="port-health" style="color:${hCol}">${icon("activity",13)} ${hLabel} holdings</span>${inv.value>0?`<span class="port-conf">${inv.conf}% conf</span>`:""}${inv.priceless?`<span class="port-pl">${inv.priceless} priceless</span>`:""}</div></div>
