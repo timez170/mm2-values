@@ -1201,7 +1201,7 @@ const state={ view:"calc", your:[], their:[],
   favorites: store.get("mm2.favorites",[]).filter(id=>BY_ID[id]),
   history: store.get("mm2.history",[]),
   recents: store.get("mm2.recents",[]).filter(id=>BY_ID[id]),
-  portfolio: store.get("mm2.portfolio",[]).filter(o=>o&&BY_ID[o.id]).map(o=>({id:o.id,qty:clampQty(o.qty)})), portQ:"", portCat:"Godly",
+  portfolio: store.get("mm2.portfolio",[]).filter(o=>o&&BY_ID[o.id]).map(o=>({id:o.id,qty:clampQty(o.qty)})), portQ:"", portCat:"All",
   savedPorts: store.get("mm2.savedPorts",[]).filter(s=>s&&Array.isArray(s.items)).map((s,i)=>({id:s.id!=null?s.id:Date.now()+i, name:String(s.name||("Portfolio "+(i+1))), items:s.items.filter(o=>o&&BY_ID[o.id]).map(o=>({id:o.id,qty:clampQty(o.qty)})), ts:s.ts||Date.now()})),
   portName:"", portConfirmDel:null,
   theme: ((t)=>t==="midnight"?"vibe":t)(store.get("mm2.theme","vibe")),
@@ -1543,7 +1543,7 @@ function headerHTML(){
 }
 function footerHTML(){
   return `<footer class="ftr">
-    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30p</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Values now follow <b>Supreme Values</b> (MM2Values is shown as a reference only); demand, rarity, stability & ranges are Supreme\u2019s. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
+    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30q</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Values now follow <b>Supreme Values</b> (MM2Values is shown as a reference only); demand, rarity, stability & ranges are Supreme\u2019s. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
     <p>Community estimates — not endorsed by Roblox or Nikilis. Demand/hype/duping shift fast; confirm live before high-value trades. Saved trades & favorites are stored locally on this device only.</p>
     <div class="ftr-social">
       <a href="https://youtube.com/@wyalife" target="_blank" rel="noopener noreferrer" aria-label="YouTube">${icon("youtube",15)} YouTube</a>
@@ -1936,13 +1936,14 @@ function recommendUpgrades(port,cat){
     const ranked=cand.map(o=>{ const qf=p.q(o.s), vf=(V>0)?valueFit(o.ratio,p):1;
         return {...o, qf, vf, sc:clamp100(100*qf*(0.28+0.72*vf))}; })      // no size penalty — every bundle size competes fairly
       .sort((a,b)=> b.sc-a.sc);
-    // Variety by construction: take the best bundle of EACH size (1..4) that fits this strategy, dropping
-    // any size well below the best; backfill with next-best if fewer than three sizes exist. So one-, two-,
-    // three- and four-item bundles all surface based on what actually trades best, not a repeated size.
-    const bySize={};
-    for(const o of ranked){ const sz=o.items.length; if(!bySize[sz] || o.sc>bySize[sz].sc) bySize[sz]=o; }
-    const best=Math.max(1, ...Object.values(bySize).map(o=>o.sc));
-    let picks=[1,2,3,4].map(sz=>bySize[sz]).filter(o=>o && o.sc>=best*0.4);
+    // Variety across BOTH axes: greedily take the best-scoring bundle whose SIZE and dominant CATEGORY are
+    // both new, so recommendations span item types (Godly, Ancient, Chroma, Set, Vintage, Legendary...) and
+    // bundle sizes (1..4). Then fill by new size, then best-remaining — single-category filters still vary by size.
+    const domCat=o=>{ let b=o.items[0]; for(const c of o.items) if(c.s.val>b.s.val) b=c; return b.it.category; };
+    let picks=[]; const usz=new Set(), ucat=new Set();
+    for(const o of ranked){ if(picks.length>=4) break; const sz=o.items.length, dc=domCat(o);
+      if(usz.has(sz) || ucat.has(dc)) continue; usz.add(sz); ucat.add(dc); picks.push(o); }
+    for(const o of ranked){ if(picks.length>=4) break; if(picks.includes(o)) continue; const sz=o.items.length; if(usz.has(sz)) continue; usz.add(sz); picks.push(o); }
     for(const o of ranked){ if(picks.length>=3) break; if(!picks.includes(o)) picks.push(o); }
     out[p.k]=picks.slice(0,4).sort((a,b)=> b.sc-a.sc);
   }
@@ -2002,7 +2003,7 @@ function portfolioView(){
     <div class="sp-list">${savedList}</div>
   </div>`;
   return `<div class="portfolio">
-    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 single items and multi-item bundles are scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks aim to hold or grow your value; a loss only ranks when the item is genuinely elite. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-06-30p</b></p>
+    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 single items and multi-item bundles are scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks aim to hold or grow your value; a loss only ranks when the item is genuinely elite. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-06-30q</b></p>
     <div class="card">
       <div class="port-sum"><div><div class="port-sum-l">Inventory True Value</div><div class="port-sum-v">${fmt(Math.round(inv.value))}</div>${inv.hi>inv.lo?`<div class="port-sum-band">${fmt(Math.round(inv.lo))} \u2013 ${fmt(Math.round(inv.hi))}</div>`:""}</div>
         <div class="port-sum-r"><span class="port-health" style="color:${hCol}">${icon("activity",13)} ${hLabel} holdings</span>${inv.value>0?`<span class="port-conf">${inv.conf}% conf</span>`:""}${inv.priceless?`<span class="port-pl">${inv.priceless} priceless</span>`:""}</div></div>
