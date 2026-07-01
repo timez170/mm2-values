@@ -912,9 +912,8 @@ function sideTotal(items,site,bound="mid"){
 }
 function combinedVal(it,bound="mid"){
   if(!it||it.placeholder) return null;
-  const a=valueOf(it,"supreme",bound), b=valueOf(it,"mm2",bound);
-  const arr=[a,b].filter(x=>x!=null);
-  return arr.length? arr.reduce((s,x)=>s+x,0)/arr.length : null;
+  const a=valueOf(it,"supreme",bound);
+  return a!=null ? a : valueOf(it,"mm2",bound);           // follow Supreme Values; MM2 only when Supreme has no value
 }
 /* ===========================================================================
    RECONCILIATION ENGINE  —  fuse Supreme + MM2Values (+ Supreme's ranged value)
@@ -926,27 +925,22 @@ function combinedVal(it,bound="mid"){
 function reconcile(it){
   if(!it || it.placeholder) return null;
   const s=it.supreme, m=it.mm2;
-  const have=[]; if(s!=null) have.push(s); if(m!=null) have.push(m);
-  if(!have.length) return null;
-  const anchors=have.slice();
-  if(it.range && it.range.length===2) anchors.push((it.range[0]+it.range[1])/2);
-  const srt=anchors.slice().sort((a,b)=>a-b);
-  const med = srt.length%2 ? srt[(srt.length-1)/2] : (srt[srt.length/2-1]+srt[srt.length/2])/2;
-  const mean = have.reduce((a,b)=>a+b,0)/have.length;
-  const value = (mean+med)/2;                              // responsive mean, guarded by robust median
-  let lo=value, hi=value, both = s!=null && m!=null;
-  if(both){ lo=Math.min(lo,s,m); hi=Math.max(hi,s,m); }
-  if(it.range && it.range.length===2){ lo=Math.min(lo,it.range[0]); hi=Math.max(hi,it.range[1]); }
-  let conf=92, divPct=0;
-  if(!both) conf-=28;
-  if(both){ divPct=Math.abs(s-m)/(((s+m)/2)||1)*100; conf-=Math.min(38, divPct*1.6); }
+  if(s==null && m==null) return null;
+  const usingSupreme = s!=null;
+  const value = usingSupreme ? s : m;                     // True Value follows Supreme; MM2 only as a fallback
+  let lo=value, hi=value;
+  if(it.range && it.range.length===2){ lo=Math.min(value,it.range[0]); hi=Math.max(value,it.range[1]); } // band = Supreme's published range only
+  const both = s!=null && m!=null;
+  let conf=91;
+  if(!usingSupreme) conf-=20;                             // no Supreme listing -> MM2 fallback, less certain
   const widthPct = value>0 ? (hi-lo)/value*100 : 0;
   conf-=Math.min(16, widthPct*0.5);
   const stab=STAB_SCORE[it.trend];
   if(stab!=null){ if(stab>=7) conf+=4; else if(stab<=2) conf-=10; else if(stab===5) conf-=6; }
   if(it.demand==null) conf-=4; if(it.rarity==null) conf-=2;
   conf=Math.max(5,Math.min(99,Math.round(conf)));
-  return { value, lo, hi, conf, divPct, both, higher: both ? (s>m?"supreme":(m>s?"mm2":"even")) : (s!=null?"supreme":"mm2") };
+  const divPct = both ? Math.abs(s-m)/(((s+m)/2)||1)*100 : 0;   // kept for the cross-site reference card only
+  return { value, lo, hi, conf, divPct, both, higher: both ? (s>m?"supreme":(m>s?"mm2":"even")) : (usingSupreme?"supreme":"mm2") };
 }
 // reconciled "True Value" for a whole side: sum of per-item reconcile(), value-weighted confidence,
 // independent-interval band (sum of per-item lo/hi). Priceless/unvalued items are flagged, not zeroed.
@@ -1429,7 +1423,7 @@ function trueValueCard(A){
   const cc = t.conf>=75?"#34d399": t.conf>=50?"#fbbf24":"#fb7185";
   return `<div class="card tv-card">
     <div class="tv-top">
-      <span class="row gap8"><span class="tv-ic" style="color:${r.t}">${icon("scale",16)}</span><span class="b sm">True Value <span class="tv-sub">· reconciled</span></span></span>
+      <span class="row gap8"><span class="tv-ic" style="color:${r.t}">${icon("scale",16)}</span><span class="b sm">True Value <span class="tv-sub">· Supreme</span></span></span>
       <span class="tv-conf" style="color:${cc};border-color:${cc}55;background:${cc}14">${icon("shield",12)} ${t.conf}% confidence</span>
     </div>
     <div class="tv-grid">
@@ -1437,7 +1431,7 @@ function trueValueCard(A){
       <div class="tv-mid"><span class="tv-verdict" style="color:${r.t}">${icon(r.icon,15)} ${t.magnitude}</span><span class="tv-gap">${t.diff>=0?"+":"−"}${fmt(Math.abs(t.diff))} · ${Math.abs(t.pct).toFixed(1)}%</span></div>
       <div class="tv-side tv-r"><div class="tv-lbl">You get</div><div class="tv-val" style="color:#67e8f9">${fmt(t.them)}</div>${band(t.themLo,t.themHi)}</div>
     </div>
-    <div class="tv-foot">${icon("info",11)} <span>Single estimate per item from a robust median + mean of Supreme &amp; MM2; the band widens with how much the two lists disagree, and confidence rises when they agree on fresh values.${t.priceless?` <b style="color:#cbd5e1">${t.priceless}</b> priceless item${t.priceless>1?"s":""} can\'t be valued.`:""}</span></div>
+    <div class="tv-foot">${icon("info",11)} <span>Values follow <b>Supreme Values</b> \u2014 MM2Values is shown as a reference only, and is used for a value solely when Supreme has none. Any band is Supreme\u2019s published range.${t.priceless?` <b style="color:#cbd5e1">${t.priceless}</b> priceless item${t.priceless>1?"s":""} can\'t be valued.`:""}</span></div>
   </div>`;
 }
 function resultsHTML(A){
@@ -1455,7 +1449,7 @@ function resultsHTML(A){
     <span class="banner-sheen"></span>
     <div class="banner-in">
       <div class="row center gap8"><span style="display:inline-flex;color:${cR.t}">${icon(cR.icon,28)}</span><span class="verdict-title" style="color:${cR.t}">${A.combined.magnitude}</span></div>
-      <p class="banner-sub">Combined (average of both lists): you give <b>${fmt(A.combined.you)}</b>, you get <b>${fmt(A.combined.them)}</b> — ${A.combined.diff>=0?"gain":"deficit"} of <b style="color:${cR.t}">${fmt(Math.abs(A.combined.diff))}</b> (${Math.abs(A.combined.pct).toFixed(1)}%).</p>
+      <p class="banner-sub">Value \u2014 you give <b>${fmt(A.combined.you)}</b>, you get <b>${fmt(A.combined.them)}</b> — ${A.combined.diff>=0?"gain":"deficit"} of <b style="color:${cR.t}">${fmt(Math.abs(A.combined.diff))}</b> (${Math.abs(A.combined.pct).toFixed(1)}%).</p>
       ${gaugeHTML(A.combined.pct,cR.t,animate)}
       <div class="row center wrap gap8" style="margin-top:6px">${bal}${flags.join("")}</div>
       ${(function(){ const bi=A.balance?balanceItems(A.balance):null; if(!bi) return ""; const sl=bi.side==="you"?"your":"their"; return `<div class="bal-sug"><span class="bal-sug-h">${icon("plus",12)} Add to <b>${sl}</b> side:</span>`+bi.items.map(o=>`<button class="bal-chip" data-action="qadd" data-side="${bi.side}" data-id="${o.id}" title="${esc(o.name)} \u00b7 ~${fmt(o.v)} value">${itemIconTag({name:o.name,category:o.cat},13)}<span class="bal-chip-n">${esc(o.name)}</span><span class="bal-chip-v">${fmt(o.v)}</span></button>`).join("")+`</div>`; })()}
@@ -1549,7 +1543,7 @@ function headerHTML(){
 }
 function footerHTML(){
   return `<footer class="ftr">
-    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30h</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Demand, rarity, stability & ranged values are sourced from <b>Supreme Values</b> (published per item); each site's value drives its own verdict. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
+    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30k</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Values now follow <b>Supreme Values</b> (MM2Values is shown as a reference only); demand, rarity, stability & ranges are Supreme\u2019s. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
     <p>Community estimates — not endorsed by Roblox or Nikilis. Demand/hype/duping shift fast; confirm live before high-value trades. Saved trades & favorites are stored locally on this device only.</p>
     <div class="ftr-social">
       <a href="https://youtube.com/@wyalife" target="_blank" rel="noopener noreferrer" aria-label="YouTube">${icon("youtube",15)} YouTube</a>
@@ -1893,13 +1887,13 @@ function invSignals(it){
 }
 const RISK_PROFILES=[
   {k:"safe",label:"Safe",color:"#34d399",icon:"shield",blurb:"Near your value, minimal downside \u2014 stable, popular, liquid.",
-   lo:0.82, hi:1.30, target:1.00,
+   lo:0.85, hi:1.14, target:1.02, lossAv:0.90, wideHi:1.20,
    q:x=>clamp01(0.28*x.liq + 0.24*x.des + 0.20*x.stab + 0.14*x.popularity + 0.14*x.histPerf - 0.26*x.vol)},
   {k:"balanced",label:"Balanced",color:"#a78bfa",icon:"scale",blurb:"Around your value or a touch above \u2014 stability with upside.",
-   lo:0.92, hi:1.42, target:1.10,
+   lo:0.95, hi:1.34, target:1.15, lossAv:0.45, wideHi:1.42,
    q:x=>clamp01(0.22*x.liq + 0.18*x.des + 0.20*x.longTerm + 0.14*x.recentMom + 0.14*x.popularity + 0.12*x.stab - 0.08*x.vol)},
   {k:"aggressive",label:"Risky",color:"#fb923c",icon:"trendingUp",blurb:"A step above your value \u2014 momentum & growth, still realistic.",
-   lo:1.00, hi:1.62, target:1.28,
+   lo:1.12, hi:1.70, target:1.44, lossAv:0.10, wideHi:1.70,
    q:x=>clamp01(0.30*x.growth + 0.24*x.recentMom + 0.16*x.headroom + 0.16*x.des + 0.14*x.mom)}
 ];
 const PORT_CATS=["All","Set","Godly","Chroma","Ancient","Collectibles","High-demand"];
@@ -1913,7 +1907,7 @@ function recConfidence(x){ return Math.round(clamp100(38 + 26*x.vconf + 14*x.dat
 // Per-strategy value fit: a bell centred on each strategy's target ratio (Safe ~1.0 = even, Balanced
 // ~1.10, Risky ~1.28 = slightly above), decreasing toward the window edges. Combined with the value
 // window filter in recommendUpgrades, this makes every strategy prefer near-value / slightly-above trades.
-function valueFit(r,p){ const h=(r>=p.target?(p.hi-p.target):(p.target-p.lo))||0.25; const d=Math.abs(r-p.target)/(h||0.25); return clamp01(1-0.6*d*d); }
+function valueFit(r,p){ const h=(r>=p.target?(p.hi-p.target):(p.target-p.lo))||0.25; const d=Math.abs(r-p.target)/(h||0.25); let f=clamp01(1-0.6*d*d); if(r<1 && p.lossAv) f*=clamp01(1-p.lossAv*(1-r)*3); return f; }
 function recValue(o,V){
   if(!(V>0)) return null;
   const r=o.s.val/V, pct=Math.round((r-1)*100);
@@ -1950,15 +1944,17 @@ function recommendUpgrades(port,cat){
   const pool=ALL.filter(it=> !it.placeholder && !owned.has(it.id) && reconcile(it) && catMatch(it,cat));
   // Score every candidate once (values come straight from reconcile(), same engine as the calculator).
   const scored=pool.map(it=>{ const sg=invSignals(it); return {it, s:sg, conf:recConfidence(sg), ratio:V>0?sg.val/V:1}; });
+  const REC_LO=0.72, REC_HI=1.70;                                    // absolute trade-realism bounds: never worse than -28% or better than +70%
+  const near=(V>0)? scored.filter(o=> o.ratio>=REC_LO && o.ratio<=REC_HI).length : scored.length;
   const diversify=(cat==="All");
   const out={};
   for(const p of RISK_PROFILES){
-    // Each strategy draws only from its own value window (relative to inventory). Widen it once, with a
-    // hard ceiling near +75%, if too few near-value targets exist — never reach for huge jumps.
+    // Each strategy draws from its own value lane (relative to inventory), widening once — but never past
+    // the absolute bounds — if too few targets sit in-lane. Score = quality x loss-aware value proximity.
     let cand = (V>0) ? scored.filter(o=> o.ratio>=p.lo && o.ratio<=p.hi) : scored.slice();
-    if(V>0 && cand.length<3){ const lo2=p.lo*0.85, hi2=Math.min(p.hi*1.15, 1.75); cand=scored.filter(o=> o.ratio>=lo2 && o.ratio<=hi2); }
+    if(V>0 && cand.length<3){ const hi2=Math.min(p.wideHi, REC_HI); cand=scored.filter(o=> o.ratio>=p.lo && o.ratio<=hi2); }  // widen upward only, never into deeper losses
     const ranked=cand.map(o=>{ const qf=p.q(o.s), vf=(V>0)?valueFit(o.ratio,p):1;
-        return {...o, qf, vf, sc:clamp100(100*qf*(0.30+0.70*vf))}; })          // rank = quality x value-proximity
+        return {...o, qf, vf, sc:clamp100(100*qf*(0.28+0.72*vf))}; })
       .sort((a,b)=> b.sc-a.sc);
     let picks=[];
     if(diversify){ const seen=new Set();
@@ -1967,7 +1963,7 @@ function recommendUpgrades(port,cat){
     } else picks=ranked.slice(0,3);
     out[p.k]=picks;
   }
-  return {V, out, count:pool.length};
+  return {V, out, count:pool.length, near};
 }
 function portSearchHTML(q){
   q=(q||"").trim().toLowerCase();
@@ -1989,6 +1985,8 @@ function portfolioView(){
       <button class="qbtn rm" data-action="prm" data-id="${o.id}" aria-label="remove">${icon("x",12)}</button></span></div>`;
   }).join("") : `<p class="port-empty">No items yet. Search below to add what you own \u2014 then I\u2019ll value your inventory at reconciled True Value and suggest upgrade paths.</p>`;
   const rec=recommendUpgrades(port, state.portCat);
+  const _recCatTxt = state.portCat==="All"?"items":esc(state.portCat)+" items";
+  const recNote = (rec.V>0 && rec.near<5) ? `<p class="port-empty" style="margin:0 2px 12px">${icon("info",12)} ${rec.near===0?("No "+_recCatTxt+" sit near your value right now"):("Only "+rec.near+" "+_recCatTxt+" sit near your value, so the strategies overlap")}${state.portCat==="All"?"":" \u2014 switch to <b>All</b> for more variety"}.</p>` : "";
   const catChips=PORT_CATS.map(c=>`<button class="pcat${state.portCat===c?' on':''}" data-action="pcat" data-c="${c}">${c}</button>`).join("");
   const card=(o,pf)=>{ const it=o.it, r=reconcile(it);
     const cc = o.conf>=75?"#34d399":o.conf>=55?"#fbbf24":"#fb7185";
@@ -2017,7 +2015,7 @@ function portfolioView(){
     <div class="sp-list">${savedList}</div>
   </div>`;
   return `<div class="portfolio">
-    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 every target is scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks aim to hold or grow your value; a loss only ranks when the item is genuinely elite. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-06-30h</b></p>
+    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 every target is scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks aim to hold or grow your value; a loss only ranks when the item is genuinely elite. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-06-30k</b></p>
     <div class="card">
       <div class="port-sum"><div><div class="port-sum-l">Inventory True Value</div><div class="port-sum-v">${fmt(Math.round(inv.value))}</div>${inv.hi>inv.lo?`<div class="port-sum-band">${fmt(Math.round(inv.lo))} \u2013 ${fmt(Math.round(inv.hi))}</div>`:""}</div>
         <div class="port-sum-r"><span class="port-health" style="color:${hCol}">${icon("activity",13)} ${hLabel} holdings</span>${inv.value>0?`<span class="port-conf">${inv.conf}% conf</span>`:""}${inv.priceless?`<span class="port-pl">${inv.priceless} priceless</span>`:""}</div></div>
@@ -2026,7 +2024,7 @@ function portfolioView(){
     </div>
     ${savedCard}
     <div class="rec-catbar">${catChips}</div>
-    ${RISK_PROFILES.map(profSection).join("")}
+    ${recNote}${RISK_PROFILES.map(profSection).join("")}
   </div>`;
 }
 function moverData(){
