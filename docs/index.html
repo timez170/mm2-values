@@ -769,6 +769,7 @@ function jsonToItem(o){ return {id:o.id||slug(o.name),name:o.name,category:o.cat
 const EMBEDDED = RAW.map(rowToItem);            // offline source of truth (always present)
 const POPULAR_NAMES=["Chroma Traveler's Gun","Traveler's Gun","Chroma Ever Set","Celestial","Corrupt","Sparkle Set","Chroma Evergun","Vampire's Gun","Constellation","Gingerscope","Harvester"];
 
+let _dataRev=0;                                // bumped on every buildData() so the rec cache invalidates (declared here to avoid a TDZ crash — buildData runs at boot, long before the rec code below)
 let ALL=[], BY_ID={}, HAY={}, POPULAR=[];
 let DATA_DATE="Jun 17, 2026", DATA_SRC="embedded", DATA_LIVE=false;
 function buildData(items){ _dataRev++;
@@ -1913,7 +1914,7 @@ function buildCombos(items, V){
         if(sum>=V*0.86 && sum<=V*1.16){ if(add([Q[a],Q[b],Q[c],e])) nQ++; } } } } }
   return out;
 }
-let _dataRev=0, _recCache={k:null,v:null};   // recompute recommendations only when inputs actually change
+let _recCache={k:null,v:null};   // recompute recommendations only when inputs actually change (_dataRev is declared up near buildData)
 function recommendUpgrades(port,cat,mode){
   const modeSize = /^[1-4]$/.test(String(mode)) ? +mode : 0;   // 0 = General (any 1..4 items), else a fixed bundle size
   const V=reconciledSide(port).value;
