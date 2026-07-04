@@ -1,6 +1,6 @@
 {
   "schema": 1,
-  "updatedAt": "2026-06-30",
+  "updatedAt": "2026-07-04",
   "generatedBy": "auto-scrape",
   "source": "supremevalues.com/mm2 (Supreme authoritative for value/demand/rarity/trend/range; MM2Values cross-check, periodic)",
   "notes": "Both sites share one unit (Seer=3), compared 1:1. MM2 values are a manually-maintained cross-check and are not auto-scraped.",
@@ -60,10 +60,24 @@
       ]
     },
     {
+      "id": "chroma-alien-set",
+      "name": "Chroma Alien Set",
+      "category": "Set",
+      "supreme": 38500,
+      "mm2": null,
+      "demand": 6,
+      "rarity": 6,
+      "trend": "Stable",
+      "range": [
+        37500,
+        38500
+      ]
+    },
+    {
       "id": "chroma-bauble-set",
       "name": "Chroma Bauble Set",
       "category": "Set",
-      "supreme": 38800,
+      "supreme": 37800,
       "mm2": null,
       "demand": 7,
       "rarity": 6,
@@ -74,24 +88,10 @@
       ]
     },
     {
-      "id": "chroma-alien-set",
-      "name": "Chroma Alien Set",
-      "category": "Set",
-      "supreme": 38500,
-      "mm2": null,
-      "demand": 6,
-      "rarity": 6,
-      "trend": "Underpaid For",
-      "range": [
-        37500,
-        38500
-      ]
-    },
-    {
       "id": "chroma-bauble",
       "name": "Chroma Bauble",
       "category": "Chroma",
-      "supreme": 37000,
+      "supreme": 36000,
       "mm2": 38500,
       "demand": 7,
       "rarity": 6,
@@ -107,7 +107,7 @@
       "category": "Chroma",
       "supreme": 29000,
       "mm2": 34500,
-      "demand": 6,
+      "demand": 7,
       "rarity": 6,
       "trend": "Stable",
       "range": [
@@ -122,9 +122,9 @@
       "id": "chroma-constellation",
       "name": "Chroma Constellation",
       "category": "Chroma",
-      "supreme": 26500,
+      "supreme": 27000,
       "mm2": 35000,
-      "demand": 6,
+      "demand": 7,
       "rarity": 6,
       "trend": "Stable",
       "range": [
@@ -143,7 +143,7 @@
       "mm2": 30000,
       "demand": 6,
       "rarity": 6,
-      "trend": "Underpaid For",
+      "trend": "Stable",
       "range": [
         23000,
         24000
@@ -156,7 +156,7 @@
       "id": "chroma-sun-set",
       "name": "Chroma Sun Set",
       "category": "Set",
-      "supreme": 17750,
+      "supreme": 18000,
       "mm2": null,
       "demand": 6,
       "rarity": 5,
@@ -192,7 +192,7 @@
       "id": "traveler-s-set",
       "name": "Traveler's Set",
       "category": "Set",
-      "supreme": 13650,
+      "supreme": 13400,
       "mm2": null,
       "demand": 6,
       "rarity": 5,
@@ -225,7 +225,7 @@
       "id": "chroma-sunrise",
       "name": "Chroma Sunrise",
       "category": "Chroma",
-      "supreme": 11250,
+      "supreme": 11500,
       "mm2": 11000,
       "demand": 6,
       "rarity": 5,
@@ -292,11 +292,11 @@
       "id": "ever-set",
       "name": "Ever Set",
       "category": "Set",
-      "supreme": 6000,
+      "supreme": 6050,
       "mm2": null,
       "demand": 6,
       "rarity": 4,
-      "trend": "Doing Well",
+      "trend": "Stable",
       "range": [
         6000,
         6100
@@ -306,7 +306,7 @@
       "id": "traveler-s-gun",
       "name": "Traveler's Gun",
       "category": "Godly",
-      "supreme": 5250,
+      "supreme": 5000,
       "mm2": 6200,
       "demand": 5,
       "rarity": 5,
@@ -322,14 +322,14 @@
       "id": "chroma-sweet-set",
       "name": "Chroma Sweet Set",
       "category": "Set",
-      "supreme": 5000,
+      "supreme": 4900,
       "mm2": null,
       "demand": 5,
       "rarity": 4,
       "trend": "Fluctuating",
       "range": [
-        4800,
-        5200
+        4700,
+        5100
       ]
     },
     {
@@ -386,11 +386,11 @@
       "id": "evergun",
       "name": "Evergun",
       "category": "Godly",
-      "supreme": 3450,
+      "supreme": 3500,
       "mm2": 3250,
       "demand": 6,
       "rarity": 4,
-      "trend": "Doing Well",
+      "trend": "Stable",
       "range": [
         3450,
         3500
@@ -414,26 +414,29 @@
       "id": "alien-set",
       "name": "Alien Set",
       "category": "Set",
-      "supreme": 3275,
+      "supreme": 3300,
       "mm2": null,
       "demand": 6,
       "rarity": 4,
       "trend": "Doing Well",
       "range": [
-        3275,
-        3325
+        3300,
+        3350
       ]
     },
     {
       "id": "dark-set",
       "name": "Dark Set",
       "category": "Set",
-      "supreme": 3000,
+      "supreme": 3025,
       "mm2": null,
       "demand": 6,
       "rarity": 4,
-      "trend": "Stable",
-      "range": null
+      "trend": "Doing Well",
+      "range": [
+        3025,
+        3075
+      ]
     },
     {
       "id": "vampire-s-set",
@@ -467,14 +470,14 @@
       "id": "chroma-treat",
       "name": "Chroma Treat",
       "category": "Chroma",
-      "supreme": 2700,
+      "supreme": 2600,
       "mm2": 4800,
       "demand": 5,
       "rarity": 4,
       "trend": "Fluctuating",
       "range": [
-        2600,
-        2800
+        2500,
+        2700
       ]
     },
     {
@@ -485,7 +488,7 @@
       "mm2": 2400,
       "demand": 6,
       "rarity": 4,
-      "trend": "Doing Well",
+      "trend": "Stable",
       "range": [
         2550,
         2600
@@ -595,33 +598,39 @@
       "id": "darkshot",
       "name": "Darkshot",
       "category": "Godly",
-      "supreme": 1510,
+      "supreme": 1525,
       "mm2": 1510,
       "demand": 6,
       "rarity": 4,
-      "trend": "Stable",
-      "range": null
+      "trend": "Doing Well",
+      "range": [
+        1525,
+        1550
+      ]
     },
     {
       "id": "darksword",
       "name": "Darksword",
       "category": "Godly",
-      "supreme": 1490,
+      "supreme": 1500,
       "mm2": 1485,
       "demand": 6,
       "rarity": 4,
-      "trend": "Stable",
-      "range": null
+      "trend": "Doing Well",
+      "range": [
+        1500,
+        1525
+      ]
     },
     {
       "id": "sun-set",
       "name": "Sun Set",
       "category": "Set",
-      "supreme": 1475,
+      "supreme": 1490,
       "mm2": null,
       "demand": 5,
       "rarity": 4,
-      "trend": "Receding",
+      "trend": "Stable",
       "range": [
         1450,
         1475
@@ -663,14 +672,14 @@
       "id": "raygun",
       "name": "Raygun",
       "category": "Godly",
-      "supreme": 1275,
+      "supreme": 1300,
       "mm2": 1175,
       "demand": 6,
       "rarity": 3,
       "trend": "Doing Well",
       "range": [
-        1275,
-        1325
+        1300,
+        1350
       ],
       "aliases": [
         "rg",
@@ -717,7 +726,7 @@
       "id": "snow-set",
       "name": "Snow Set",
       "category": "Set",
-      "supreme": 1075,
+      "supreme": 1080,
       "mm2": null,
       "demand": 5,
       "rarity": 3,
@@ -731,7 +740,7 @@
       "id": "soul-set",
       "name": "Soul Set",
       "category": "Set",
-      "supreme": 990,
+      "supreme": 1020,
       "mm2": null,
       "demand": 5,
       "rarity": 3,
@@ -746,7 +755,7 @@
       "mm2": 1075,
       "demand": 5,
       "rarity": 4,
-      "trend": "Receding",
+      "trend": "Stable",
       "range": [
         950,
         975
@@ -820,14 +829,14 @@
       "id": "cane-knife-2018",
       "name": "Cane Knife (2018)",
       "category": "Rare",
-      "supreme": 675,
+      "supreme": 650,
       "mm2": 825,
       "demand": 4,
       "rarity": 5,
       "trend": "Receding",
       "range": [
-        650,
-        675
+        625,
+        650
       ]
     },
     {
@@ -883,7 +892,7 @@
       "id": "corrupt-set",
       "name": "Corrupt Set",
       "category": "Set",
-      "supreme": 530,
+      "supreme": 520,
       "mm2": null,
       "demand": 4,
       "rarity": 3,
@@ -905,9 +914,9 @@
       "id": "sunset-knife",
       "name": "Sunset (Knife)",
       "category": "Godly",
-      "supreme": 500,
+      "supreme": 515,
       "mm2": 550,
-      "demand": 4,
+      "demand": 5,
       "rarity": 3,
       "trend": "Stable",
       "range": null,
@@ -919,8 +928,19 @@
       "id": "soul",
       "name": "Soul",
       "category": "Godly",
-      "supreme": 500,
+      "supreme": 515,
       "mm2": 490,
+      "demand": 5,
+      "rarity": 3,
+      "trend": "Stable",
+      "range": null
+    },
+    {
+      "id": "spirit",
+      "name": "Spirit",
+      "category": "Godly",
+      "supreme": 505,
+      "mm2": 480,
       "demand": 5,
       "rarity": 3,
       "trend": "Stable",
@@ -941,21 +961,10 @@
       ]
     },
     {
-      "id": "spirit",
-      "name": "Spirit",
-      "category": "Godly",
-      "supreme": 490,
-      "mm2": 480,
-      "demand": 5,
-      "rarity": 3,
-      "trend": "Stable",
-      "range": null
-    },
-    {
       "id": "corrupt",
       "name": "Corrupt",
       "category": "Unique",
-      "supreme": 485,
+      "supreme": 475,
       "mm2": 475,
       "demand": 4,
       "rarity": 3,
@@ -966,7 +975,7 @@
       "id": "latte-set",
       "name": "Latte Set",
       "category": "Set",
-      "supreme": 440,
+      "supreme": 420,
       "mm2": null,
       "demand": 3,
       "rarity": 3,
@@ -1079,6 +1088,20 @@
       ]
     },
     {
+      "id": "dungeon",
+      "name": "Dungeon",
+      "category": "Rare",
+      "supreme": 325,
+      "mm2": 90,
+      "demand": 4,
+      "rarity": 5,
+      "trend": "Overpaid For",
+      "range": [
+        325,
+        375
+      ]
+    },
+    {
       "id": "borealis-set",
       "name": "Borealis Set",
       "category": "Set",
@@ -1093,24 +1116,10 @@
       ]
     },
     {
-      "id": "dungeon",
-      "name": "Dungeon",
-      "category": "Rare",
-      "supreme": 300,
-      "mm2": 90,
-      "demand": 4,
-      "rarity": 5,
-      "trend": "Overpaid For",
-      "range": [
-        300,
-        350
-      ]
-    },
-    {
       "id": "sweet-set",
       "name": "Sweet Set",
       "category": "Set",
-      "supreme": 285,
+      "supreme": 305,
       "mm2": null,
       "demand": 3,
       "rarity": 3,
@@ -1208,6 +1217,17 @@
       ]
     },
     {
+      "id": "snow-dagger",
+      "name": "Snow Dagger",
+      "category": "Godly",
+      "supreme": 255,
+      "mm2": 243,
+      "demand": 4,
+      "rarity": 3,
+      "trend": "Stable",
+      "range": null
+    },
+    {
       "id": "watergun",
       "name": "Watergun",
       "category": "Godly",
@@ -1261,35 +1281,24 @@
       ]
     },
     {
-      "id": "snow-dagger",
-      "name": "Snow Dagger",
-      "category": "Godly",
-      "supreme": 250,
-      "mm2": 243,
-      "demand": 3,
-      "rarity": 3,
-      "trend": "Stable",
-      "range": null
-    },
-    {
       "id": "bones",
       "name": "Bones",
       "category": "Uncommon",
-      "supreme": 230,
+      "supreme": 240,
       "mm2": null,
       "demand": 3,
       "rarity": 5,
       "trend": "Doing Well",
       "range": [
-        230,
-        250
+        240,
+        260
       ]
     },
     {
       "id": "latte-gun",
       "name": "Latte (Gun)",
       "category": "Legendary",
-      "supreme": 220,
+      "supreme": 210,
       "mm2": 155,
       "demand": 3,
       "rarity": 3,
@@ -1303,7 +1312,7 @@
       "id": "latte-knife",
       "name": "Latte (Knife)",
       "category": "Legendary",
-      "supreme": 220,
+      "supreme": 210,
       "mm2": 155,
       "demand": 3,
       "rarity": 3,
@@ -1362,20 +1371,6 @@
       "range": null
     },
     {
-      "id": "ghoulish",
-      "name": "Ghoulish",
-      "category": "Common",
-      "supreme": 160,
-      "mm2": 25,
-      "demand": 3,
-      "rarity": 4,
-      "trend": "Stable",
-      "range": [
-        160,
-        170
-      ]
-    },
-    {
       "id": "bat-set",
       "name": "Bat Set",
       "category": "Set",
@@ -1423,6 +1418,31 @@
       "range": null
     },
     {
+      "id": "treat",
+      "name": "Treat",
+      "category": "Godly",
+      "supreme": 155,
+      "mm2": 140,
+      "demand": 3,
+      "rarity": 3,
+      "trend": "Stable",
+      "range": null
+    },
+    {
+      "id": "ghoulish",
+      "name": "Ghoulish",
+      "category": "Common",
+      "supreme": 150,
+      "mm2": 25,
+      "demand": 3,
+      "rarity": 4,
+      "trend": "Stable",
+      "range": [
+        160,
+        170
+      ]
+    },
+    {
       "id": "australis",
       "name": "Australis",
       "category": "Godly",
@@ -1437,6 +1457,17 @@
       ]
     },
     {
+      "id": "sweet",
+      "name": "Sweet",
+      "category": "Godly",
+      "supreme": 150,
+      "mm2": 135,
+      "demand": 3,
+      "rarity": 3,
+      "trend": "Stable",
+      "range": null
+    },
+    {
       "id": "luger-set",
       "name": "Luger Set",
       "category": "Set",
@@ -1448,28 +1479,6 @@
       "range": null,
       "placeholder": false,
       "aliases": []
-    },
-    {
-      "id": "treat",
-      "name": "Treat",
-      "category": "Godly",
-      "supreme": 145,
-      "mm2": 140,
-      "demand": 3,
-      "rarity": 3,
-      "trend": "Stable",
-      "range": null
-    },
-    {
-      "id": "sweet",
-      "name": "Sweet",
-      "category": "Godly",
-      "supreme": 140,
-      "mm2": 135,
-      "demand": 3,
-      "rarity": 3,
-      "trend": "Stable",
-      "range": null
     },
     {
       "id": "chroma-bringer-set",
@@ -1544,10 +1553,37 @@
       "aliases": []
     },
     {
+      "id": "pearlshine",
+      "name": "Pearlshine",
+      "category": "Godly",
+      "supreme": 100,
+      "mm2": 70,
+      "demand": 2,
+      "rarity": 3,
+      "trend": "Stable",
+      "range": null
+    },
+    {
+      "id": "brains",
+      "name": "Brains",
+      "category": "Uncommon",
+      "supreme": 100,
+      "mm2": null,
+      "demand": 3,
+      "rarity": 4,
+      "trend": "Overpaid For",
+      "range": [
+        100,
+        150
+      ],
+      "placeholder": false,
+      "aliases": []
+    },
+    {
       "id": "spectral-set",
       "name": "Spectral Set",
       "category": "Set",
-      "supreme": 103,
+      "supreme": 98,
       "mm2": null,
       "demand": 3,
       "rarity": 4,
@@ -1561,7 +1597,7 @@
       "id": "traveler-set",
       "name": "Traveler Set",
       "category": "Set",
-      "supreme": 103,
+      "supreme": 98,
       "mm2": null,
       "demand": 3,
       "rarity": 4,
@@ -1574,21 +1610,10 @@
       "aliases": []
     },
     {
-      "id": "pearlshine",
-      "name": "Pearlshine",
-      "category": "Godly",
-      "supreme": 100,
-      "mm2": 70,
-      "demand": 2,
-      "rarity": 3,
-      "trend": "Stable",
-      "range": null
-    },
-    {
       "id": "spectral-knife",
       "name": "Spectral (Knife)",
       "category": "Legendary",
-      "supreme": 100,
+      "supreme": 95,
       "mm2": 70,
       "demand": 3,
       "rarity": 4,
@@ -1602,7 +1627,7 @@
       "id": "traveler-gun",
       "name": "Traveler (Gun)",
       "category": "Legendary",
-      "supreme": 100,
+      "supreme": 95,
       "mm2": 70,
       "demand": 3,
       "rarity": 4,
@@ -1734,22 +1759,6 @@
       "rarity": 4,
       "trend": "Stable",
       "range": null,
-      "placeholder": false,
-      "aliases": []
-    },
-    {
-      "id": "brains",
-      "name": "Brains",
-      "category": "Uncommon",
-      "supreme": 85,
-      "mm2": null,
-      "demand": 3,
-      "rarity": 4,
-      "trend": "Doing Well",
-      "range": [
-        85,
-        100
-      ],
       "placeholder": false,
       "aliases": []
     },
@@ -2799,6 +2808,32 @@
       "aliases": []
     },
     {
+      "id": "starry-gun",
+      "name": "Starry (Gun)",
+      "category": "Rare",
+      "supreme": 25,
+      "mm2": null,
+      "demand": 2,
+      "rarity": 4,
+      "trend": "Stable",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
+      "id": "snowflake-2",
+      "name": "Snowflake",
+      "category": "Uncommon",
+      "supreme": 25,
+      "mm2": null,
+      "demand": 2,
+      "rarity": 4,
+      "trend": "Stable",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
       "id": "amerilaser",
       "name": "Amerilaser",
       "category": "Godly",
@@ -2916,32 +2951,6 @@
       "aliases": [
         "nightfall"
       ]
-    },
-    {
-      "id": "starry-gun",
-      "name": "Starry (Gun)",
-      "category": "Rare",
-      "supreme": 20,
-      "mm2": null,
-      "demand": 2,
-      "rarity": 4,
-      "trend": "Stable",
-      "range": null,
-      "placeholder": false,
-      "aliases": []
-    },
-    {
-      "id": "snowflake-2",
-      "name": "Snowflake",
-      "category": "Uncommon",
-      "supreme": 20,
-      "mm2": null,
-      "demand": 2,
-      "rarity": 4,
-      "trend": "Stable",
-      "range": null,
-      "placeholder": false,
-      "aliases": []
     },
     {
       "id": "frosted-knife",

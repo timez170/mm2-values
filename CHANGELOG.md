@@ -1243,3 +1243,73 @@
 - `brains` **supreme**: 75 → 85
 - `brains` **trend**: Stable → Doing Well
 - `brains` **range**: null → [85,100]
+
+## 2026-07-04 — 68 change(s) [tiersOK 10, failed 0]
+- `chroma-bauble-set` **supreme**: 38800 → 37800
+- `chroma-alien-set` **trend**: Underpaid For → Stable
+- `chroma-bauble` **supreme**: 37000 → 36000
+- `chroma-vampire-s-gun` **demand**: 6 → 7
+- `chroma-constellation` **supreme**: 26500 → 27000
+- `chroma-constellation` **demand**: 6 → 7
+- `chroma-alienbeam` **trend**: Underpaid For → Stable
+- `chroma-sun-set` **supreme**: 17750 → 18000
+- `traveler-s-set` **supreme**: 13650 → 13400
+- `chroma-sunrise` **supreme**: 11250 → 11500
+- `ever-set` **supreme**: 6000 → 6050
+- `ever-set` **trend**: Doing Well → Stable
+- `traveler-s-gun` **supreme**: 5250 → 5000
+- `chroma-sweet-set` **supreme**: 5000 → 4900
+- `chroma-sweet-set` **range**: [4800,5200] → [4700,5100]
+- `evergun` **supreme**: 3450 → 3500
+- `evergun` **trend**: Doing Well → Stable
+- `alien-set` **supreme**: 3275 → 3300
+- `alien-set` **range**: [3275,3325] → [3300,3350]
+- `dark-set` **supreme**: 3000 → 3025
+- `dark-set` **trend**: Stable → Doing Well
+- `dark-set` **range**: null → [3025,3075]
+- `chroma-treat` **supreme**: 2700 → 2600
+- `chroma-treat` **range**: [2600,2800] → [2500,2700]
+- `evergreen` **trend**: Doing Well → Stable
+- `darkshot` **supreme**: 1510 → 1525
+- `darkshot` **trend**: Stable → Doing Well
+- `darkshot` **range**: null → [1525,1550]
+- `darksword` **supreme**: 1490 → 1500
+- `darksword` **trend**: Stable → Doing Well
+- `darksword` **range**: null → [1500,1525]
+- `sun-set` **supreme**: 1475 → 1490
+- `sun-set` **trend**: Receding → Stable
+- `raygun` **supreme**: 1275 → 1300
+- `raygun` **range**: [1275,1325] → [1300,1350]
+- `snow-set` **supreme**: 1075 → 1080
+- `soul-set` **supreme**: 990 → 1020
+- `sunrise` **trend**: Receding → Stable
+- `cane-knife-2018` **supreme**: 675 → 650
+- `cane-knife-2018` **range**: [650,675] → [625,650]
+- `corrupt-set` **supreme**: 530 → 520
+- `sunset-knife` **supreme**: 500 → 515
+- `sunset-knife` **demand**: 4 → 5
+- `soul` **supreme**: 500 → 515
+- `spirit` **supreme**: 490 → 505
+- `corrupt` **supreme**: 485 → 475
+- `latte-set` **supreme**: 440 → 420
+- `dungeon` **supreme**: 300 → 325
+- `dungeon` **range**: [300,350] → [325,375]
+- `sweet-set` **supreme**: 285 → 305
+- `snow-dagger` **supreme**: 250 → 255
+- `snow-dagger` **demand**: 3 → 4
+- `bones` **supreme**: 230 → 240
+- `bones` **range**: [230,250] → [240,260]
+- `latte-gun` **supreme**: 220 → 210
+- `latte-knife` **supreme**: 220 → 210
+- `ghoulish` **supreme**: 160 → 150
+- `treat` **supreme**: 145 → 155
+- `sweet` **supreme**: 140 → 150
+- `spectral-set` **supreme**: 103 → 98
+- `traveler-set` **supreme**: 103 → 98
+- `spectral-knife` **supreme**: 100 → 95
+- `traveler-gun` **supreme**: 100 → 95
+- `brains` **supreme**: 85 → 100
+- `brains` **trend**: Doing Well → Overpaid For
+- `brains` **range**: [85,100] → [100,150]
+- `starry-gun` **supreme**: 20 → 25
+- `snowflake-2` **supreme**: 20 → 25
