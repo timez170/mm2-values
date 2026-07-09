@@ -1570,3 +1570,67 @@
 - `bats-2020` **added**: — → 1
 - `infected-gun` **added**: — → 1
 - `slashed` **added**: — → 1
+
+## 2026-07-09 — 62 change(s) [tiersOK 10, failed 0]
+- `chroma-ever-set` **supreme**: 135000 → 134000
+- `chroma-ever-set` **trend**: Stable → Underpaid For
+- `chroma-evergreen` **supreme**: 59000 → 58000
+- `chroma-evergreen` **trend**: Stable → Underpaid For
+- `chroma-evergreen` **range**: null → [57000,58000]
+- `chroma-alien-set` **supreme**: 38250 → 38000
+- `chroma-sun-set` **supreme**: 18500 → 19000
+- `chroma-raygun` **supreme**: 14250 → 14000
+- `chroma-sunrise` **supreme**: 11750 → 12000
+- `chroma-sunset` **supreme**: 6750 → 7000
+- `alien-set` **supreme**: 3350 → 3375
+- `alien-set` **trend**: Doing Well → Stable
+- `dark-set` **supreme**: 3125 → 3175
+- `dark-set` **range**: [3125,3175] → [3175,3205]
+- `darkshot` **supreme**: 1575 → 1600
+- `darkshot` **range**: [1575,1600] → [1600,1615]
+- `sun-set` **supreme**: 1565 → 1600
+- `sun-set` **demand**: 5 → 6
+- `sun-set` **trend**: Improving → Doing Well
+- `sun-set` **range**: [1565,1600] → [1600,1650]
+- `darksword` **supreme**: 1550 → 1575
+- `darksword` **range**: [1550,1575] → [1575,1590]
+- `raygun` **supreme**: 1350 → 1375
+- `raygun` **trend**: Doing Well → Stable
+- `sunrise` **supreme**: 1025 → 1050
+- `sunrise` **demand**: 5 → 6
+- `sunrise` **trend**: Improving → Doing Well
+- `sunrise` **range**: [1025,1050] → [1050,1075]
+- `sunset-knife` **supreme**: 540 → 550
+- `sunset-knife` **trend**: Improving → Doing Well
+- `sunset-knife` **range**: [540,550] → [550,575]
+- `latte-set` **supreme**: 380 → 360
+- `dungeon` **supreme**: 360 → 370
+- `dungeon` **trend**: Doing Well → Stable
+- `bones` **supreme**: 255 → 265
+- `bones` **trend**: Doing Well → Stable
+- `latte-gun` **supreme**: 190 → 180
+- `latte-knife` **supreme**: 190 → 180
+- `bats-set` **supreme**: 161 → 166
+- `bats-knife` **supreme**: 160 → 165
+- `brains` **supreme**: 140 → 150
+- `brains` **range**: [140,180] → [150,185]
+- `ghoulish` **supreme**: 130 → 125
+- `zombified-set` **supreme**: 100 → 110
+- `spectral-set` **supreme**: 88 → 83
+- `traveler-set` **supreme**: 88 → 83
+- `spectral-knife` **supreme**: 85 → 80
+- `traveler-gun` **supreme**: 85 → 80
+- `zombified-knife` **supreme**: 85 → 95
+- `aurora-set-legend` **supreme**: 83 → 78
+- `vampire-set-legend` **supreme**: 83 → 78
+- `aurora-gun` **supreme**: 80 → 75
+- `vampire-gun` **supreme**: 80 → 75
+- `snowflakes-gun` **supreme**: 22 → 25
+- `zombie-set` **supreme**: 9 → 8
+- `potion-set` **supreme**: 8 → 6
+- `zombie-gun` **supreme**: 8 → 7
+- `potion-knife` **supreme**: 5 → 3
+- `candycorn-2019` **supreme**: 3 → 5
+- `steel-gun` **supreme**: 3 → 5
+- `elf-2018` **supreme**: 3 → 5
+- `monster` **supreme**: 2 → 1
