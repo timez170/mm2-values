@@ -1850,3 +1850,8 @@
 - `infected-gun` **supreme**: 1 → 2
 - `snowman-gun-2` **added**: — → 1
 - `hazard-gun` **added**: — → 1
+
+## 2026-07-13 — 3 change(s) [tiersOK 10, failed 0]
+- `cane-knife` **added**: — → 600
+- `mummy-gun` **added**: — → 2
+- `mummy-knife` **added**: — → 1
