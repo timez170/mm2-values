@@ -1951,3 +1951,110 @@
 - `moonlight` **added**: — → 1
 - `stars-knife` **added**: — → 1
 - `zombie-2023` **added**: — → 1
+
+## 2026-07-17 — 105 change(s) [tiersOK 10, failed 0]
+- `chroma-ever-set` **supreme**: 130000 → 129000
+- `chroma-evergreen` **supreme**: 55000 → 54000
+- `chroma-evergreen` **range**: [52000,55000] → [51000,54000]
+- `chroma-alien-set` **supreme**: 37500 → 37250
+- `chroma-alien-set` **range**: [37250,37500] → [37000,37250]
+- `chroma-sun-set` **supreme**: 20000 → 20500
+- `chroma-sun-set` **range**: [20000,20500] → [20500,21000]
+- `chroma-raygun` **supreme**: 13500 → 13250
+- `chroma-raygun` **range**: [13250,13500] → [13000,13250]
+- `traveler-s-set` **supreme**: 13200 → 13250
+- `traveler-s-set` **trend**: Stable → Doing Well
+- `traveler-s-set` **range**: null → [13250,13450]
+- `chroma-sunrise` **supreme**: 12500 → 12750
+- `chroma-sunrise` **range**: [12500,12750] → [12750,13000]
+- `traveler-s-axe` **supreme**: 8300 → 8250
+- `traveler-s-axe` **demand**: 6 → 5
+- `chroma-sunset` **supreme**: 7500 → 7750
+- `chroma-sunset` **range**: [7500,7750] → [7750,8000]
+- `traveler-s-gun` **supreme**: 4900 → 5000
+- `traveler-s-gun` **demand**: 5 → 6
+- `traveler-s-gun` **trend**: Stable → Doing Well
+- `traveler-s-gun` **range**: null → [5000,5200]
+- `chroma-sweet-set` **supreme**: 4800 → 4700
+- `chroma-sweet-set` **range**: [4700,4900] → [4600,4800]
+- `chroma-heart-wand` **supreme**: 4500 → 4250
+- `alien-set` **supreme**: 3325 → 3300
+- `vampire-s-set` **supreme**: 2975 → 3025
+- `vampire-s-set` **demand**: 5 → 6
+- `chroma-treat` **supreme**: 2550 → 2500
+- `chroma-treat` **range**: [2500,2600] → [2450,2550]
+- `sakura-set` **supreme**: 2530 → 2540
+- `chroma-sweet` **supreme**: 2250 → 2200
+- `chroma-sweet` **range**: [2200,2300] → [2150,2250]
+- `alienbeam` **supreme**: 1950 → 1925
+- `vampire-s-gun` **supreme**: 1750 → 1800
+- `vampire-s-gun` **demand**: 5 → 6
+- `sun-set` **supreme**: 1700 → 1750
+- `sun-set` **trend**: Doing Well → Stable
+- `blossom` **supreme**: 1270 → 1275
+- `sakura` **supreme**: 1260 → 1265
+- `sunrise` **supreme**: 1100 → 1125
+- `sunrise` **trend**: Doing Well → Stable
+- `soul-set` **supreme**: 1070 → 1080
+- `soul-set` **trend**: Stable → Doing Well
+- `soul-set` **range**: null → [1080,1100]
+- `bauble-set` **supreme**: 902 → 877
+- `bauble-set` **range**: [900,903] → [875,878]
+- `bauble` **supreme**: 875 → 850
+- `cane-knife` **supreme**: 600 → 625
+- `sunset-knife` **supreme**: 600 → 625
+- `sunset-knife` **trend**: Doing Well → Stable
+- `soul` **supreme**: 540 → 545
+- `soul` **trend**: Stable → Doing Well
+- `soul` **range**: null → [545,555]
+- `spirit` **supreme**: 530 → 535
+- `spirit` **trend**: Stable → Doing Well
+- `spirit` **range**: null → [535,545]
+- `blizzard-set` **supreme**: 500 → 510
+- `dungeon` **supreme**: 360 → 350
+- `dungeon` **demand**: 4 → 3
+- `dungeon` **trend**: Stable → Receding
+- `dungeon` **range**: [360,380] → [340,350]
+- `latte-set` **supreme**: 340 → 330
+- `borealis-set` **supreme**: 305 → 295
+- `bones` **supreme**: 260 → 255
+- `blizzard` **supreme**: 250 → 255
+- `snowstorm` **supreme**: 250 → 255
+- `latte-gun` **supreme**: 170 → 165
+- `latte-knife` **supreme**: 170 → 165
+- `brains` **supreme**: 170 → 175
+- `brains` **trend**: Doing Well → Stable
+- `borealis` **supreme**: 155 → 150
+- `australis` **supreme**: 150 → 145
+- `zombified-set` **supreme**: 115 → 120
+- `ghoulish` **supreme**: 110 → 105
+- `zombified-knife` **supreme**: 100 → 105
+- `dark-set-rare` **supreme**: 81 → 76
+- `darkknife` **supreme**: 80 → 75
+- `gingerbread-set` **supreme**: 77 → 76
+- `spectral-set` **supreme**: 73 → 68
+- `traveler-set` **supreme**: 73 → 68
+- `spectral-knife` **supreme**: 70 → 65
+- `traveler-gun` **supreme**: 70 → 65
+- `aurora-set-legend` **supreme**: 68 → 63
+- `vampire-set-legend` **supreme**: 68 → 63
+- `aurora-gun` **supreme**: 65 → 60
+- `vampire-gun` **supreme**: 65 → 60
+- `branches` **demand**: 2 → 3
+- `watcher-gun` **supreme**: 20 → 25
+- `aurora-set-rare` **supreme**: 13 → 11
+- `aurora-knife` **supreme**: 12 → 10
+- `magma-gun` **supreme**: 12 → 17
+- `vampire-set-rare` **supreme**: 6 → 4
+- `slime-set` **supreme**: 5 → 3
+- `vampire-gun-2` **supreme**: 5 → 3
+- `sun` **supreme**: 5 → 3
+- `slime-knife` **supreme**: 3 → 2
+- `bats` **supreme**: 3 → 2
+- `pumpkin-pie` **supreme**: 3 → 2
+- `gingerbread-gun` **supreme**: 2 → 1
+- `slime-gun` **supreme**: 2 → 1
+- `bats-2020` **supreme**: 2 → 3
+- `zombie-2023` **supreme**: 1 → 3
+- `lantern` **added**: — → 1
+- `meltdown` **added**: — → 1
