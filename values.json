@@ -1,11 +1,50 @@
 {
   "schema": 1,
-  "updatedAt": "2026-07-22",
+  "updatedAt": "2026-07-23",
   "generatedBy": "auto-scrape",
   "source": "supremevalues.com/mm2 (Supreme authoritative for value/demand/rarity/trend/range; MM2Values cross-check, periodic)",
   "notes": "Both sites share one unit (Seer=3), compared 1:1. MM2 values are a manually-maintained cross-check and are not auto-scraped.",
-  "count": 479,
+  "count": 482,
   "items": [
+    {
+      "id": "batwing-2",
+      "name": "Batwing",
+      "category": "Godly",
+      "supreme": 1000000,
+      "mm2": null,
+      "demand": 10,
+      "rarity": 10,
+      "trend": "Stable",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
+      "id": "black-luger",
+      "name": "Black Luger",
+      "category": "Godly",
+      "supreme": 1000000,
+      "mm2": null,
+      "demand": 10,
+      "rarity": 10,
+      "trend": "Stable",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
+      "id": "mortal-blade",
+      "name": "Mortal Blade",
+      "category": "Godly",
+      "supreme": 1000000,
+      "mm2": null,
+      "demand": 10,
+      "rarity": 10,
+      "trend": "Stable",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
     {
       "id": "chroma-traveler-s-gun",
       "name": "Chroma Traveler's Gun",

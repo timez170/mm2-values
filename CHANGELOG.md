@@ -2247,3 +2247,8 @@
 - `asteroid` **supreme**: 3 → 2
 - `tree-2021` **supreme**: 1 → 2
 - `stars-knife` **supreme**: 1 → 2
+
+## 2026-07-23 — 3 change(s) [tiersOK 10, failed 0]
+- `batwing-2` **added**: — → 1000000
+- `black-luger` **added**: — → 1000000
+- `mortal-blade` **added**: — → 1000000
