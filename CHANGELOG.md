@@ -2288,3 +2288,36 @@
 - `beachy` **added**: — → 375
 - `sands` **added**: — → 375
 - `beach-set` **added**: — → 750
+
+## 2026-07-25 — 31 change(s) [tiersOK 10, failed 0]
+- `chroma-alien-set` **supreme**: 36500 → 36250
+- `chroma-raygun` **supreme**: 12500 → 12250
+- `chroma-sweet-set` **supreme**: 4750 → 4800
+- `vampire-s-set` **supreme**: 3125 → 3150
+- `sakura-set` **supreme**: 2570 → 2580
+- `chroma-treat` **supreme**: 2550 → 2600
+- `vampire-s-gun` **supreme**: 1900 → 1925
+- `blossom` **supreme**: 1290 → 1295
+- `sakura` **supreme**: 1280 → 1285
+- `soul-set` **supreme**: 1150 → 1170
+- `icecream` **supreme**: 1000 → 750
+- `icecream` **demand**: 7 → 6
+- `icecream` **rarity**: 6 → 5
+- `icecream` **trend**: Overpaid For → Doing Well
+- `beach-set` **supreme**: 750 → 600
+- `beach-set` **demand**: 5 → 4
+- `soul` **supreme**: 580 → 590
+- `spirit` **supreme**: 570 → 580
+- `xeno-set` **supreme**: 540 → 550
+- `beachy` **supreme**: 375 → 300
+- `beachy` **demand**: 5 → 4
+- `sands` **supreme**: 375 → 300
+- `sands` **demand**: 5 → 4
+- `dungeon` **supreme**: 280 → 270
+- `xenoknife` **supreme**: 270 → 275
+- `xenoshot` **supreme**: 270 → 275
+- `brains` **supreme**: 150 → 145
+- `chroma-icecream` **added**: — → 6500
+- `chroma-beachy` **added**: — → 3250
+- `chroma-sands` **added**: — → 3250
+- `chroma-beach-set` **added**: — → 6500

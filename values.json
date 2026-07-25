@@ -4,7 +4,7 @@
   "generatedBy": "auto-scrape",
   "source": "supremevalues.com/mm2 (Supreme authoritative for value/demand/rarity/trend/range; MM2Values cross-check, periodic)",
   "notes": "Both sites share one unit (Seer=3), compared 1:1. MM2 values are a manually-maintained cross-check and are not auto-scraped.",
-  "count": 486,
+  "count": 490,
   "items": [
     {
       "id": "batwing-2",
@@ -94,7 +94,7 @@
       "id": "chroma-alien-set",
       "name": "Chroma Alien Set",
       "category": "Set",
-      "supreme": 36500,
+      "supreme": 36250,
       "mm2": null,
       "demand": 6,
       "rarity": 6,
@@ -254,7 +254,7 @@
       "id": "chroma-raygun",
       "name": "Chroma Raygun",
       "category": "Chroma",
-      "supreme": 12500,
+      "supreme": 12250,
       "mm2": 14500,
       "demand": 6,
       "rarity": 5,
@@ -335,6 +335,32 @@
       ]
     },
     {
+      "id": "chroma-icecream",
+      "name": "Chroma Icecream",
+      "category": "Chroma",
+      "supreme": 6500,
+      "mm2": null,
+      "demand": 8,
+      "rarity": 8,
+      "trend": "Overpaid For",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
+      "id": "chroma-beach-set",
+      "name": "Chroma Beach Set",
+      "category": "Set",
+      "supreme": 6500,
+      "mm2": null,
+      "demand": 7,
+      "rarity": 6,
+      "trend": "Overpaid For",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
       "id": "ever-set",
       "name": "Ever Set",
       "category": "Set",
@@ -368,6 +394,20 @@
       ]
     },
     {
+      "id": "chroma-sweet-set",
+      "name": "Chroma Sweet Set",
+      "category": "Set",
+      "supreme": 4800,
+      "mm2": null,
+      "demand": 5,
+      "rarity": 4,
+      "trend": "Fluctuating",
+      "range": [
+        4600,
+        4800
+      ]
+    },
+    {
       "id": "celestial-set",
       "name": "Celestial Set",
       "category": "Set",
@@ -379,20 +419,6 @@
       "range": [
         4650,
         4750
-      ]
-    },
-    {
-      "id": "chroma-sweet-set",
-      "name": "Chroma Sweet Set",
-      "category": "Set",
-      "supreme": 4750,
-      "mm2": null,
-      "demand": 5,
-      "rarity": 4,
-      "trend": "Fluctuating",
-      "range": [
-        4600,
-        4800
       ]
     },
     {
@@ -474,6 +500,32 @@
       ]
     },
     {
+      "id": "chroma-beachy",
+      "name": "Chroma Beachy",
+      "category": "Chroma",
+      "supreme": 3250,
+      "mm2": null,
+      "demand": 7,
+      "rarity": 6,
+      "trend": "Overpaid For",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
+      "id": "chroma-sands",
+      "name": "Chroma Sands",
+      "category": "Chroma",
+      "supreme": 3250,
+      "mm2": null,
+      "demand": 7,
+      "rarity": 6,
+      "trend": "Overpaid For",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
       "id": "dark-set",
       "name": "Dark Set",
       "category": "Set",
@@ -491,7 +543,7 @@
       "id": "vampire-s-set",
       "name": "Vampire's Set",
       "category": "Set",
-      "supreme": 3125,
+      "supreme": 3150,
       "mm2": null,
       "demand": 6,
       "rarity": 4,
@@ -519,21 +571,10 @@
       ]
     },
     {
-      "id": "sakura-set",
-      "name": "Sakura Set",
-      "category": "Set",
-      "supreme": 2570,
-      "mm2": null,
-      "demand": 6,
-      "rarity": 4,
-      "trend": "Stable",
-      "range": null
-    },
-    {
       "id": "chroma-treat",
       "name": "Chroma Treat",
       "category": "Chroma",
-      "supreme": 2550,
+      "supreme": 2600,
       "mm2": 4800,
       "demand": 5,
       "rarity": 4,
@@ -542,6 +583,17 @@
         2450,
         2550
       ]
+    },
+    {
+      "id": "sakura-set",
+      "name": "Sakura Set",
+      "category": "Set",
+      "supreme": 2580,
+      "mm2": null,
+      "demand": 6,
+      "rarity": 4,
+      "trend": "Stable",
+      "range": null
     },
     {
       "id": "evergreen",
@@ -603,7 +655,7 @@
       "id": "vampire-s-gun",
       "name": "Vampire's Gun",
       "category": "Godly",
-      "supreme": 1900,
+      "supreme": 1925,
       "mm2": 1675,
       "demand": 6,
       "rarity": 4,
@@ -729,7 +781,7 @@
       "id": "blossom",
       "name": "Blossom",
       "category": "Godly",
-      "supreme": 1290,
+      "supreme": 1295,
       "mm2": 1265,
       "demand": 6,
       "rarity": 4,
@@ -740,7 +792,7 @@
       "id": "sakura",
       "name": "Sakura",
       "category": "Godly",
-      "supreme": 1280,
+      "supreme": 1285,
       "mm2": 1245,
       "demand": 6,
       "rarity": 4,
@@ -781,7 +833,7 @@
       "id": "soul-set",
       "name": "Soul Set",
       "category": "Set",
-      "supreme": 1150,
+      "supreme": 1170,
       "mm2": null,
       "demand": 5,
       "rarity": 3,
@@ -818,19 +870,6 @@
         1030,
         1055
       ]
-    },
-    {
-      "id": "icecream",
-      "name": "Icecream",
-      "category": "Godly",
-      "supreme": 1000,
-      "mm2": null,
-      "demand": 7,
-      "rarity": 6,
-      "trend": "Overpaid For",
-      "range": null,
-      "placeholder": false,
-      "aliases": []
     },
     {
       "id": "bauble-set",
@@ -900,13 +939,13 @@
       "range": null
     },
     {
-      "id": "beach-set",
-      "name": "Beach Set",
-      "category": "Set",
+      "id": "icecream",
+      "name": "Icecream",
+      "category": "Godly",
       "supreme": 750,
       "mm2": null,
-      "demand": 5,
-      "rarity": 4,
+      "demand": 6,
+      "rarity": 5,
       "trend": "Doing Well",
       "range": null,
       "placeholder": false,
@@ -943,6 +982,19 @@
       ]
     },
     {
+      "id": "beach-set",
+      "name": "Beach Set",
+      "category": "Set",
+      "supreme": 600,
+      "mm2": null,
+      "demand": 4,
+      "rarity": 4,
+      "trend": "Doing Well",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
       "id": "cane-knife-2018",
       "name": "Cane Knife (2018)",
       "category": "Rare",
@@ -960,7 +1012,7 @@
       "id": "soul",
       "name": "Soul",
       "category": "Godly",
-      "supreme": 580,
+      "supreme": 590,
       "mm2": 490,
       "demand": 5,
       "rarity": 3,
@@ -974,7 +1026,7 @@
       "id": "spirit",
       "name": "Spirit",
       "category": "Godly",
-      "supreme": 570,
+      "supreme": 580,
       "mm2": 480,
       "demand": 5,
       "rarity": 3,
@@ -1013,7 +1065,7 @@
       "id": "xeno-set",
       "name": "Xeno Set",
       "category": "Set",
-      "supreme": 540,
+      "supreme": 550,
       "mm2": null,
       "demand": 4,
       "rarity": 3,
@@ -1172,32 +1224,6 @@
       "range": null
     },
     {
-      "id": "beachy",
-      "name": "Beachy",
-      "category": "Godly",
-      "supreme": 375,
-      "mm2": null,
-      "demand": 5,
-      "rarity": 4,
-      "trend": "Doing Well",
-      "range": null,
-      "placeholder": false,
-      "aliases": []
-    },
-    {
-      "id": "sands",
-      "name": "Sands",
-      "category": "Godly",
-      "supreme": 375,
-      "mm2": null,
-      "demand": 5,
-      "rarity": 4,
-      "trend": "Doing Well",
-      "range": null,
-      "placeholder": false,
-      "aliases": []
-    },
-    {
       "id": "heart-wand",
       "name": "Heart Wand",
       "category": "Godly",
@@ -1239,6 +1265,32 @@
       ]
     },
     {
+      "id": "beachy",
+      "name": "Beachy",
+      "category": "Godly",
+      "supreme": 300,
+      "mm2": null,
+      "demand": 4,
+      "rarity": 4,
+      "trend": "Doing Well",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
+      "id": "sands",
+      "name": "Sands",
+      "category": "Godly",
+      "supreme": 300,
+      "mm2": null,
+      "demand": 4,
+      "rarity": 4,
+      "trend": "Doing Well",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
       "id": "borealis-set",
       "name": "Borealis Set",
       "category": "Set",
@@ -1250,20 +1302,6 @@
       "range": [
         305,
         315
-      ]
-    },
-    {
-      "id": "dungeon",
-      "name": "Dungeon",
-      "category": "Rare",
-      "supreme": 280,
-      "mm2": 90,
-      "demand": 3,
-      "rarity": 5,
-      "trend": "Receding",
-      "range": [
-        310,
-        330
       ]
     },
     {
@@ -1292,7 +1330,7 @@
       "id": "xenoknife",
       "name": "Xenoknife",
       "category": "Godly",
-      "supreme": 270,
+      "supreme": 275,
       "mm2": 225,
       "demand": 4,
       "rarity": 3,
@@ -1306,7 +1344,7 @@
       "id": "xenoshot",
       "name": "Xenoshot",
       "category": "Godly",
-      "supreme": 270,
+      "supreme": 275,
       "mm2": 225,
       "demand": 4,
       "rarity": 3,
@@ -1314,6 +1352,20 @@
       "range": null,
       "aliases": [
         "xeno shot"
+      ]
+    },
+    {
+      "id": "dungeon",
+      "name": "Dungeon",
+      "category": "Rare",
+      "supreme": 270,
+      "mm2": 90,
+      "demand": 3,
+      "rarity": 5,
+      "trend": "Receding",
+      "range": [
+        310,
+        330
       ]
     },
     {
@@ -1580,22 +1632,6 @@
       ]
     },
     {
-      "id": "brains",
-      "name": "Brains",
-      "category": "Uncommon",
-      "supreme": 150,
-      "mm2": null,
-      "demand": 3,
-      "rarity": 4,
-      "trend": "Stable",
-      "range": [
-        170,
-        180
-      ],
-      "placeholder": false,
-      "aliases": []
-    },
-    {
       "id": "borealis",
       "name": "Borealis",
       "category": "Godly",
@@ -1608,6 +1644,22 @@
         155,
         160
       ]
+    },
+    {
+      "id": "brains",
+      "name": "Brains",
+      "category": "Uncommon",
+      "supreme": 145,
+      "mm2": null,
+      "demand": 3,
+      "rarity": 4,
+      "trend": "Stable",
+      "range": [
+        170,
+        180
+      ],
+      "placeholder": false,
+      "aliases": []
     },
     {
       "id": "australis",
