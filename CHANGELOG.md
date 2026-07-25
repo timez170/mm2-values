@@ -2252,3 +2252,39 @@
 - `batwing-2` **added**: — → 1000000
 - `black-luger` **added**: — → 1000000
 - `mortal-blade` **added**: — → 1000000
+
+## 2026-07-25 — 34 change(s) [tiersOK 10, failed 0]
+- `chroma-evergreen` **supreme**: 52000 → 51000
+- `chroma-alien-set` **supreme**: 36750 → 36500
+- `traveler-s-set` **supreme**: 13500 → 13600
+- `chroma-raygun` **supreme**: 12750 → 12500
+- `traveler-s-gun` **supreme**: 5400 → 5500
+- `celestial-set` **supreme**: 4725 → 4750
+- `celestial-set` **demand**: 5 → 6
+- `chroma-sweet-set` **supreme**: 4700 → 4750
+- `vampire-s-set` **supreme**: 3100 → 3125
+- `chroma-treat` **supreme**: 2500 → 2550
+- `celestial` **supreme**: 2025 → 2050
+- `celestial` **demand**: 5 → 6
+- `vampire-s-gun` **supreme**: 1875 → 1900
+- `soul-set` **supreme**: 1130 → 1150
+- `cane-knife` **supreme**: 650 → 675
+- `soul` **supreme**: 570 → 580
+- `spirit` **supreme**: 560 → 570
+- `dungeon` **supreme**: 300 → 280
+- `brains` **supreme**: 155 → 150
+- `zombified-set` **supreme**: 130 → 135
+- `chroma-ever-set` **supreme**: 127 → 126
+- `zombified-knife` **supreme**: 115 → 120
+- `collectible-set` **supreme**: 71 → 230 ⚠️
+- `makeshift-knife` **demand**: 3 → 2
+- `zombified` **demand**: 3 → 2
+- `cotton-candy` **supreme**: 40 → 38
+- `skate-set` **supreme**: 30 → 25
+- `tailslide` **supreme**: 8 → 7
+- `ollie` **supreme**: 7 → 5
+- `sidewinder` **supreme**: 7 → 5
+- `icecream` **added**: — → 1000
+- `beachy` **added**: — → 375
+- `sands` **added**: — → 375
+- `beach-set` **added**: — → 750
