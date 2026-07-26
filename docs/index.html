@@ -624,6 +624,7 @@ const RAW = [
   ["Darkshot","Godly",1500,1510,6,4,"Stable"],["Darksword","Godly",1480,1485,6,4,"Stable"],
   ["Blossom","Godly",1265,1265,6,4,"Stable"],["Sakura","Godly",1255,1245,6,4,"Stable"],
   ["Raygun","Godly",1150,1175,5,3,"Stable",{aliases:["rg","ray gun"]}],["Sunrise","Godly",1100,1075,5,4,"Stable"],
+  ["Icecream","Godly",1000,null,7,6,"Overpaid For",{range:[1000,1200],aliases:["ice cream"]}],
   ["Bauble","Godly",900,900,5,4,"Stable",{aliases:["baub"]}],["Snowcannon","Godly",700,713,4,3,"Stable"],
   ["Sunset (Knife)","Godly",500,550,5,3,"Stable"],["Soul","Godly",500,490,5,3,"Stable"],
   ["Spirit","Godly",490,480,5,3,"Stable"],["Flora","Godly",410,400,5,3,"Stable"],
@@ -684,6 +685,7 @@ const RAW = [
   ["Chroma Constellation","Chroma",33000,35000,7,6,"Stable",{aliases:["cconst"]}],["Chroma Alienbeam","Chroma",30000,30000,7,6,"Stable",{aliases:["cab"]}],
   ["Chroma Raygun","Chroma",14500,14500,6,5,"Stable",{aliases:["crg"]}],["Chroma Sunrise","Chroma",11250,11000,6,5,"Stable",{aliases:["csr"]}],
   ["Chroma Snowcannon","Chroma",8500,8650,6,5,"Stable"],["Chroma Blizzard","Chroma",8000,7800,5,5,"Stable",{aliases:["cbz"]}],
+  ["Chroma Icecream","Chroma",6500,null,8,8,"Overpaid For",{range:[6500,7500],aliases:["cic","chroma ice cream"]}],
   ["Chroma Sunset","Chroma",6500,6500,5,5,"Stable",{aliases:["css"]}],["Chroma Snow Dagger","Chroma",5750,5750,5,5,"Stable"],
   ["Chroma Heart Wand","Chroma",4750,4750,5,4,"Stable",{aliases:["chw"]}],["Chroma Snowstorm","Chroma",4250,4250,5,5,"Stable"],
   ["Chroma Watergun","Chroma",3400,3400,5,5,"Stable",{aliases:["cwg"]}],["Chroma Treat","Chroma",2800,4800,5,4,"Underpaid For",{range:[2600,2800]}],
@@ -732,6 +734,7 @@ const RAW = [
   ["Chroma Ever Set","Set",136000,null,8,8,"Stable"],["Chroma Alien Set","Set",44500,null,7,6,"Stable"],
   ["Chroma Bauble Set","Set",39900,null,7,6,"Underpaid For",{range:[39800,39900]}],["Chroma Sun Set","Set",17750,null,6,5,"Stable"],
   ["Chroma Snow Set","Set",14000,null,6,5,"Stable"],["Chroma Blizzard Set","Set",12250,null,5,5,"Stable"],
+  ["Chroma Beach Set","Set",6500,null,7,6,"Overpaid For",{range:[6500,7500],aliases:["cbeach","chroma beach"]}],
   ["Chroma Sweet Set","Set",5000,null,5,4,"Fluctuating",{range:[4800,5200]}],
   ["Traveler's Set","Set",14700,null,6,5,"Stable"],["Ever Set","Set",5725,null,5,4,"Stable"],
   ["Celestial Set","Set",4475,null,5,4,"Doing Well",{range:[4475,4525]}],["Alien Set","Set",3150,null,5,4,"Stable"],
@@ -739,7 +742,7 @@ const RAW = [
   ["Sakura Set","Set",2520,null,6,4,"Stable"],["Sun Set","Set",1600,null,5,4,"Stable"],
   ["Soul Set","Set",990,null,5,3,"Stable"],["Bauble Set","Set",930,null,5,4,"Stable"],
   ["Snow Set","Set",930,null,4,3,"Stable"],["Bloom Set","Set",810,null,5,3,"Stable"],
-  ["Rainbow Set","Set",750,null,5,3,"Overpaid For",{range:[750,810]}],["Ocean Set","Set",555,null,4,3,"Stable"],
+  ["Rainbow Set","Set",750,null,5,3,"Overpaid For",{range:[750,810]}],["Beach Set","Set",600,null,4,4,"Doing Well",{range:[600,700]}],["Ocean Set","Set",555,null,4,3,"Stable"],
   ["Xeno Set","Set",540,null,4,3,"Stable"],["Flowerwood Set","Set",515,null,4,3,"Stable"],
   ["Corrupt Set","Set",495,null,4,3,"Stable"],["Blizzard Set","Set",430,null,4,3,"Doing Well",{range:[430,460]}],
   ["Bow Set","Set",410,null,3,2,"Stable"],["Pumpkin Set (2018)","Set",410,null,3,4,"Stable"],
@@ -773,9 +776,14 @@ let _dataRev=0;                                // bumped on every buildData() so
 let ALL=[], BY_ID={}, HAY={}, POPULAR=[];
 let DATA_DATE="Jun 17, 2026", DATA_SRC="embedded", DATA_LIVE=false;
 function buildData(items){ _dataRev++;
-  ALL=items;
+  // Dedupe by id: a malformed feed (two rows sharing a slug, or a blank id) would otherwise
+  // vanish from BY_ID while still inflating ALL — keep the first, count and warn on the rest.
+  const seen=new Set(), uniq=[]; let dropped=0;
+  for(const it of items){ if(!it||!it.id||seen.has(it.id)){ dropped++; continue; } seen.add(it.id); uniq.push(it); }
+  if(dropped>0 && typeof console!=="undefined") console.warn("[mm2] skipped "+dropped+" item(s) with duplicate or blank id");
+  ALL=uniq;
   BY_ID=Object.fromEntries(ALL.map(i=>[i.id,i]));
-  HAY=Object.fromEntries(ALL.map(i=>[i.id,{name:norm(i.name),text:norm(i.name)+" "+i.aliases.map(norm).join(" ")}]));
+  HAY=Object.fromEntries(ALL.map(i=>[i.id,{name:norm(i.name),text:norm(i.name)+" "+(Array.isArray(i.aliases)?i.aliases:[]).map(norm).join(" ")}]));
   POPULAR=POPULAR_NAMES.map(slug).filter(id=>BY_ID[id]);
 }
 buildData(EMBEDDED);                            // boot from embedded; live data overlays later
@@ -850,7 +858,7 @@ const ICONS={
 function icon(name,size=16,cls=""){ const fill = name==="starFill"?"currentColor":"none";
   const path = name==="starFill"?ICONS.star:ICONS[name]||"";
   return `<svg class="ic ${cls}" width="${size}" height="${size}" viewBox="0 0 24 24" fill="${fill}" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${path}</svg>`; }
-const badge = cat => `<span class="badge" style="color:${CAT_COLOR[cat]};background:${CAT_COLOR[cat]}1f">${cat}</span>`;
+const badge = cat => { const c=CAT_COLOR[cat]||"#94a3b8"; return `<span class="badge" style="color:${c};background:${c}1f">${esc(cat)}</span>`; };
 /* ---- item identity icons: motif by name, then type, then knife default; tinted by rarity ---- */
 const _GLYPH_RULES=[
   [/fire|flame|inferno|\bheat\b|phoenix|blaze|ember|lava|magma|molten|hell|demon|infernal|scorch/, "flame"],
@@ -883,7 +891,7 @@ function itemGlyph(it){
   return "knife";
 }
 function itemIconTag(it,size){ const c=(it&&CAT_COLOR[it.category])||"#94a3b8"; return `<span class="witem-ic" style="color:${c}">${icon(itemGlyph(it),size||15)}</span>`; }
-function trendChip(t){ if(!t) return ""; const s=TREND_SENT[t]||"flat",c=SENT_COLOR[s]; return `<span class="trend" style="color:${c};background:${c}1f">${t}</span>`; }
+function trendChip(t){ if(!t) return ""; const s=TREND_SENT[t]||"flat",c=SENT_COLOR[s]; return `<span class="trend" style="color:${c};background:${c}1f">${esc(t)}</span>`; }
 function metricsHTML(it){
   if(it.demand==null && it.rarity==null) return `<span class="dr dim">D — R —</span>${trendChip(it.trend)}`;
   const dm = it.demand==null?"":`<span class="dr" title="Demand ${it.demand}/10">D<span class="mbar"><i style="width:${Math.min(100,it.demand*10)}%;background:#a78bfa"></i></span>${it.demand}</span>`;
@@ -1283,7 +1291,7 @@ function itemRow(side,o,idx){
         <span class="vtag" style="color:#c4b5fd">SV ${fmt(it.supreme)}</span><span class="vtag" style="color:#67e8f9">MM2 ${fmt(it.mm2)}</span>
         ${it.placeholder?'<span class="vtag" style="color:#fbbf24">priceless</span>':""}
         ${(it.demand!=null||it.rarity!=null)?`<span class="idr">${it.demand!=null?"D"+it.demand:""}${it.demand!=null&&it.rarity!=null?"\u00b7":""}${it.rarity!=null?"R"+it.rarity:""}</span>`:""}
-        ${it.trend?`<span class="tdot" title="${it.trend}" style="background:${SENT_COLOR[TREND_SENT[it.trend]||"flat"]}"></span>`:""}
+        ${it.trend?`<span class="tdot" title="${esc(it.trend)}" style="background:${SENT_COLOR[TREND_SENT[it.trend]||"flat"]}"></span>`:""}
         ${sparkline(o.id)}
       </div>
     </div>
@@ -1545,7 +1553,7 @@ function headerHTML(){
 }
 function footerHTML(){
   return `<footer class="ftr">
-    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-06-30w</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Values now follow <b>Supreme Values</b> (MM2Values is shown as a reference only); demand, rarity, stability & ranges are Supreme\u2019s. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
+    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-07-25a</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Values now follow <b>Supreme Values</b> (MM2Values is shown as a reference only); demand, rarity, stability & ranges are Supreme\u2019s. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
     <p>Community estimates — not endorsed by Roblox or Nikilis. Demand/hype/duping shift fast; confirm live before high-value trades. Saved trades & favorites are stored locally on this device only.</p>
     <div class="ftr-social">
       <a href="https://youtube.com/@wyalife" target="_blank" rel="noopener noreferrer" aria-label="YouTube">${icon("youtube",15)} YouTube</a>
@@ -2008,7 +2016,7 @@ function portfolioView(){
     <div class="sp-list">${savedList}</div>
   </div>`;
   return `<div class="portfolio">
-    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 single items and multi-item bundles are scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks are realistic, roughly even-value trades the other trader would actually accept — worth about what your inventory is worth, never much more. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-06-30w</b></p>
+    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 single items and multi-item bundles are scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks are realistic, roughly even-value trades the other trader would actually accept — worth about what your inventory is worth, never much more. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-07-25a</b></p>
     <div class="card">
       <div class="port-sum"><div><div class="port-sum-l">Inventory True Value</div><div class="port-sum-v">${fmt(Math.round(inv.value))}</div>${inv.hi>inv.lo?`<div class="port-sum-band">${fmt(Math.round(inv.lo))} \u2013 ${fmt(Math.round(inv.hi))}</div>`:""}</div>
         <div class="port-sum-r"><span class="port-health" style="color:${hCol}">${icon("activity",13)} ${hLabel} holdings</span>${inv.value>0?`<span class="port-conf">${inv.conf}% conf</span>`:""}${inv.priceless?`<span class="port-pl">${inv.priceless} priceless</span>`:""}</div></div>
