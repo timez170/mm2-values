@@ -2321,3 +2321,56 @@
 - `chroma-beachy` **added**: — → 3250
 - `chroma-sands` **added**: — → 3250
 - `chroma-beach-set` **added**: — → 6500
+
+## 2026-07-27 — 51 change(s) [tiersOK 10, failed 0]
+- `traveler-s-set` **supreme**: 13600 → 13700
+- `traveler-s-set` **trend**: Doing Well → Stable
+- `chroma-icecream` **supreme**: 6500 → 4500
+- `chroma-icecream` **demand**: 8 → 7
+- `chroma-icecream` **rarity**: 8 → 7
+- `chroma-beach-set` **supreme**: 6500 → 6000
+- `traveler-s-gun` **supreme**: 5500 → 5600
+- `traveler-s-gun` **trend**: Doing Well → Stable
+- `chroma-sweet-set` **supreme**: 4800 → 4900
+- `chroma-sweet-set` **trend**: Fluctuating → Doing Well
+- `celestial-set` **supreme**: 4750 → 4775
+- `alien-set` **supreme**: 3250 → 3275
+- `chroma-beachy` **supreme**: 3250 → 3000
+- `chroma-sands` **supreme**: 3250 → 3000
+- `vampire-s-set` **supreme**: 3150 → 3175
+- `vampire-s-set` **trend**: Doing Well → Stable
+- `chroma-treat` **supreme**: 2600 → 2650
+- `chroma-treat` **trend**: Fluctuating → Doing Well
+- `sakura-set` **supreme**: 2580 → 2590
+- `chroma-sweet` **supreme**: 2200 → 2250
+- `chroma-sweet` **trend**: Fluctuating → Stable
+- `celestial` **supreme**: 2050 → 2075
+- `vampire-s-gun` **supreme**: 1925 → 1950
+- `vampire-s-gun` **trend**: Doing Well → Stable
+- `raygun` **supreme**: 1375 → 1400
+- `blossom` **supreme**: 1295 → 1300
+- `sakura` **supreme**: 1285 → 1290
+- `soul-set` **supreme**: 1170 → 1190
+- `icecream` **supreme**: 750 → 500
+- `icecream` **demand**: 6 → 5
+- `icecream` **trend**: Doing Well → Fluctuating
+- `cane-knife` **supreme**: 675 → 700
+- `beach-set` **supreme**: 600 → 500
+- `beach-set` **trend**: Doing Well → Fluctuating
+- `soul` **supreme**: 590 → 600
+- `spirit` **supreme**: 580 → 590
+- `sweet-set` **supreme**: 315 → 305
+- `latte-set` **supreme**: 310 → 300
+- `beachy` **supreme**: 300 → 250
+- `beachy` **trend**: Doing Well → Fluctuating
+- `sands` **supreme**: 300 → 250
+- `sands` **trend**: Doing Well → Fluctuating
+- `dungeon` **supreme**: 270 → 260
+- `bones` **supreme**: 240 → 235
+- `bats-set` **supreme**: 191 → 201
+- `bats-knife` **supreme**: 190 → 200
+- `treat` **supreme**: 160 → 155
+- `latte-gun` **supreme**: 155 → 150
+- `latte-knife` **supreme**: 155 → 150
+- `sweet` **supreme**: 155 → 150
+- `glitch2` **supreme**: 45 → 40
