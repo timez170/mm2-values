@@ -2374,3 +2374,59 @@
 - `latte-knife` **supreme**: 155 → 150
 - `sweet` **supreme**: 155 → 150
 - `glitch2` **supreme**: 45 → 40
+
+## 2026-07-27 — 54 change(s) [tiersOK 10, failed 0]
+- `traveler-s-set` **demand**: 6 → 5
+- `chroma-beach-set` **supreme**: 6000 → 5000
+- `chroma-beach-set` **demand**: 7 → 6
+- `chroma-beach-set` **rarity**: 6 → 5
+- `chroma-beach-set` **trend**: Overpaid For → Doing Well
+- `traveler-s-gun` **demand**: 6 → 5
+- `chroma-sweet-set` **supreme**: 4900 → 5000
+- `chroma-sweet-set` **demand**: 5 → 6
+- `celestial-set` **supreme**: 4775 → 4800
+- `chroma-icecream` **supreme**: 4500 → 3250
+- `chroma-icecream` **demand**: 7 → 6
+- `chroma-icecream` **rarity**: 7 → 6
+- `chroma-icecream` **trend**: Overpaid For → Doing Well
+- `chroma-beachy` **supreme**: 3000 → 2500
+- `chroma-beachy` **demand**: 7 → 6
+- `chroma-beachy` **rarity**: 6 → 5
+- `chroma-beachy` **trend**: Overpaid For → Doing Well
+- `chroma-sands` **supreme**: 3000 → 2500
+- `chroma-sands` **demand**: 7 → 6
+- `chroma-sands` **rarity**: 6 → 5
+- `chroma-sands` **trend**: Overpaid For → Doing Well
+- `chroma-treat` **supreme**: 2650 → 2700
+- `chroma-treat` **demand**: 5 → 6
+- `sakura-set` **supreme**: 2590 → 2600
+- `chroma-sweet` **supreme**: 2250 → 2300
+- `celestial` **supreme**: 2075 → 2100
+- `blossom` **supreme**: 1300 → 1305
+- `sakura` **supreme**: 1290 → 1295
+- `soul-set` **supreme**: 1190 → 1200
+- `soul` **supreme**: 600 → 605
+- `spirit` **supreme**: 590 → 595
+- `icecream` **supreme**: 500 → 275
+- `icecream` **demand**: 5 → 4
+- `icecream` **rarity**: 5 → 4
+- `beach-set` **supreme**: 500 → 450
+- `beach-set` **demand**: 4 → 3
+- `beach-set` **rarity**: 4 → 3
+- `latte-set` **supreme**: 300 → 290
+- `borealis-set` **supreme**: 295 → 285
+- `dungeon` **supreme**: 260 → 255
+- `beachy` **supreme**: 250 → 225
+- `beachy` **demand**: 4 → 3
+- `beachy` **rarity**: 4 → 3
+- `sands` **supreme**: 250 → 225
+- `sands` **demand**: 4 → 3
+- `sands` **rarity**: 4 → 3
+- `bones` **supreme**: 235 → 230
+- `bats-set` **supreme**: 201 → 211
+- `bats-knife` **supreme**: 200 → 210
+- `latte-gun` **supreme**: 150 → 145
+- `latte-knife` **supreme**: 150 → 145
+- `borealis` **supreme**: 150 → 145
+- `australis` **supreme**: 145 → 140
+- `gifts-knife` **supreme**: 90 → 95

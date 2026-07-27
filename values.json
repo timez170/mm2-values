@@ -214,7 +214,7 @@
       "category": "Set",
       "supreme": 13700,
       "mm2": null,
-      "demand": 6,
+      "demand": 5,
       "rarity": 5,
       "trend": "Stable",
       "range": [
@@ -335,19 +335,6 @@
       ]
     },
     {
-      "id": "chroma-beach-set",
-      "name": "Chroma Beach Set",
-      "category": "Set",
-      "supreme": 6000,
-      "mm2": null,
-      "demand": 7,
-      "rarity": 6,
-      "trend": "Overpaid For",
-      "range": null,
-      "placeholder": false,
-      "aliases": []
-    },
-    {
       "id": "ever-set",
       "name": "Ever Set",
       "category": "Set",
@@ -367,7 +354,7 @@
       "category": "Godly",
       "supreme": 5600,
       "mm2": 6200,
-      "demand": 6,
+      "demand": 5,
       "rarity": 5,
       "trend": "Stable",
       "range": [
@@ -381,12 +368,25 @@
       ]
     },
     {
+      "id": "chroma-beach-set",
+      "name": "Chroma Beach Set",
+      "category": "Set",
+      "supreme": 5000,
+      "mm2": null,
+      "demand": 6,
+      "rarity": 5,
+      "trend": "Doing Well",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
       "id": "chroma-sweet-set",
       "name": "Chroma Sweet Set",
       "category": "Set",
-      "supreme": 4900,
+      "supreme": 5000,
       "mm2": null,
-      "demand": 5,
+      "demand": 6,
       "rarity": 4,
       "trend": "Doing Well",
       "range": [
@@ -398,7 +398,7 @@
       "id": "celestial-set",
       "name": "Celestial Set",
       "category": "Set",
-      "supreme": 4775,
+      "supreme": 4800,
       "mm2": null,
       "demand": 6,
       "rarity": 4,
@@ -407,19 +407,6 @@
         4650,
         4750
       ]
-    },
-    {
-      "id": "chroma-icecream",
-      "name": "Chroma Icecream",
-      "category": "Chroma",
-      "supreme": 4500,
-      "mm2": null,
-      "demand": 7,
-      "rarity": 7,
-      "trend": "Overpaid For",
-      "range": null,
-      "placeholder": false,
-      "aliases": []
     },
     {
       "id": "chroma-snow-dagger",
@@ -500,6 +487,19 @@
       ]
     },
     {
+      "id": "chroma-icecream",
+      "name": "Chroma Icecream",
+      "category": "Chroma",
+      "supreme": 3250,
+      "mm2": null,
+      "demand": 6,
+      "rarity": 6,
+      "trend": "Doing Well",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
       "id": "dark-set",
       "name": "Dark Set",
       "category": "Set",
@@ -528,32 +528,6 @@
       ]
     },
     {
-      "id": "chroma-beachy",
-      "name": "Chroma Beachy",
-      "category": "Chroma",
-      "supreme": 3000,
-      "mm2": null,
-      "demand": 7,
-      "rarity": 6,
-      "trend": "Overpaid For",
-      "range": null,
-      "placeholder": false,
-      "aliases": []
-    },
-    {
-      "id": "chroma-sands",
-      "name": "Chroma Sands",
-      "category": "Chroma",
-      "supreme": 3000,
-      "mm2": null,
-      "demand": 7,
-      "rarity": 6,
-      "trend": "Overpaid For",
-      "range": null,
-      "placeholder": false,
-      "aliases": []
-    },
-    {
       "id": "constellation",
       "name": "Constellation",
       "category": "Godly",
@@ -574,9 +548,9 @@
       "id": "chroma-treat",
       "name": "Chroma Treat",
       "category": "Chroma",
-      "supreme": 2650,
+      "supreme": 2700,
       "mm2": 4800,
-      "demand": 5,
+      "demand": 6,
       "rarity": 4,
       "trend": "Doing Well",
       "range": [
@@ -588,12 +562,38 @@
       "id": "sakura-set",
       "name": "Sakura Set",
       "category": "Set",
-      "supreme": 2590,
+      "supreme": 2600,
       "mm2": null,
       "demand": 6,
       "rarity": 4,
       "trend": "Stable",
       "range": null
+    },
+    {
+      "id": "chroma-beachy",
+      "name": "Chroma Beachy",
+      "category": "Chroma",
+      "supreme": 2500,
+      "mm2": null,
+      "demand": 6,
+      "rarity": 5,
+      "trend": "Doing Well",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
+      "id": "chroma-sands",
+      "name": "Chroma Sands",
+      "category": "Chroma",
+      "supreme": 2500,
+      "mm2": null,
+      "demand": 6,
+      "rarity": 5,
+      "trend": "Doing Well",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
     },
     {
       "id": "evergreen",
@@ -624,7 +624,7 @@
       "id": "chroma-sweet",
       "name": "Chroma Sweet",
       "category": "Chroma",
-      "supreme": 2250,
+      "supreme": 2300,
       "mm2": 2800,
       "demand": 5,
       "rarity": 4,
@@ -638,7 +638,7 @@
       "id": "celestial",
       "name": "Celestial",
       "category": "Ancient",
-      "supreme": 2075,
+      "supreme": 2100,
       "mm2": 1850,
       "demand": 6,
       "rarity": 4,
@@ -765,7 +765,7 @@
       "id": "blossom",
       "name": "Blossom",
       "category": "Godly",
-      "supreme": 1300,
+      "supreme": 1305,
       "mm2": 1265,
       "demand": 6,
       "rarity": 4,
@@ -792,7 +792,7 @@
       "id": "sakura",
       "name": "Sakura",
       "category": "Godly",
-      "supreme": 1290,
+      "supreme": 1295,
       "mm2": 1245,
       "demand": 6,
       "rarity": 4,
@@ -833,7 +833,7 @@
       "id": "soul-set",
       "name": "Soul Set",
       "category": "Set",
-      "supreme": 1190,
+      "supreme": 1200,
       "mm2": null,
       "demand": 5,
       "rarity": 3,
@@ -969,6 +969,20 @@
       ]
     },
     {
+      "id": "soul",
+      "name": "Soul",
+      "category": "Godly",
+      "supreme": 605,
+      "mm2": 490,
+      "demand": 5,
+      "rarity": 3,
+      "trend": "Doing Well",
+      "range": [
+        555,
+        575
+      ]
+    },
+    {
       "id": "cane-knife-2018",
       "name": "Cane Knife (2018)",
       "category": "Rare",
@@ -983,24 +997,10 @@
       ]
     },
     {
-      "id": "soul",
-      "name": "Soul",
-      "category": "Godly",
-      "supreme": 600,
-      "mm2": 490,
-      "demand": 5,
-      "rarity": 3,
-      "trend": "Doing Well",
-      "range": [
-        555,
-        575
-      ]
-    },
-    {
       "id": "spirit",
       "name": "Spirit",
       "category": "Godly",
-      "supreme": 590,
+      "supreme": 595,
       "mm2": 480,
       "demand": 5,
       "rarity": 3,
@@ -1096,32 +1096,6 @@
       "range": null
     },
     {
-      "id": "icecream",
-      "name": "Icecream",
-      "category": "Godly",
-      "supreme": 500,
-      "mm2": null,
-      "demand": 5,
-      "rarity": 5,
-      "trend": "Fluctuating",
-      "range": null,
-      "placeholder": false,
-      "aliases": []
-    },
-    {
-      "id": "beach-set",
-      "name": "Beach Set",
-      "category": "Set",
-      "supreme": 500,
-      "mm2": null,
-      "demand": 4,
-      "rarity": 4,
-      "trend": "Fluctuating",
-      "range": null,
-      "placeholder": false,
-      "aliases": []
-    },
-    {
       "id": "corrupt",
       "name": "Corrupt",
       "category": "Unique",
@@ -1131,6 +1105,19 @@
       "rarity": 3,
       "trend": "Stable",
       "range": null
+    },
+    {
+      "id": "beach-set",
+      "name": "Beach Set",
+      "category": "Set",
+      "supreme": 450,
+      "mm2": null,
+      "demand": 3,
+      "rarity": 3,
+      "trend": "Fluctuating",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
     },
     {
       "id": "rainbow-gun",
@@ -1254,7 +1241,7 @@
       "id": "latte-set",
       "name": "Latte Set",
       "category": "Set",
-      "supreme": 300,
+      "supreme": 290,
       "mm2": null,
       "demand": 3,
       "rarity": 3,
@@ -1268,7 +1255,7 @@
       "id": "borealis-set",
       "name": "Borealis Set",
       "category": "Set",
-      "supreme": 295,
+      "supreme": 285,
       "mm2": null,
       "demand": 3,
       "rarity": 3,
@@ -1288,6 +1275,19 @@
       "rarity": 3,
       "trend": "Stable",
       "range": null
+    },
+    {
+      "id": "icecream",
+      "name": "Icecream",
+      "category": "Godly",
+      "supreme": 275,
+      "mm2": null,
+      "demand": 4,
+      "rarity": 4,
+      "trend": "Fluctuating",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
     },
     {
       "id": "waves",
@@ -1338,20 +1338,6 @@
       "rarity": 3,
       "trend": "Stable",
       "range": null
-    },
-    {
-      "id": "dungeon",
-      "name": "Dungeon",
-      "category": "Rare",
-      "supreme": 260,
-      "mm2": 90,
-      "demand": 3,
-      "rarity": 5,
-      "trend": "Receding",
-      "range": [
-        310,
-        330
-      ]
     },
     {
       "id": "flowerwood-knife",
@@ -1409,6 +1395,20 @@
       "aliases": []
     },
     {
+      "id": "dungeon",
+      "name": "Dungeon",
+      "category": "Rare",
+      "supreme": 255,
+      "mm2": 90,
+      "demand": 3,
+      "rarity": 5,
+      "trend": "Receding",
+      "range": [
+        310,
+        330
+      ]
+    },
+    {
       "id": "snow-dagger",
       "name": "Snow Dagger",
       "category": "Godly",
@@ -1418,32 +1418,6 @@
       "rarity": 3,
       "trend": "Stable",
       "range": null
-    },
-    {
-      "id": "beachy",
-      "name": "Beachy",
-      "category": "Godly",
-      "supreme": 250,
-      "mm2": null,
-      "demand": 4,
-      "rarity": 4,
-      "trend": "Fluctuating",
-      "range": null,
-      "placeholder": false,
-      "aliases": []
-    },
-    {
-      "id": "sands",
-      "name": "Sands",
-      "category": "Godly",
-      "supreme": 250,
-      "mm2": null,
-      "demand": 4,
-      "rarity": 4,
-      "trend": "Fluctuating",
-      "range": null,
-      "placeholder": false,
-      "aliases": []
     },
     {
       "id": "watergun",
@@ -1474,7 +1448,7 @@
       "id": "bones",
       "name": "Bones",
       "category": "Uncommon",
-      "supreme": 235,
+      "supreme": 230,
       "mm2": null,
       "demand": 3,
       "rarity": 5,
@@ -1498,10 +1472,36 @@
       "aliases": []
     },
     {
+      "id": "beachy",
+      "name": "Beachy",
+      "category": "Godly",
+      "supreme": 225,
+      "mm2": null,
+      "demand": 3,
+      "rarity": 3,
+      "trend": "Fluctuating",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
+      "id": "sands",
+      "name": "Sands",
+      "category": "Godly",
+      "supreme": 225,
+      "mm2": null,
+      "demand": 3,
+      "rarity": 3,
+      "trend": "Fluctuating",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
       "id": "bats-set",
       "name": "Bats Set",
       "category": "Set",
-      "supreme": 201,
+      "supreme": 211,
       "mm2": null,
       "demand": 3,
       "rarity": 5,
@@ -1512,7 +1512,7 @@
       "id": "bats-knife",
       "name": "Bats (Knife)",
       "category": "Common",
-      "supreme": 200,
+      "supreme": 210,
       "mm2": 105,
       "demand": 3,
       "rarity": 5,
@@ -1593,10 +1593,21 @@
       ]
     },
     {
+      "id": "sweet",
+      "name": "Sweet",
+      "category": "Godly",
+      "supreme": 150,
+      "mm2": 135,
+      "demand": 3,
+      "rarity": 3,
+      "trend": "Stable",
+      "range": null
+    },
+    {
       "id": "latte-gun",
       "name": "Latte (Gun)",
       "category": "Legendary",
-      "supreme": 150,
+      "supreme": 145,
       "mm2": 155,
       "demand": 3,
       "rarity": 3,
@@ -1610,7 +1621,7 @@
       "id": "latte-knife",
       "name": "Latte (Knife)",
       "category": "Legendary",
-      "supreme": 150,
+      "supreme": 145,
       "mm2": 155,
       "demand": 3,
       "rarity": 3,
@@ -1621,21 +1632,10 @@
       ]
     },
     {
-      "id": "sweet",
-      "name": "Sweet",
-      "category": "Godly",
-      "supreme": 150,
-      "mm2": 135,
-      "demand": 3,
-      "rarity": 3,
-      "trend": "Stable",
-      "range": null
-    },
-    {
       "id": "borealis",
       "name": "Borealis",
       "category": "Godly",
-      "supreme": 150,
+      "supreme": 145,
       "mm2": 105,
       "demand": 3,
       "rarity": 3,
@@ -1665,7 +1665,7 @@
       "id": "australis",
       "name": "Australis",
       "category": "Godly",
-      "supreme": 145,
+      "supreme": 140,
       "mm2": 100,
       "demand": 3,
       "rarity": 3,
@@ -1826,6 +1826,19 @@
       "range": null
     },
     {
+      "id": "gifts-knife",
+      "name": "Gifts (Knife)",
+      "category": "Common",
+      "supreme": 95,
+      "mm2": null,
+      "demand": 3,
+      "rarity": 4,
+      "trend": "Stable",
+      "range": null,
+      "placeholder": false,
+      "aliases": []
+    },
+    {
       "id": "pearl",
       "name": "Pearl",
       "category": "Godly",
@@ -1835,19 +1848,6 @@
       "rarity": 3,
       "trend": "Stable",
       "range": null
-    },
-    {
-      "id": "gifts-knife",
-      "name": "Gifts (Knife)",
-      "category": "Common",
-      "supreme": 90,
-      "mm2": null,
-      "demand": 3,
-      "rarity": 4,
-      "trend": "Stable",
-      "range": null,
-      "placeholder": false,
-      "aliases": []
     },
     {
       "id": "pine-knife",
