@@ -193,6 +193,8 @@
   .vtag{font-size:10px;font-variant-numeric:tabular-nums;white-space:nowrap}
   .idr{font-size:9px;color:var(--muted);font-weight:700;letter-spacing:.02em}
   .tdot{width:7px;height:7px;border-radius:9999px;flex:none}
+  .dir{font-size:10px;font-weight:800;flex:none;line-height:1;letter-spacing:-.5px}
+  .dd-dir{font-size:10px;font-weight:800;flex:none;line-height:1;margin-left:1px}
   .warn-dot{width:6px;height:6px;border-radius:9999px;background:var(--fair);flex:none}
   .qty{display:flex;align-items:center;gap:2px;flex:none}
   .qbtn{width:22px;height:22px;border-radius:6px;background:rgba(42,55,80,.7);border:none;color:#cdd6e8;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background var(--fast)}
@@ -616,100 +618,191 @@ const DATA_URL = "https://raw.githubusercontent.com/timez170/mm2-values/main/val
      opts : { placeholder?:bool, range?:[lo,hi], aliases?:[...] }
    =========================================================================== */
 const RAW = [
-  // ---------------- GODLIES ----------------
-  ["Traveler's Gun","Godly",6300,6200,7,5,"Doing Well",{aliases:["trav gun","tg","travelers gun"]}],
-  ["Evergun","Godly",3300,3250,5,4,"Stable"],["Constellation","Godly",2625,2600,5,4,"Stable",{aliases:["const"]}],
-  ["Turkey","Godly",2450,2450,5,4,"Stable"],["Evergreen","Godly",2425,2400,5,4,"Stable"],
-  ["Alienbeam","Godly",2000,2000,5,4,"Stable",{aliases:["ab","alien beam"]}],["Vampire's Gun","Godly",1700,1675,5,4,"Stable",{aliases:["vamp gun","vg"]}],
-  ["Darkshot","Godly",1500,1510,6,4,"Stable"],["Darksword","Godly",1480,1485,6,4,"Stable"],
-  ["Blossom","Godly",1265,1265,6,4,"Stable"],["Sakura","Godly",1255,1245,6,4,"Stable"],
-  ["Raygun","Godly",1150,1175,5,3,"Stable",{aliases:["rg","ray gun"]}],["Sunrise","Godly",1100,1075,5,4,"Stable"],
-  ["Icecream","Godly",1000,null,7,6,"Overpaid For",{range:[1000,1200],aliases:["ice cream"]}],
-  ["Bauble","Godly",900,900,5,4,"Stable",{aliases:["baub"]}],["Snowcannon","Godly",700,713,4,3,"Stable"],
-  ["Sunset (Knife)","Godly",500,550,5,3,"Stable"],["Soul","Godly",500,490,5,3,"Stable"],
-  ["Spirit","Godly",490,480,5,3,"Stable"],["Flora","Godly",410,400,5,3,"Stable"],
-  ["Bloom","Godly",400,390,5,3,"Stable"],["Rainbow Gun","Godly",380,315,5,3,"Overpaid For",{range:[380,410]}],
-  ["Rainbow (Knife)","Godly",370,310,5,3,"Overpaid For",{range:[370,400]}],["Heart Wand","Godly",320,300,4,3,"Improving",{range:[320,330]}],
-  ["Ocean","Godly",280,215,4,3,"Stable"],["Waves","Godly",275,210,4,3,"Stable"],
-  ["Xenoknife","Godly",270,225,4,3,"Stable",{aliases:["xeno knife"]}],["Xenoshot","Godly",270,225,4,3,"Stable",{aliases:["xeno shot"]}],
-  ["Flowerwood Gun","Godly",260,205,4,3,"Stable"],["Watergun","Godly",260,265,3,3,"Stable"],
-  ["Flowerwood (Knife)","Godly",255,200,4,3,"Stable"],["Snow Dagger","Godly",230,243,3,3,"Stable"],
-  ["Blizzard","Godly",215,203,4,3,"Doing Well",{range:[215,230]}],["Snowstorm","Godly",215,203,4,3,"Doing Well",{range:[215,230]}],
-  ["Treat","Godly",140,140,3,3,"Stable"],["Sweet","Godly",135,135,3,3,"Stable"],["Bat","Godly",120,125,2,2,"Stable"],
-  ["Borealis","Godly",125,105,3,3,"Doing Well",{range:[125,135]}],["Australis","Godly",120,100,3,3,"Doing Well",{range:[120,130]}],
-  ["Pearlshine","Godly",100,70,2,3,"Stable"],["Pearl","Godly",95,65,2,3,"Stable"],
-  ["Candy","Godly",80,90,1,2,"Stable"],["Heartblade","Godly",68,70,1,2,"Stable"],
-  ["Luger","Godly",45,47,1,2,"Stable"],["Red Luger","Godly",42,45,1,2,"Stable"],
-  ["Candleflame","Godly",38,43,1,2,"Stable"],["Darkbringer","Godly",38,43,1,2,"Stable"],
-  ["Elderwood Blade","Godly",38,42,1,2,"Stable"],["Elderwood Revolver","Godly",38,43,1,2,"Stable"],
-  ["Iceblaster","Godly",38,42,1,2,"Stable"],["Makeshift","Godly",38,43,1,2,"Stable"],
-  ["Phantom","Godly",38,42,1,2,"Stable"],["Spectre","Godly",38,42,1,2,"Stable"],
-  ["Sugar","Godly",37,40,1,2,"Stable"],["Lightbringer","Godly",35,38,1,2,"Stable"],
-  ["Ornament","Godly",28,28,1,2,"Stable"],["Green Luger","Godly",25,28,1,2,"Stable"],
-  ["Amerilaser","Godly",23,25,1,2,"Stable"],["Hallowgun","Godly",23,25,1,2,"Stable"],
-  ["Laser","Godly",23,25,1,2,"Stable"],["Swirly Gun","Godly",20,23,1,2,"Stable"],
-  ["Shark","Godly",20,23,1,2,"Stable"],["Icebeam","Godly",20,23,1,2,"Stable"],
-  ["Nightblade","Godly",20,23,1,2,"Stable",{aliases:["nightfall"]}],["Blaster","Godly",18,20,1,2,"Stable"],
-  ["Iceflake","Godly",18,20,1,2,"Stable"],["Plasmabeam","Godly",18,20,1,2,"Stable"],
-  ["Battleaxe II","Godly",17,18,1,2,"Stable"],["Ginger Luger","Godly",17,20,1,2,"Stable"],
-  ["Old Glory","Godly",17,20,1,2,"Stable"],["Pixel","Godly",17,20,1,2,"Stable"],
-  ["Plasmablade","Godly",17,18,1,2,"Stable"],["Slasher","Godly",17,20,1,2,"Stable"],
-  ["Virtual","Godly",15,18,1,2,"Stable"],["Gemstone","Godly",15,15,1,2,"Stable"],
-  ["Gingerblade","Godly",15,15,1,2,"Stable"],["Nebula","Godly",15,15,1,2,"Stable"],
-  ["Vampire's Edge","Godly",15,15,1,2,"Stable"],["Eternalcane","Godly",15,17,1,2,"Stable"],
-  ["Cookiecane","Godly",15,17,1,2,"Stable"],["Minty","Godly",15,17,1,2,"Stable"],
-  ["Gingermint","Godly",15,17,1,2,"Stable"],["Jinglegun","Godly",15,18,1,2,"Stable"],
-  ["Lugercane","Godly",15,18,1,2,"Stable"],["Swirly Blade","Godly",15,13,1,2,"Stable"],
-  ["Deathshard","Godly",13,15,1,2,"Stable"],["Battleaxe","Godly",12,13,1,2,"Stable"],
-  ["Heat","Godly",10,12,1,2,"Stable"],["Tides","Godly",10,12,1,2,"Stable"],["Fang","Godly",10,12,1,2,"Stable"],
-  ["Chill","Godly",10,12,1,2,"Stable"],["Spider","Godly",10,12,1,2,"Stable"],["Clockwork","Godly",10,12,1,2,"Stable"],
-  ["Eternal III","Godly",10,10,1,2,"Stable"],["Eternal IV","Godly",10,10,1,2,"Stable"],
-  ["Frostsaber","Godly",10,10,1,2,"Stable"],["Bioblade","Godly",10,10,1,2,"Stable"],
-  ["Eternal","Godly",8,10,1,2,"Stable"],["Eternal II","Godly",8,8,1,2,"Stable"],
-  ["Hallow's Blade","Godly",8,7,1,2,"Stable"],["Hallow's Edge","Godly",8,9,1,2,"Stable"],
-  ["Handsaw","Godly",8,9,1,2,"Stable"],["Xmas","Godly",8,10,1,2,"Stable"],
-  ["Boneblade","Godly",7,8,1,2,"Stable"],["Frostbite","Godly",7,7,1,2,"Stable"],
-  ["Ghostblade","Godly",7,8,1,2,"Stable"],["Ice Dragon","Godly",7,7,1,2,"Stable"],
-  ["Ice Shard","Godly",7,9,1,2,"Stable"],["Prismatic","Godly",7,5,1,2,"Stable"],
-  ["Pumpking","Godly",7,8,1,2,"Stable"],["Saw","Godly",7,8,1,2,"Stable"],
-  ["Eggblade","Godly",5,5,1,2,"Stable"],["Flames","Godly",5,7,1,2,"Stable"],
-  ["Snowflake","Godly",5,5,1,2,"Stable"],["Winter's Edge","Godly",5,7,1,2,"Stable"],
-  ["Peppermint","Godly",4,4,1,2,"Stable"],["Cookieblade","Godly",3,4,1,2,"Stable"],
-  ["Seer","Godly",3,3,1,1,"Stable"],["Blue Seer","Godly",3,3,1,1,"Stable"],["Purple Seer","Godly",3,3,1,1,"Stable"],
-  ["Red Seer","Godly",3,3,1,1,"Stable"],["Orange Seer","Godly",2,2,1,1,"Stable"],["Yellow Seer","Godly",2,2,1,1,"Stable"],
+  // ---------------- GODLIES (Supreme sync 2026-07-24) ----------------
+  ["Traveler's Gun","Godly",5500,6200,6,5,"Doing Well",{range:[5500,5600],change:100,changePct:1.9,aliases:["trav gun","tg","travelers gun"]}],
+  ["Evergun","Godly",3450,3250,5,4,"Stable",{change:-25,changePct:-0.7}],
+  ["Constellation","Godly",2700,2600,5,4,"Stable",{change:-25,changePct:-0.9,aliases:["const"]}],
+  ["Evergreen","Godly",2500,2400,5,4,"Stable",{change:-25,changePct:-1.0}],
+  ["Turkey","Godly",2450,2450,5,4,"Stable",{change:-25,changePct:-1.0}],
+  ["Vampire's Gun","Godly",1900,1675,6,4,"Doing Well",{range:[1900,1950],change:25,changePct:1.3,aliases:["vamp gun","vg"]}],
+  ["Alienbeam","Godly",1875,2000,5,4,"Stable",{change:-25,changePct:-1.3,aliases:["ab","alien beam"]}],
+  ["Darkshot","Godly",1625,1510,6,4,"Stable",{change:10,changePct:0.6}],
+  ["Darksword","Godly",1600,1485,6,4,"Stable",{change:10,changePct:0.6}],
+  ["Raygun","Godly",1375,1175,6,3,"Stable",{change:25,changePct:1.9,aliases:["rg","ray gun"]}],
+  ["Blossom","Godly",1290,1265,6,4,"Stable",{change:10,changePct:0.8}],
+  ["Sakura","Godly",1280,1245,6,4,"Stable",{change:10,changePct:0.8}],
+  ["Sunrise","Godly",1125,1075,5,4,"Stable",{change:25,changePct:2.3}],
+  ["Icecream","Godly",1000,null,7,6,"Overpaid For",{range:[1000,1200],change:0,aliases:["ice cream"]}],
+  ["Snowcannon","Godly",850,713,5,3,"Stable",{change:25,changePct:3.0}],
+  ["Bauble","Godly",825,900,5,4,"Stable",{change:-25,changePct:-2.9,aliases:["baub"]}],
+  ["Sunset (Knife)","Godly",625,550,5,3,"Stable",{change:25,changePct:4.2}],
+  ["Soul","Godly",580,490,5,3,"Doing Well",{range:[580,600],change:10,changePct:1.8}],
+  ["Spirit","Godly",570,480,5,3,"Doing Well",{range:[570,590],change:10,changePct:1.8}],
+  ["Rainbow Gun","Godly",420,315,5,3,"Stable",{change:5,changePct:1.2}],
+  ["Flora","Godly",410,400,5,3,"Stable",{change:10,changePct:2.5}],
+  ["Rainbow (Knife)","Godly",410,310,5,3,"Stable",{change:5,changePct:1.2}],
+  ["Bloom","Godly",400,390,5,3,"Stable",{change:10,changePct:2.6}],
+  ["Beachy","Godly",375,null,5,4,"Doing Well",{range:[375,425],change:0}],
+  ["Sands","Godly",375,null,5,4,"Doing Well",{range:[375,425],change:0}],
+  ["Heart Wand","Godly",340,300,4,3,"Stable",{change:10,changePct:3.0}],
+  ["Ocean","Godly",280,215,4,3,"Stable",{change:-5,changePct:-1.8}],
+  ["Waves","Godly",275,210,4,3,"Stable",{change:-5,changePct:-1.8}],
+  ["Xenoknife","Godly",270,225,4,3,"Stable",{change:-5,changePct:-1.8,aliases:["xeno knife"]}],
+  ["Xenoshot","Godly",270,225,4,3,"Stable",{change:-5,changePct:-1.8,aliases:["xeno shot"]}],
+  ["Flowerwood Gun","Godly",265,205,4,3,"Stable",{change:5,changePct:1.9}],
+  ["Blizzard","Godly",260,203,4,3,"Stable",{change:5,changePct:2.0}],
+  ["Flowerwood (Knife)","Godly",260,200,4,3,"Stable",{change:5,changePct:2.0}],
+  ["Snowstorm","Godly",260,203,4,3,"Stable",{change:5,changePct:2.0}],
+  ["Snow Dagger","Godly",255,243,4,3,"Stable",{change:-5,changePct:-1.9}],
+  ["Watergun","Godly",250,265,3,3,"Stable",{change:-10,changePct:-3.8}],
+  ["Treat","Godly",160,140,3,3,"Stable",{change:-5,changePct:-3.0}],
+  ["Sweet","Godly",155,135,3,3,"Stable",{change:-5,changePct:-3.1}],
+  ["Borealis","Godly",150,105,3,3,"Stable",{change:-5,changePct:-3.2}],
+  ["Australis","Godly",145,100,3,3,"Stable",{change:-5,changePct:-3.3}],
+  ["Bat","Godly",120,125,2,2,"Fluctuating",{range:[115,125],change:-5,changePct:-4.0}],
+  ["Pearlshine","Godly",95,70,2,3,"Stable",{change:-5,changePct:-5.0}],
+  ["Pearl","Godly",90,65,2,3,"Stable",{change:-5,changePct:-5.3}],
+  ["Candy","Godly",80,90,1,2,"Stable",{change:-5,changePct:-5.9}],
+  ["Heartblade","Godly",65,70,1,2,"Stable",{change:-2,changePct:-3.0}],
+  ["Nightblade","Godly",20,23,1,2,"Stable",{change:-2,changePct:-9.1,aliases:["nightfall"]}],
+  ["Ornament","Godly",27,28,1,2,"Fluctuating",{range:[25,28],change:-1,changePct:-3.6}],
+  ["Luger","Godly",40,47,1,2,"Stable",{change:-2,changePct:-4.8}],
+  ["Red Luger","Godly",38,45,1,2,"Stable",{change:-2,changePct:-5.0}],
+  ["Phantom","Godly",35,42,1,2,"Stable",{change:-2,changePct:-5.4}],
+  ["Spectre","Godly",35,42,1,2,"Stable",{change:-2,changePct:-5.4}],
+  ["Candleflame","Godly",33,43,1,2,"Stable",{change:-2,changePct:-5.7}],
+  ["Darkbringer","Godly",33,43,1,2,"Stable",{change:-2,changePct:-5.7}],
+  ["Elderwood Blade","Godly",33,42,1,2,"Stable",{change:-2,changePct:-5.7}],
+  ["Elderwood Revolver","Godly",33,43,1,2,"Stable",{change:-2,changePct:-5.7}],
+  ["Iceblaster","Godly",33,42,1,2,"Stable",{change:-2,changePct:-5.7}],
+  ["Lightbringer","Godly",33,38,1,2,"Stable",{change:-2,changePct:-5.7}],
+  ["Makeshift","Godly",33,43,1,2,"Stable",{change:-2,changePct:-5.7}],
+  ["Sugar","Godly",32,40,1,2,"Stable",{change:-1,changePct:-3.0}],
+  ["Green Luger","Godly",23,28,1,2,"Stable",{change:-2,changePct:-8.0}],
+  ["Amerilaser","Godly",22,25,1,2,"Stable",{change:-1,changePct:-4.3}],
+  ["Laser","Godly",22,25,1,2,"Stable",{change:-1,changePct:-4.3}],
+  ["Hallowgun","Godly",20,25,1,2,"Stable",{change:-2,changePct:-9.1}],
+  ["Shark","Godly",20,23,1,2,"Stable",{change:-3,changePct:-13.0}],
+  ["Icebeam","Godly",18,23,1,2,"Stable",{change:-2,changePct:-10.0}],
+  ["Plasmabeam","Godly",18,20,1,2,"Stable",{change:-4,changePct:-18.2}],
+  ["Swirly Gun","Godly",18,23,1,2,"Stable",{change:-2,changePct:-10.0}],
+  ["Battleaxe II","Godly",17,18,1,2,"Stable",{change:-1,changePct:-5.6}],
+  ["Blaster","Godly",17,20,1,2,"Stable",{change:-1,changePct:-5.6}],
+  ["Ginger Luger","Godly",17,20,1,2,"Stable",{change:-3,changePct:-15.0}],
+  ["Pixel","Godly",17,20,1,2,"Stable",{change:-3,changePct:-15.0}],
+  ["Gemstone","Godly",15,15,1,2,"Stable",{change:-2,changePct:-11.8}],
+  ["Iceflake","Godly",15,20,1,2,"Stable",{change:-2,changePct:-11.8}],
+  ["Old Glory","Godly",15,20,1,2,"Stable",{change:-2,changePct:-11.8}],
+  ["Plasmablade","Godly",15,18,1,2,"Stable",{change:-2,changePct:-11.8}],
+  ["Slasher","Godly",15,20,1,2,"Stable",{change:-2,changePct:-11.8}],
+  ["Vampire's Edge","Godly",15,15,1,2,"Stable",{change:0}],
+  ["Cookiecane","Godly",13,17,1,2,"Stable",{change:-2,changePct:-13.3}],
+  ["Deathshard","Godly",13,15,1,2,"Stable",{change:-2,changePct:-13.3}],
+  ["Eternalcane","Godly",13,17,1,2,"Stable",{change:-2,changePct:-13.3}],
+  ["Gingerblade","Godly",13,15,1,2,"Stable",{change:-2,changePct:-13.3}],
+  ["Jinglegun","Godly",13,18,1,2,"Stable",{change:-2,changePct:-13.3}],
+  ["Lugercane","Godly",13,18,1,2,"Stable",{change:-2,changePct:-13.3}],
+  ["Minty","Godly",13,17,1,2,"Stable",{change:-2,changePct:-13.3}],
+  ["Nebula","Godly",13,15,1,2,"Stable",{change:-2,changePct:-13.3}],
+  ["Virtual","Godly",13,18,1,2,"Stable",{change:-2,changePct:-13.3}],
+  ["Battleaxe","Godly",12,13,1,2,"Stable",{change:0}],
+  ["Gingermint","Godly",12,17,1,2,"Stable",{change:-1,changePct:-7.7}],
+  ["Swirly Blade","Godly",12,13,1,2,"Stable",{change:-1,changePct:-7.7}],
+  ["Chill","Godly",10,12,1,2,"Stable",{change:-2,changePct:-16.7}],
+  ["Clockwork","Godly",10,12,1,2,"Stable",{change:-2,changePct:-16.7}],
+  ["Fang","Godly",10,12,1,2,"Stable",{change:-2,changePct:-16.7}],
+  ["Frostsaber","Godly",10,10,1,2,"Stable",{change:0}],
+  ["Heat","Godly",10,12,1,2,"Stable",{change:-2,changePct:-16.7}],
+  ["Spider","Godly",10,12,1,2,"Stable",{change:-2,changePct:-16.7}],
+  ["Tides","Godly",10,12,1,2,"Stable",{change:-2,changePct:-16.7}],
+  ["Bioblade","Godly",8,10,1,2,"Stable",{change:-2,changePct:-20.0}],
+  ["Eternal III","Godly",8,10,1,2,"Stable",{change:-2,changePct:-20.0}],
+  ["Eternal IV","Godly",8,10,1,2,"Stable",{change:-2,changePct:-20.0}],
+  ["Hallow's Blade","Godly",8,7,1,2,"Stable",{change:0}],
+  ["Hallow's Edge","Godly",8,9,1,2,"Stable",{change:0}],
+  ["Handsaw","Godly",8,9,1,2,"Stable",{change:0}],
+  ["Boneblade","Godly",7,8,1,2,"Stable",{change:0}],
+  ["Eternal","Godly",7,10,1,2,"Stable",{change:-1,changePct:-12.5}],
+  ["Eternal II","Godly",7,8,1,2,"Stable",{change:-1,changePct:-12.5}],
+  ["Frostbite","Godly",7,7,1,2,"Stable",{change:0}],
+  ["Ghostblade","Godly",7,8,1,2,"Stable",{change:0}],
+  ["Ice Dragon","Godly",7,7,1,2,"Stable",{change:-1,changePct:-12.5}],
+  ["Ice Shard","Godly",7,9,1,2,"Stable",{change:-1,changePct:-12.5}],
+  ["Prismatic","Godly",7,5,1,2,"Stable",{change:0}],
+  ["Pumpking","Godly",7,8,1,2,"Stable",{change:-1,changePct:-12.5}],
+  ["Saw","Godly",7,8,1,2,"Stable",{change:0}],
+  ["Xmas","Godly",7,10,1,2,"Stable",{change:-1,changePct:-12.5}],
+  ["Eggblade","Godly",5,5,1,2,"Stable",{change:0}],
+  ["Flames","Godly",5,7,1,2,"Stable",{change:-2,changePct:-28.6}],
+  ["Snowflake","Godly",5,5,1,2,"Stable",{change:0}],
+  ["Winter's Edge","Godly",5,7,1,2,"Stable",{change:-2,changePct:-28.6}],
+  ["Peppermint","Godly",4,4,1,2,"Stable",{change:0}],
+  ["Cookieblade","Godly",3,4,1,2,"Stable",{change:0}],
+  ["Seer","Godly",3,3,1,1,"Stable",{change:0}],
+  ["Blue Seer","Godly",3,3,1,1,"Stable",{change:0}],
+  ["Purple Seer","Godly",3,3,1,1,"Stable",{change:0}],
+  ["Red Seer","Godly",3,3,1,1,"Stable",{change:0}],
+  ["Orange Seer","Godly",2,2,1,1,"Stable",{change:0}],
+  ["Yellow Seer","Godly",2,2,1,1,"Stable",{change:0}],
 
-  // ---------------- CHROMAS ----------------
-  ["Chroma Traveler's Gun","Chroma",225000,230000,9,10,"Stable",{aliases:["ctg"]}],
-  ["Chroma Evergun","Chroma",76000,74000,8,8,"Stable",{aliases:["cevergun"]}],["Chroma Evergreen","Chroma",60000,60000,7,7,"Stable",{aliases:["cevergreen"]}],
-  ["Chroma Bauble","Chroma",38000,38500,7,6,"Stable",{aliases:["cbaub"]}],["Chroma Vampire's Gun","Chroma",35000,34500,7,6,"Stable",{aliases:["cvg"]}],
-  ["Chroma Constellation","Chroma",33000,35000,7,6,"Stable",{aliases:["cconst"]}],["Chroma Alienbeam","Chroma",30000,30000,7,6,"Stable",{aliases:["cab"]}],
-  ["Chroma Raygun","Chroma",14500,14500,6,5,"Stable",{aliases:["crg"]}],["Chroma Sunrise","Chroma",11250,11000,6,5,"Stable",{aliases:["csr"]}],
-  ["Chroma Snowcannon","Chroma",8500,8650,6,5,"Stable"],["Chroma Blizzard","Chroma",8000,7800,5,5,"Stable",{aliases:["cbz"]}],
-  ["Chroma Icecream","Chroma",6500,null,8,8,"Overpaid For",{range:[6500,7500],aliases:["cic","chroma ice cream"]}],
-  ["Chroma Sunset","Chroma",6500,6500,5,5,"Stable",{aliases:["css"]}],["Chroma Snow Dagger","Chroma",5750,5750,5,5,"Stable"],
-  ["Chroma Heart Wand","Chroma",4750,4750,5,4,"Stable",{aliases:["chw"]}],["Chroma Snowstorm","Chroma",4250,4250,5,5,"Stable"],
-  ["Chroma Watergun","Chroma",3400,3400,5,5,"Stable",{aliases:["cwg"]}],["Chroma Treat","Chroma",2800,4800,5,4,"Underpaid For",{range:[2600,2800]}],
-  ["Chroma Sweet","Chroma",2400,2800,5,4,"Underpaid For",{range:[2200,2400]}],["Chroma Ornament","Chroma",2000,2450,5,4,"Underpaid For",{range:[1900,2000],aliases:["cor"]}],
-  ["Chroma Darkbringer","Chroma",75,75,1,2,"Stable",{aliases:["cdb","c dark"]}],["Chroma Lightbringer","Chroma",70,70,1,2,"Stable",{aliases:["clb"]}],
-  ["Chroma Luger","Chroma",55,53,1,2,"Stable"],["Chroma Candleflame","Chroma",45,45,1,2,"Stable",{aliases:["ccf"]}],
-  ["Chroma Elderwood Blade","Chroma",45,45,1,2,"Stable",{aliases:["ceb"]}],["Chroma Swirly Gun","Chroma",45,43,1,2,"Stable",{aliases:["csg"]}],
-  ["Chroma Laser","Chroma",42,45,1,2,"Stable"],["Chroma Slasher","Chroma",38,40,1,2,"Stable"],
-  ["Chroma Deathshard","Chroma",38,40,1,2,"Stable",{aliases:["cds"]}],["Chroma Cookiecane","Chroma",38,40,1,2,"Stable",{aliases:["ccc"]}],
-  ["Chroma Shark","Chroma",35,38,1,2,"Stable"],["Chroma Fang","Chroma",35,35,1,2,"Stable"],
-  ["Chroma Heat","Chroma",32,33,1,2,"Stable"],["Chroma Gemstone","Chroma",32,33,1,2,"Stable",{aliases:["c gem"]}],
-  ["Chroma Gingerblade","Chroma",32,32,1,2,"Stable",{aliases:["cgb"]}],["Chroma Seer","Chroma",32,32,1,2,"Stable"],
-  ["Chroma Saw","Chroma",30,32,1,2,"Stable"],["Chroma Tides","Chroma",30,30,1,2,"Stable"],
-  ["Chroma Boneblade","Chroma",27,25,1,2,"Stable",{aliases:["cbb"]}],
+  // ---------------- CHROMAS (Supreme sync 2026-07-25) ----------------
+  ["Chroma Traveler's Gun","Chroma",220000,230000,9,10,"Stable",{change:-5000,changePct:-2.2,aliases:["ctg"]}],
+  ["Chroma Evergun","Chroma",75000,74000,8,8,"Stable",{change:-1000,changePct:-1.3,aliases:["cevergun"]}],
+  ["Chroma Evergreen","Chroma",51000,60000,7,7,"Underpaid For",{range:[49000,51000],change:-1000,changePct:-1.9,aliases:["cevergreen"]}],
+  ["Chroma Bauble","Chroma",34000,38500,7,6,"Stable",{change:-1000,changePct:-2.9,aliases:["cbaub"]}],
+  ["Chroma Vampire's Gun","Chroma",29000,34500,7,6,"Stable",{change:-1000,changePct:-3.3,aliases:["cvg"]}],
+  ["Chroma Constellation","Chroma",27000,35000,7,6,"Stable",{change:500,changePct:1.9,aliases:["cconst"]}],
+  ["Chroma Alienbeam","Chroma",24000,30000,6,6,"Stable",{change:-1000,changePct:-4.0,aliases:["cab"]}],
+  ["Chroma Sunrise","Chroma",13250,11000,6,5,"Stable",{change:250,changePct:1.9,aliases:["csr"]}],
+  ["Chroma Raygun","Chroma",12250,14500,6,5,"Underpaid For",{range:[12000,12250],change:-250,changePct:-2.0,aliases:["crg"]}],
+  ["Chroma Snowcannon","Chroma",8500,8650,6,5,"Stable",{change:250,changePct:3.0}],
+  ["Chroma Sunset","Chroma",8250,6500,6,5,"Stable",{change:250,changePct:3.1,aliases:["css"]}],
+  ["Chroma Blizzard","Chroma",8000,7800,5,5,"Stable",{change:-500,changePct:-5.9,aliases:["cbz"]}],
+  ["Chroma Icecream","Chroma",6500,null,8,8,"Overpaid For",{range:[6500,7500],change:0,aliases:["cic","chroma ice cream"]}],
+  ["Chroma Snow Dagger","Chroma",4250,5750,5,5,"Stable",{change:-250,changePct:-5.6}],
+  ["Chroma Snowstorm","Chroma",4250,4250,5,5,"Stable",{change:50,changePct:1.2}],
+  ["Chroma Heart Wand","Chroma",4250,4750,5,4,"Stable",{change:-250,changePct:-5.6,aliases:["chw"]}],
+  ["Chroma Watergun","Chroma",3400,3400,5,5,"Stable",{change:-50,changePct:-1.4,aliases:["cwg"]}],
+  ["Chroma Beachy","Chroma",3250,null,7,6,"Overpaid For",{range:[3250,3750],change:0}],
+  ["Chroma Sands","Chroma",3250,null,7,6,"Overpaid For",{range:[3250,3750],change:0}],
+  ["Chroma Treat","Chroma",2600,4800,5,4,"Fluctuating",{range:[2550,2650],change:50,changePct:2.0}],
+  ["Chroma Sweet","Chroma",2200,2800,5,4,"Fluctuating",{range:[2150,2250],change:-50,changePct:-2.2}],
+  ["Chroma Ornament","Chroma",1800,2450,5,4,"Stable",{change:-100,changePct:-5.3,aliases:["cor"]}],
+  ["Chroma Darkbringer","Chroma",65,75,1,2,"Stable",{change:-5,changePct:-7.1,aliases:["cdb","c dark"]}],
+  ["Chroma Lightbringer","Chroma",60,70,1,2,"Stable",{change:-5,changePct:-7.7,aliases:["clb"]}],
+  ["Chroma Luger","Chroma",50,53,1,2,"Stable",{change:-2,changePct:-3.8}],
+  ["Chroma Candleflame","Chroma",40,45,1,2,"Stable",{change:-2,changePct:-4.8,aliases:["ccf"]}],
+  ["Chroma Laser","Chroma",40,45,1,2,"Stable",{change:-2,changePct:-4.8}],
+  ["Chroma Swirly Gun","Chroma",38,43,1,2,"Stable",{change:-2,changePct:-5.0,aliases:["csg"]}],
+  ["Chroma Elderwood Blade","Chroma",37,45,1,2,"Stable",{change:-1,changePct:-2.6,aliases:["ceb"]}],
+  ["Chroma Deathshard","Chroma",35,40,1,2,"Stable",{change:-3,changePct:-7.9,aliases:["cds"]}],
+  ["Chroma Cookiecane","Chroma",32,40,1,2,"Stable",{change:-1,changePct:-3.0,aliases:["ccc"]}],
+  ["Chroma Fang","Chroma",32,35,1,2,"Stable",{change:-3,changePct:-8.6}],
+  ["Chroma Gemstone","Chroma",32,33,1,2,"Stable",{change:-3,changePct:-8.6,aliases:["c gem"]}],
+  ["Chroma Shark","Chroma",32,38,1,2,"Stable",{change:-3,changePct:-8.6}],
+  ["Chroma Slasher","Chroma",32,40,1,2,"Stable",{change:-1,changePct:-3.0}],
+  ["Chroma Heat","Chroma",28,33,1,2,"Stable",{change:-2,changePct:-6.7}],
+  ["Chroma Seer","Chroma",28,32,1,2,"Stable",{change:-2,changePct:-6.7}],
+  ["Chroma Gingerblade","Chroma",27,32,1,2,"Stable",{change:-1,changePct:-3.6,aliases:["cgb"]}],
+  ["Chroma Tides","Chroma",27,30,1,2,"Stable",{change:-1,changePct:-3.6}],
+  ["Chroma Saw","Chroma",23,32,1,2,"Stable",{change:-2,changePct:-8.0}],
+  ["Chroma Boneblade","Chroma",22,25,1,2,"Stable",{change:-3,changePct:-12.0,aliases:["cbb"]}],
 
-  // ---------------- ANCIENTS ----------------
+  // ---------------- ANCIENTS (Supreme sync 2026-07-26) ----------------
   ["Nik's Scythe","Ancient",null,null,11,11,"Overpaid For",{placeholder:true,aliases:["niks","nik scythe"]}],
-  ["Gingerscope","Ancient",17000,16750,6,4,"Stable"],["Traveler's Axe","Ancient",8400,8500,6,5,"Stable",{aliases:["trav axe"]}],
-  ["Celestial","Ancient",1850,1850,5,4,"Doing Well",{range:[1850,1900],aliases:["celes"]}],["Vampire's Axe","Ancient",1225,1200,5,4,"Stable",{aliases:["vamp axe"]}],
-  ["Harvester","Ancient",250,260,3,2,"Stable",{aliases:["harv"]}],["Icepiercer","Ancient",160,175,3,2,"Stable"],
-  ["Icebreaker","Ancient",68,75,1,2,"Stable"],["Batwing","Ancient",45,47,1,2,"Stable"],
-  ["Elderwood Scythe","Ancient",42,45,1,2,"Stable"],["Swirly Axe","Ancient",42,43,1,2,"Stable"],
-  ["Hallowscythe","Ancient",32,35,1,2,"Stable"],["Logchopper","Ancient",18,20,1,2,"Stable"],
-  ["Icewing","Ancient",15,18,2,2,"Fluctuating",{range:[10,20]}],
+  ["Gingerscope","Ancient",17750,16750,6,4,"Stable",{change:250,changePct:1.4}],
+  ["Traveler's Axe","Ancient",8100,8500,5,5,"Stable",{change:-100,changePct:-1.2,aliases:["trav axe"]}],
+  ["Celestial","Ancient",2075,1850,6,4,"Stable",{change:25,changePct:1.2,aliases:["celes"]}],
+  ["Vampire's Axe","Ancient",1225,1200,5,4,"Stable",{change:25,changePct:2.1,aliases:["vamp axe"]}],
+  ["Harvester","Ancient",250,260,3,2,"Stable",{change:-10,changePct:-3.8,aliases:["harv"]}],
+  ["Icepiercer","Ancient",160,175,3,2,"Stable",{change:-10,changePct:-5.9}],
+  ["Icebreaker","Ancient",65,75,1,2,"Stable",{change:-2,changePct:-3.0}],
+  ["Batwing","Ancient",42,47,1,2,"Stable",{change:-1,changePct:-2.3}],
+  ["Elderwood Scythe","Ancient",38,45,1,2,"Stable",{change:-2,changePct:-5.0}],
+  ["Swirly Axe","Ancient",38,43,1,2,"Stable",{change:-2,changePct:-5.0}],
+  ["Hallowscythe","Ancient",30,35,1,2,"Stable",{change:-2,changePct:-6.3}],
+  ["Logchopper","Ancient",18,20,1,2,"Stable",{change:-2,changePct:-10.0}],
+  ["Icewing","Ancient",13,18,2,2,"Stable",{change:-2,changePct:-13.3}],
 
   // ---------------- LEGENDARIES ----------------
   ["Latte (Gun)","Legendary",135,155,3,3,"Stable"],["Latte (Knife)","Legendary",135,155,3,3,"Stable"],
@@ -717,7 +810,7 @@ const RAW = [
   ["Aurora (Gun)","Legendary",45,55,3,4,"Stable"],["Vampire (Gun)","Legendary",45,55,3,4,"Stable"],
 
   // ---------------- UNIQUES ----------------
-  ["Corrupt","Unique",450,475,4,3,"Stable"],["slouse's Clown","Unique",null,null,11,11,null,{placeholder:true}],
+  ["Corrupt","Unique",470,475,4,3,"Stable"],["slouse's Clown","Unique",null,null,11,11,null,{placeholder:true}],
 
   // ---------------- RARE / UNCOMMON / COMMON ----------------
   ["Cane Knife (2018)","Rare",900,825,4,5,"Stable",{range:[850,900]}],["Dungeon","Rare",85,90,3,5,"Stable"],
@@ -730,52 +823,73 @@ const RAW = [
   ["Phaser","Vintage",5,6,1,2,"Stable"],["Cowboy","Vintage",4,4,1,2,"Stable"],["Golden","Vintage",4,5,1,2,"Stable"],
   ["Splitter","Vintage",3,3,1,2,"Stable"],
 
-  // ---------------- SETS (Supreme; MM2 mostly N/A — site rebuilding) ----------------
-  ["Chroma Ever Set","Set",136000,null,8,8,"Stable"],["Chroma Alien Set","Set",44500,null,7,6,"Stable"],
-  ["Chroma Bauble Set","Set",39900,null,7,6,"Underpaid For",{range:[39800,39900]}],["Chroma Sun Set","Set",17750,null,6,5,"Stable"],
-  ["Chroma Snow Set","Set",14000,null,6,5,"Stable"],["Chroma Blizzard Set","Set",12250,null,5,5,"Stable"],
-  ["Chroma Beach Set","Set",6500,null,7,6,"Overpaid For",{range:[6500,7500],aliases:["cbeach","chroma beach"]}],
-  ["Chroma Sweet Set","Set",5000,null,5,4,"Fluctuating",{range:[4800,5200]}],
-  ["Traveler's Set","Set",14700,null,6,5,"Stable"],["Ever Set","Set",5725,null,5,4,"Stable"],
-  ["Celestial Set","Set",4475,null,5,4,"Doing Well",{range:[4475,4525]}],["Alien Set","Set",3150,null,5,4,"Stable"],
-  ["Dark Set","Set",2980,null,6,4,"Stable"],["Vampire's Set","Set",2925,null,5,4,"Stable"],
-  ["Sakura Set","Set",2520,null,6,4,"Stable"],["Sun Set","Set",1600,null,5,4,"Stable"],
-  ["Soul Set","Set",990,null,5,3,"Stable"],["Bauble Set","Set",930,null,5,4,"Stable"],
-  ["Snow Set","Set",930,null,4,3,"Stable"],["Bloom Set","Set",810,null,5,3,"Stable"],
-  ["Rainbow Set","Set",750,null,5,3,"Overpaid For",{range:[750,810]}],["Beach Set","Set",600,null,4,4,"Doing Well",{range:[600,700]}],["Ocean Set","Set",555,null,4,3,"Stable"],
-  ["Xeno Set","Set",540,null,4,3,"Stable"],["Flowerwood Set","Set",515,null,4,3,"Stable"],
-  ["Corrupt Set","Set",495,null,4,3,"Stable"],["Blizzard Set","Set",430,null,4,3,"Doing Well",{range:[430,460]}],
-  ["Bow Set","Set",410,null,3,2,"Stable"],["Pumpkin Set (2018)","Set",410,null,3,4,"Stable"],
-  ["Borealis Set","Set",245,null,3,3,"Doing Well",{range:[245,265]}],["Pearl Set","Set",195,null,2,3,"Stable"],
-  ["Bat Set","Set",158,null,2,2,"Stable"],["Latte Set","Set",300,null,4,3,"Overpaid For",{range:[300,350]}],
-  ["Bats Set","Set",146,null,3,5,"Stable"],["Sparkle Set","Set",127,175,2,3,"Stable"],
-  ["Spectral Set","Set",68,null,3,4,"Doing Well",{range:[68,78]}],["Traveler Set (Legendary)","Set",68,null,3,4,"Doing Well",{range:[68,78]}],
-  ["Aurora Set (Legendary)","Set",58,null,3,4,"Doing Well",{range:[58,68]}],["Vampire Set (Legendary)","Set",58,null,3,4,"Doing Well",{range:[58,68]}],
-  ["Dark Set (Rare)","Set",51,null,3,4,"Doing Well",{range:[51,61]}],["Eternal Set","Set",51,null,1,2,"Stable"],
-  ["Full Chroma Set","Set",615,null,1,3,"Underpaid For",{range:[600,615]}],["Full Elderwood Set","Set",118,null,1,2,"Stable"],
-  ["Pearl Set ","Set",null,null,null,null,null,{placeholder:true}], // guard against accidental dup id (removed below)
-  ["Colored Seer Set","Set",16,null,1,1,"Stable"],["Vintage Set","Set",61,null,1,2,"Stable"],
+  // ---------------- SETS (Supreme sync 2026-07-25; MM2Values sets page still rebuilding — mm2 null) ----------------
+  ["Chroma Ever Set","Set",126000,null,8,8,"Underpaid For",{range:[124000,126000],change:-1000,changePct:-0.8}],
+  ["Chroma Alien Set","Set",36250,null,6,6,"Underpaid For",{range:[36000,36250],change:-250,changePct:-0.7}],
+  ["Chroma Bauble Set","Set",35800,null,7,6,"Stable",{change:-1000,changePct:-2.7}],
+  ["Chroma Sun Set","Set",21500,null,6,5,"Stable",{change:500,changePct:2.4}],
+  ["Chroma Snow Set","Set",12750,null,6,5,"Stable",{change:-250,changePct:-1.9}],
+  ["Chroma Blizzard Set","Set",12250,null,5,5,"Stable",{change:50,changePct:0.4}],
+  ["Chroma Beach Set","Set",6500,null,7,6,"Overpaid For",{range:[6500,7500],change:0,aliases:["cbeach","chroma beach"]}],
+  ["Chroma Sweet Set","Set",4800,null,5,4,"Fluctuating",{range:[4700,4900],change:50,changePct:1.1}],
+  ["Traveler's Set","Set",13600,null,6,5,"Doing Well",{range:[13600,13700],change:100,changePct:0.7}],
+  ["Ever Set","Set",5950,null,5,4,"Stable",{change:-50,changePct:-0.8}],
+  ["Celestial Set","Set",4750,null,6,4,"Stable",{change:25,changePct:0.5}],
+  ["Alien Set","Set",3250,null,6,4,"Stable",{change:-25,changePct:-0.8}],
+  ["Dark Set","Set",3225,null,6,4,"Stable",{change:20,changePct:0.6}],
+  ["Vampire's Set","Set",3150,null,6,4,"Doing Well",{range:[3150,3175],change:25,changePct:0.8}],
+  ["Sakura Set","Set",2580,null,6,4,"Stable",{change:10,changePct:0.4}],
+  ["Sun Set","Set",1750,null,5,4,"Stable",{change:50,changePct:2.9}],
+  ["Soul Set","Set",1170,null,5,3,"Doing Well",{range:[1170,1210],change:20,changePct:1.7}],
+  ["Snow Set","Set",1105,null,5,3,"Stable",{change:-5,changePct:-0.5}],
+  ["Bauble Set","Set",852,null,5,4,"Fluctuating",{range:[850,853],change:-25,changePct:-2.9}],
+  ["Rainbow Set","Set",830,null,5,3,"Stable",{change:10,changePct:1.2}],
+  ["Bloom Set","Set",810,null,5,3,"Stable",{change:20,changePct:2.5}],
+  ["Beach Set","Set",600,null,4,4,"Doing Well",{range:[600,700],change:-150,changePct:-20.0}],
+  ["Ocean Set","Set",555,null,4,3,"Stable",{change:-10,changePct:-1.8}],
+  ["Xeno Set","Set",550,null,4,3,"Stable",{change:10,changePct:1.9}],
+  ["Flowerwood Set","Set",525,null,4,3,"Stable",{change:10,changePct:1.9}],
+  ["Blizzard Set","Set",520,null,4,3,"Stable",{change:10,changePct:2.0}],
+  ["Corrupt Set","Set",510,null,4,3,"Stable",{change:-2,changePct:-0.4}],
+  ["Bow Set","Set",410,null,3,2,"Stable",{change:-20,changePct:-4.7}],
+  ["Pumpkin Set (2018)","Set",404,null,3,4,"Underpaid For",{range:[402,404],change:-1,changePct:-0.2}],
+  ["Borealis Set","Set",295,null,3,3,"Stable",{change:-10,changePct:-3.3}],
+  ["Pearl Set","Set",185,null,2,3,"Stable",{change:-10,changePct:-5.1}],
+  ["Bat Set","Set",153,null,2,2,"Fluctuating",{range:[148,158],change:-2,changePct:-1.3}],
+  ["Latte Set","Set",310,null,3,3,"Stable",{change:-10,changePct:-3.1}],
+  ["Bats Set","Set",191,null,3,5,"Stable",{change:5,changePct:2.7}],
+  ["Spectral Set","Set",63,null,3,4,"Stable",{change:-5,changePct:-7.4}],
+  ["Traveler Set (Legendary)","Set",63,null,3,4,"Stable",{change:-5,changePct:-7.4}],
+  ["Aurora Set (Legendary)","Set",58,null,3,4,"Stable",{change:-5,changePct:-7.9}],
+  ["Vampire Set (Legendary)","Set",58,null,3,4,"Stable",{change:-5,changePct:-7.9}],
+  ["Dark Set (Rare)","Set",76,null,3,4,"Stable",{change:-5,changePct:-6.2}],
+  ["Eternal Set","Set",43,null,1,2,"Stable",{change:-8,changePct:-15.7}],
+  ["Full Chroma Set","Set",555,null,1,2,"Underpaid For",{change:-15,changePct:-2.6}],
+  ["Full Elderwood Set","Set",104,null,1,2,"Stable",{change:-6,changePct:-5.5}],
+  ["Colored Seer Set","Set",16,null,1,1,"Stable",{change:-6,changePct:-27.3}],
+  ["Vintage Set","Set",59,null,1,2,"Stable",{change:-2,changePct:-3.3}],
+  ["Sparkle Set","Set",127,175,2,3,"Stable",{change:2,changePct:1.6}],
 ];
-// drop the guard row (kept ids unique during authoring)
-RAW.splice(RAW.findIndex(r=>r[0]==="Pearl Set "),1);
 
 /* ---------------- build indices ---------------- */
 const slug = s => s.toLowerCase().replace(/[^a-z0-9]+/g,"-").replace(/(^-|-$)/g,"");
 const norm = s => s.toLowerCase().replace(/[^a-z0-9]/g,"");
 // Normalize either an embedded tuple or a values.json object into one canonical item.
 function rowToItem(r){ const [name,category,supreme=null,mm2=null,demand=null,rarity=null,trend=null,opts={}]=r;
-  return {id:slug(name),name,category,supreme,mm2,demand,rarity,trend,placeholder:!!opts.placeholder,range:opts.range||null,aliases:opts.aliases||[]}; }
+  return {id:slug(name),name,category,supreme,mm2,demand,rarity,trend,change:Number.isFinite(opts.change)?opts.change:null,changePct:Number.isFinite(opts.changePct)?opts.changePct:null,placeholder:!!opts.placeholder,range:opts.range||null,aliases:opts.aliases||[]}; }
 function jsonToItem(o){ return {id:o.id||slug(o.name),name:o.name,category:o.category,
   supreme:o.supreme==null?null:o.supreme, mm2:o.mm2==null?null:o.mm2,
   demand:o.demand==null?null:o.demand, rarity:o.rarity==null?null:o.rarity, trend:o.trend||null,
+  change:Number.isFinite(o.change)?o.change:null, changePct:Number.isFinite(o.changePct)?o.changePct:null,
   placeholder:!!o.placeholder, range:Array.isArray(o.range)?o.range:null, aliases:Array.isArray(o.aliases)?o.aliases:[]}; }
 const EMBEDDED = RAW.map(rowToItem);            // offline source of truth (always present)
 const POPULAR_NAMES=["Chroma Traveler's Gun","Traveler's Gun","Chroma Ever Set","Celestial","Corrupt","Sparkle Set","Chroma Evergun","Vampire's Gun","Constellation","Gingerscope","Harvester"];
 
 let _dataRev=0;                                // bumped on every buildData() so the rec cache invalidates (declared here to avoid a TDZ crash — buildData runs at boot, long before the rec code below)
+let _histCache=new Map();                      // cleaned history-series cache (declared early for the same TDZ reason)
 let ALL=[], BY_ID={}, HAY={}, POPULAR=[];
 let DATA_DATE="Jun 17, 2026", DATA_SRC="embedded", DATA_LIVE=false;
-function buildData(items){ _dataRev++;
+function buildData(items){ _dataRev++; _histCache=new Map();
   // Dedupe by id: a malformed feed (two rows sharing a slug, or a blank id) would otherwise
   // vanish from BY_ID while still inflating ALL — keep the first, count and warn on the rest.
   const seen=new Set(), uniq=[]; let dropped=0;
@@ -1080,17 +1194,46 @@ const clamp01=x=>Math.max(0,Math.min(1,x));
 const clamp100=x=>Math.max(0,Math.min(100,x));
 function stabScore01(it){ const s=it&&it.trend?STAB_SCORE[it.trend]:null; return s==null?(3/9):(s/9); }
 
-// history.json-derived metrics for one item id: volatility (CV), momentum (slope), drawdown
-function histMetrics(id){
+/* Cleaned, memoized value-history access. Every consumer (metrics, sparklines, movers,
+   portfolio signals) reads through histSeries(), so one scale glitch in history.json —
+   e.g. "126K" recorded as 126 — can never draw a cliff or fake a falling trend. */
+function histSeries(id){
   if(!HISTORY||!HISTORY.values) return null;
-  const raw=HISTORY.values[id]; if(!Array.isArray(raw)) return null;
-  const pts=raw.filter(v=>v!=null&&isFinite(v)); if(pts.length<3) return null;
-  const n=pts.length, mean=pts.reduce((a,b)=>a+b,0)/n; if(mean<=0) return null;
-  const variance=pts.reduce((a,b)=>a+(b-mean)*(b-mean),0)/n, cv=Math.sqrt(variance)/mean;
-  let sx=0,sy=0,sxy=0,sxx=0; for(let i=0;i<n;i++){ sx+=i; sy+=pts[i]; sxy+=i*pts[i]; sxx+=i*i; }
-  const denom=(n*sxx-sx*sx)||1, slope=(n*sxy-sx*sy)/denom, normSlope=(slope*(n-1))/mean;
-  let peak=pts[0], mdd=0; for(const v of pts){ if(v>peak)peak=v; const dd=(peak-v)/peak; if(dd>mdd)mdd=dd; }
-  return {n,cv,normSlope,mdd};
+  const hit=_histCache.get(id); if(hit) return hit.series;
+  let series=null;
+  const raw=HISTORY.values[id];
+  if(Array.isArray(raw)){
+    let pts=raw.filter(v=>typeof v==="number"&&isFinite(v)&&v>0);
+    if(pts.length>=3){
+      const sorted=[...pts].sort((a,b)=>a-b), med=sorted[sorted.length>>1];
+      pts=pts.filter(v=>v/med<=4&&med/v<=4);                     // drop >4× scale artifacts
+      const it=BY_ID[id], cur=it?(it.supreme??it.mm2):null;      // suppress cross-scale series entirely
+      if(pts.length>=3 && !(cur>0&&(med/cur>4||cur/med>4))) series=pts;
+    }
+  }
+  _histCache.set(id,{series});
+  return series;
+}
+// history-derived metrics: volatility (CV), robust momentum (Theil–Sen slope), drawdown
+function histMetrics(id){
+  const hit=_histCache.get(id);
+  if(hit&&"metrics" in hit) return hit.metrics;
+  const pts=histSeries(id);
+  let m=null;
+  if(pts){
+    const n=pts.length, mean=pts.reduce((a,b)=>a+b,0)/n;
+    if(mean>0){
+      const variance=pts.reduce((a,b)=>a+(b-mean)*(b-mean),0)/n, cv=Math.sqrt(variance)/mean;
+      const slopes=[];                                           // Theil–Sen: median of pairwise slopes
+      for(let i=0;i<n;i++) for(let j=i+1;j<n;j++) slopes.push((pts[j]-pts[i])/(j-i));
+      slopes.sort((a,b)=>a-b);
+      const normSlope=(slopes[slopes.length>>1]*(n-1))/mean;
+      let peak=pts[0], mdd=0; for(const v of pts){ if(v>peak)peak=v; const dd=(peak-v)/peak; if(dd>mdd)mdd=dd; }
+      m={n,cv,normSlope,mdd};
+    }
+  }
+  _histCache.set(id,{series:pts,metrics:m});
+  return m;
 }
 function itemTrend01(it){ const label=stabScore01(it), m=histMetrics(it.id);
   if(!m) return label;
@@ -1110,6 +1253,36 @@ function dominantItem(items){ let best=null,bv=-1;
 function recTrendWord(it){ const m=histMetrics(it.id);
   if(m){ if(m.normSlope<=-0.08) return "falling"; if(m.normSlope>=0.08) return "rising"; if(m.cv>=0.25) return "volatile"; }
   const s=it&&it.trend?TREND_SENT[it.trend]:null; return s==="down"?"falling":s==="up"?"rising":s==="warn"?"volatile":"stable"; }
+
+// ---- value DIRECTION (rising/falling), distinct from stability (over/under-paid) ----
+// Priority: recorded-history slope (live trend) → Supreme's last-update change → unknown.
+// This is the single source for the ▲/▼ arrow shown in item rows.
+const DIR_SLOPE=0.02;   // |normalized slope| above which recent history counts as a move
+function itemDirection(it){
+  if(!it) return null;
+  // Explicit "Last Change in Value" from the feed is authoritative — it mirrors Supreme's own
+  // per-update delta exactly, so it takes priority over any slope inferred from history.
+  if(Number.isFinite(it.change)){
+    if(it.change===0) return {dir:"flat",src:"change",delta:0,pct:Number.isFinite(it.changePct)?it.changePct:null};
+    return {dir:it.change>0?"up":"down",src:"change",delta:it.change,pct:Number.isFinite(it.changePct)?it.changePct:null};
+  }
+  // Fallback: infer direction from the recent history slope only when no explicit change exists.
+  const m=histMetrics(it.id);
+  if(m){ if(m.normSlope>=DIR_SLOPE) return {dir:"up",src:"history"};
+         if(m.normSlope<=-DIR_SLOPE) return {dir:"down",src:"history"};
+         return {dir:"flat",src:"history"}; }
+  return null;   // no signal yet (brand-new item: no change field and no history)
+}
+// Compact ▲/▼ chip; renders nothing when flat/unknown so stable items stay uncluttered.
+function dirChip(it,cls){
+  const d=itemDirection(it); if(!d||d.dir==="flat") return "";
+  const up=d.dir==="up", g=up?"\u25b2":"\u25bc", c=up?"#34d399":"#fb7185";
+  let tip=up?"Rising":"Falling";
+  if(d.src==="change"&&Number.isFinite(d.delta)){
+    tip+=` ${d.delta>0?"+":"\u2212"}${fmt(Math.abs(d.delta))}`+(d.pct!=null?` (${d.pct>0?"+":"\u2212"}${Math.abs(d.pct)}%)`:"")+" since last update";
+  } else { tip+=" over recent history"; }
+  return `<span class="${cls||"dir"}" style="color:${c}" title="${esc(tip)}">${g}</span>`;
+}
 
 function buildRecReasons(d){
   const out=[], a=Math.abs(d.pct), rn=d.domR?d.domR.name:"the item you'd receive";
@@ -1262,7 +1435,7 @@ function dropdownHTML(side){
   const matches=searchItems(side), q=state["q_"+side]||"", active=state["active_"+side];
   if(!matches.length) return `<div class="dropdown" id="dd-${side}"><div class="dd-empty">${icon("alert",14,"amber")} No item matches “${esc(q)}”. Try a different spelling, an alias (e.g. CTG), or pick a category.</div></div>`;
   const rows=matches.map((i,idx)=>`<button class="dd-item${idx===active?' active':''}" data-add="${i.id}" data-side="${side}" data-idx="${idx}">
-    <span class="row gap8 min0">${itemIconTag(i,15)}${badge(i.category)}<span class="dd-name">${esc(i.name)}</span>${i.demand!=null?`<span class="dd-d">D${i.demand}</span>`:""}</span>
+    <span class="row gap8 min0">${itemIconTag(i,15)}${badge(i.category)}<span class="dd-name">${esc(i.name)}</span>${i.demand!=null?`<span class="dd-d">D${i.demand}</span>`:""}${dirChip(i,"dd-dir")}</span>
     <span class="dd-val"><span style="color:#c4b5fd">${fmt(i.supreme)}</span> / <span style="color:#67e8f9">${fmt(i.mm2)}</span></span>
   </button>`).join("");
   return `<div class="dropdown" id="dd-${side}"><div class="dd-list">${rows}</div>
@@ -1291,7 +1464,7 @@ function itemRow(side,o,idx){
         <span class="vtag" style="color:#c4b5fd">SV ${fmt(it.supreme)}</span><span class="vtag" style="color:#67e8f9">MM2 ${fmt(it.mm2)}</span>
         ${it.placeholder?'<span class="vtag" style="color:#fbbf24">priceless</span>':""}
         ${(it.demand!=null||it.rarity!=null)?`<span class="idr">${it.demand!=null?"D"+it.demand:""}${it.demand!=null&&it.rarity!=null?"\u00b7":""}${it.rarity!=null?"R"+it.rarity:""}</span>`:""}
-        ${it.trend?`<span class="tdot" title="${esc(it.trend)}" style="background:${SENT_COLOR[TREND_SENT[it.trend]||"flat"]}"></span>`:""}
+        ${it.trend?`<span class="tdot" title="${esc(it.trend)}" style="background:${SENT_COLOR[TREND_SENT[it.trend]||"flat"]}"></span>`:""}${dirChip(it)}
         ${sparkline(o.id)}
       </div>
     </div>
@@ -1553,7 +1726,7 @@ function headerHTML(){
 }
 function footerHTML(){
   return `<footer class="ftr">
-    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-07-25a</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Values now follow <b>Supreme Values</b> (MM2Values is shown as a reference only); demand, rarity, stability & ranges are Supreme\u2019s. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
+    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-07-27b</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Values now follow <b>Supreme Values</b> (MM2Values is shown as a reference only); demand, rarity, stability & ranges are Supreme\u2019s. MM2Values' Sets page is being rebuilt, so most sets show MM2 = "—".</span></p>
     <p>Community estimates — not endorsed by Roblox or Nikilis. Demand/hype/duping shift fast; confirm live before high-value trades. Saved trades & favorites are stored locally on this device only.</p>
     <div class="ftr-social">
       <a href="https://youtube.com/@wyalife" target="_blank" rel="noopener noreferrer" aria-label="YouTube">${icon("youtube",15)} YouTube</a>
@@ -1812,8 +1985,7 @@ async function loadChanges(){
 function invSignals(it){
   const liq=itemLiquidity01(it), des=itemDesire01(it), stab=stabScore01(it), trend=itemTrend01(it);
   const m=histMetrics(it.id);
-  const raw=(HISTORY&&HISTORY.values)?HISTORY.values[it.id]:null;
-  const pts=Array.isArray(raw)?raw.filter(v=>v!=null&&isFinite(v)):[];
+  const pts=histSeries(it.id)||[];              // cleaned series — outlier/scale artifacts removed
   const mom = m? clamp01(0.5+m.normSlope*2) : 0.5;        // whole-window momentum
   let recentMom=mom, chgPct=0, headroom=0.25;
   if(pts.length>=2){ const f=pts[0], l=pts[pts.length-1]; chgPct=f>0?(l-f)/f*100:0; }
@@ -2016,7 +2188,7 @@ function portfolioView(){
     <div class="sp-list">${savedList}</div>
   </div>`;
   return `<div class="portfolio">
-    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 single items and multi-item bundles are scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks are realistic, roughly even-value trades the other trader would actually accept — worth about what your inventory is worth, never much more. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-07-25a</b></p>
+    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 single items and multi-item bundles are scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks are realistic, roughly even-value trades the other trader would actually accept — worth about what your inventory is worth, never much more. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-07-27b</b></p>
     <div class="card">
       <div class="port-sum"><div><div class="port-sum-l">Inventory True Value</div><div class="port-sum-v">${fmt(Math.round(inv.value))}</div>${inv.hi>inv.lo?`<div class="port-sum-band">${fmt(Math.round(inv.lo))} \u2013 ${fmt(Math.round(inv.hi))}</div>`:""}</div>
         <div class="port-sum-r"><span class="port-health" style="color:${hCol}">${icon("activity",13)} ${hLabel} holdings</span>${inv.value>0?`<span class="port-conf">${inv.conf}% conf</span>`:""}${inv.priceless?`<span class="port-pl">${inv.priceless} priceless</span>`:""}</div></div>
@@ -2034,8 +2206,8 @@ function moverData(){
   for(const it of ALL){
     if(it.placeholder) continue;
     const m=histMetrics(it.id); if(!m) continue;
-    const raw=HISTORY.values[it.id]; const pts=raw.filter(v=>v!=null&&isFinite(v));
-    if(pts.length<2) continue;
+    const pts=histSeries(it.id);
+    if(!pts||pts.length<2) continue;
     const first=pts[0], last=pts[pts.length-1];
     const chgPct = first>0 ? (last-first)/first*100 : 0;
     const snr = Math.min(1, Math.abs(m.normSlope)/(m.cv*0.6+0.05));
@@ -2094,22 +2266,19 @@ async function loadHistory(){
     const res=await fetch(HISTORY_URL,{signal:ctrl.signal,cache:"no-store"}); clearTimeout(to);
     if(!res.ok) throw new Error("HTTP "+res.status);
     const h=await res.json();
-    if(h && h.values && typeof h.values==="object"){ HISTORY=h; render(); }
+    if(h && h.values && typeof h.values==="object"){ HISTORY=h; _histCache=new Map(); render(); }
   }catch(e){ /* no history yet — sparklines simply don't render */ }
 }
 function sparkline(id){
-  if(!HISTORY||!HISTORY.values) return "";
-  const raw=HISTORY.values[id]; if(!Array.isArray(raw)) return "";
-  const pts=raw.map((v,i)=>[i,v]).filter(p=>p[1]!=null && isFinite(p[1]));
-  if(pts.length<2) return "";
-  const xs=pts.map(p=>p[0]), ys=pts.map(p=>p[1]);
-  const x0=Math.min(...xs),x1=Math.max(...xs),lo=Math.min(...ys),hi=Math.max(...ys);
+  const pts=histSeries(id);                     // cleaned series — no scale-glitch cliffs
+  if(!pts||pts.length<2) return "";
+  const n=pts.length, lo=Math.min(...pts), hi=Math.max(...pts);
   const W=56,Hh=16,p=2;
-  const sx=i=>x1===x0?0:((i-x0)/(x1-x0))*W;
+  const sx=k=>n<2?0:(k/(n-1))*W;
   const sy=v=>hi===lo?Hh/2:Hh-p-((v-lo)/(hi-lo))*(Hh-p*2);
-  const d=pts.map((q,k)=>`${k?"L":"M"}${sx(q[0]).toFixed(1)} ${sy(q[1]).toFixed(1)}`).join(" ");
-  const first=ys[0],last=ys[ys.length-1], c=last>first?"#34d399":last<first?"#fb7185":"#8aa0c6";
-  return `<svg class="spark" width="${W}" height="${Hh}" viewBox="0 0 ${W} ${Hh}" aria-hidden="true" title="value trend"><path d="${d}" fill="none" stroke="${c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${sx(x1).toFixed(1)}" cy="${sy(last).toFixed(1)}" r="1.7" fill="${c}"/></svg>`;
+  const d=pts.map((v,k)=>`${k?"L":"M"}${sx(k).toFixed(1)} ${sy(v).toFixed(1)}`).join(" ");
+  const first=pts[0],last=pts[n-1], c=last>first?"#34d399":last<first?"#fb7185":"#8aa0c6";
+  return `<svg class="spark" width="${W}" height="${Hh}" viewBox="0 0 ${W} ${Hh}" aria-hidden="true" title="value trend"><path d="${d}" fill="none" stroke="${c}" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="${sx(n-1).toFixed(1)}" cy="${sy(last).toFixed(1)}" r="1.7" fill="${c}"/></svg>`;
 }
 
 /* ===========================================================================
@@ -2296,17 +2465,33 @@ document.addEventListener("keydown",e=>{ if(e.key==="Escape") closeCardModal(); 
 
 /* ---------------- data loading: cache → embedded fallback → live refresh ---------------- */
 const DATA_KEY="mm2.values";
+function sanitizeItems(items){
+  // Structural filter: keep only well-formed items so a single malformed row can't block an
+  // entire update. Returns the clean subset; callers decide whether enough survived to accept.
+  const okNum=(v,lo,hi)=> v==null || (Number.isFinite(v)&&v>=lo&&(hi==null||v<=hi));
+  const clean=[];
+  for(const o of (Array.isArray(items)?items:[])){
+    if(!o||typeof o.name!=="string"||!o.name.trim()) continue;
+    if(typeof o.category!=="string") continue;
+    if(!okNum(o.supreme,0,null)||!okNum(o.mm2,0,null)) continue;
+    if(!okNum(o.demand,1,11)||!okNum(o.rarity,1,11)) continue;
+    clean.push(o);
+  }
+  return clean;
+}
 function validDataset(d){
-  if(!d||typeof d!=="object"||!Array.isArray(d.items)||d.items.length<100) return false;
-  return d.items.every(o=> o && typeof o.name==="string" && typeof o.category==="string"
-    && (o.supreme==null||(Number.isFinite(o.supreme)&&o.supreme>=0))
-    && (o.mm2==null||(Number.isFinite(o.mm2)&&o.mm2>=0))
-    && (o.demand==null||(o.demand>=1&&o.demand<=11))
-    && (o.rarity==null||(o.rarity>=1&&o.rarity<=11)) );
+  if(!d||typeof d!=="object"||!Array.isArray(d.items)) return false;
+  const clean=sanitizeItems(d.items);
+  // Accept when a healthy majority is well-formed; reject only a genuinely corrupt payload.
+  return clean.length>=100 && clean.length>=d.items.length*0.8;
 }
 function applyDataset(d,src){
-  if(!validDataset(d)) return false;
-  buildData(d.items.map(jsonToItem));
+  if(!d||typeof d!=="object"||!Array.isArray(d.items)) return false;
+  const clean=sanitizeItems(d.items);
+  if(clean.length<100 || clean.length<d.items.length*0.8) return false;   // too corrupt to trust
+  const dropped=d.items.length-clean.length;
+  if(dropped>0 && typeof console!=="undefined") console.warn("[mm2] skipped "+dropped+" malformed item(s) in values.json");
+  buildData(clean.map(jsonToItem));
   DATA_DATE=d.updatedAt||DATA_DATE; DATA_SRC=src; DATA_LIVE=(src==="live");
   state.your=state.your.filter(o=>BY_ID[o.id]);
   state.their=state.their.filter(o=>BY_ID[o.id]);
