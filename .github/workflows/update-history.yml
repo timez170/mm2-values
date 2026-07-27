@@ -1,0 +1,22 @@
+name: Update value history
+on:
+  push:
+    branches: [main]
+    paths: [values.json]
+  workflow_dispatch:
+jobs:
+  history:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Append snapshot to history.json
+        run: python3 update_history.py
+      - name: Commit if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add history.json
+          git diff --cached --quiet || git commit -m "history: append $(date -u +%F)"
+          git push
