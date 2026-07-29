@@ -1,5 +1,5 @@
 {
-"updatedAt": "2026-07-28",
+"updatedAt": "2026-07-29",
 "values": {
 "traveler-s-gun": [5500,5600],
 "evergun": [3475,3450],
@@ -10,7 +10,7 @@
 "alienbeam": [1900,1875],
 "darkshot": [1615,1625],
 "darksword": [1590,1600],
-"raygun": [1375,1400],
+"raygun": [1375,1400,1425],
 "blossom": [1295,1300,1305],
 "sakura": [1285,1290,1295],
 "sunrise": [1100,1125],
