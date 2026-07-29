@@ -334,6 +334,10 @@
   .rec-fitbar{flex:1;height:5px;border-radius:9999px;background:rgba(42,55,80,.5);overflow:hidden}
   .rec-fitbar>span{display:block;height:100%;border-radius:9999px}
   .rec-fitn{font-size:10px;font-weight:700;color:var(--muted2);font-variant-numeric:tabular-nums;flex:none}
+  .rec-risk{font-size:10px;font-weight:700;display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:9999px;font-variant-numeric:tabular-nums}
+  .rec-chip.warn{color:#fcd34d;border-color:rgba(251,191,36,.4);background:rgba(251,191,36,.08)}
+  .rec-relax{font-size:9.5px;font-weight:700;color:#fbbf24;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.35);padding:1px 7px;border-radius:9999px;letter-spacing:.02em}
+  .rec-reroll{display:inline-flex;align-items:center;gap:5px;margin-left:8px}
   /* ===== Saved portfolios ===== */
   .sp-card{margin-bottom:12px}
   .sp-h{font-size:13px;font-weight:800;display:flex;align-items:center;gap:7px;margin-bottom:11px}
@@ -1425,7 +1429,7 @@ const state={ view:"calc", your:[], their:[],
   recents: store.get("mm2.recents",[]).filter(id=>BY_ID[id]),
   portfolio: store.get("mm2.portfolio",[]).filter(o=>o&&BY_ID[o.id]).map(o=>({id:o.id,qty:clampQty(o.qty)})), portQ:"", portCat:"All", recMode:((v)=>["general","1","2","3","4"].includes(v)?v:"general")(store.get("mm2.recMode","general")),
   savedPorts: store.get("mm2.savedPorts",[]).filter(s=>s&&Array.isArray(s.items)).map((s,i)=>({id:s.id!=null?s.id:Date.now()+i, name:String(s.name||("Portfolio "+(i+1))), items:s.items.filter(o=>o&&BY_ID[o.id]).map(o=>({id:o.id,qty:clampQty(o.qty)})), ts:s.ts||Date.now()})),
-  portName:"", portConfirmDel:null,
+  portName:"", portConfirmDel:null, recSeed:0,
   theme: ((t)=>t==="midnight"?"vibe":t)(store.get("mm2.theme","vibe")),
   q_you:"", q_them:"", cat_you:"All", cat_them:"All", sort:"value",
   active_you:-1, active_them:-1 };
@@ -1767,7 +1771,7 @@ function headerHTML(){
 }
 function footerHTML(){
   return `<footer class="ftr">
-    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-07-29b</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Verdicts also weigh each side\u2019s market momentum (max \u00b14%). Values now follow <b>Supreme Values</b>; demand, rarity, stability & ranges are Supreme\u2019s. The MM2Values column is a dated reference snapshot (their site blocks automated refresh) and never affects verdicts unless Supreme lacks a value.</span></p>
+    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-07-29c</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Verdicts also weigh each side\u2019s market momentum (max \u00b14%). Values now follow <b>Supreme Values</b>; demand, rarity, stability & ranges are Supreme\u2019s. The MM2Values column is a dated reference snapshot (their site blocks automated refresh) and never affects verdicts unless Supreme lacks a value.</span></p>
     <p>Community estimates — not endorsed by Roblox or Nikilis. Demand/hype/duping shift fast; confirm live before high-value trades. Saved trades & favorites are stored locally on this device only.</p>
     <div class="ftr-social">
       <a href="https://youtube.com/@wyalife" target="_blank" rel="noopener noreferrer" aria-label="YouTube">${icon("youtube",15)} YouTube</a>
@@ -2023,41 +2027,27 @@ async function loadChanges(){
    scoring over existing signals (reconciled value, demand, liquidity, stability,
    momentum & volatility from history). Three risk profiles, category-filtered,
    each pick justified. No server, so "predictions" = transparent heuristics. =========================================================================== */
-function invSignals(it){
-  const liq=itemLiquidity01(it), des=itemDesire01(it), stab=stabScore01(it), trend=itemTrend01(it);
-  const m=histMetrics(it.id);
-  const pts=histSeries(it.id)||[];              // cleaned series — outlier/scale artifacts removed
-  const mom = m? clamp01(0.5+m.normSlope*2) : 0.5;        // whole-window momentum
-  let recentMom=mom, chgPct=0, headroom=0.25;
-  if(pts.length>=2){ const f=pts[0], l=pts[pts.length-1]; chgPct=f>0?(l-f)/f*100:0; }
-  if(pts.length>=4){ const k=Math.max(2,Math.round(pts.length/3)); const rc=pts.slice(-k), bs=pts.slice(0,pts.length-k);
-    const ra=rc.reduce((a,b)=>a+b,0)/rc.length, ba=bs.reduce((a,b)=>a+b,0)/bs.length;
-    recentMom=clamp01(0.5 + (ba>0?(ra-ba)/ba:0)*1.6); }   // recency-weighted momentum (last third vs rest)
-  if(pts.length>=3){ const peak=Math.max(...pts), l=pts[pts.length-1]; headroom=peak>0?clamp01((peak-l)/peak):0; } // room below historical peak
-  const vol = m? clamp01(m.cv/0.5) : 0.35;
-  const mdd = m? clamp01(m.mdd/0.5) : 0.3;
-  const r=reconcile(it); const vconf=r?r.conf/100:0.6, val=r?r.value:(combinedVal(it)||0), both=!!(r&&r.both);
-  const dataN = m? clamp01((m.n-3)/9) : 0;                // history sufficiency
-  const d01 = it.demand==null?0.4:it.demand/10, rar01 = it.rarity==null?0.4:it.rarity/10;
-  const activity = clamp01(0.6*d01 + 0.4*liq);            // trading-activity proxy (no live volume feed)
-  const popularity = clamp01(0.42*d01 + 0.24*liq + 0.18*des + 0.16*(both?1:0.4)); // market-popularity / breadth proxy
-  const histPerf = clamp01(0.50*mom + 0.28*(1-mdd) + 0.22*stab);                   // held or grew with shallow drawdowns
-  const longTerm = clamp01(0.34*stab + 0.24*Math.max(mom,recentMom) + 0.22*des + 0.20*headroom*(Math.max(mom,recentMom)>=0.5?1:0.4));
-  const growth = clamp01(0.42*headroom*(Math.max(mom,recentMom)>=0.5?1:0.35) + 0.34*Math.max(mom,recentMom) + 0.24*((histPerf+des)/2)); // future-growth potential
-  const quality = clamp01(0.24*d01 + 0.22*liq + 0.16*activity + 0.14*Math.max(mom,recentMom) + 0.12*popularity + 0.12*growth); // "is this item elite?" -> value-loss tolerance
-  return {liq,des,stab,trend,mom,recentMom,chgPct,headroom,vol,mdd,vconf,val,both,dataN,d01,rar01,activity,popularity,histPerf,longTerm,growth,quality,m};
-}
-const RISK_PROFILES=[
-  {k:"safe",label:"Safe",color:"#34d399",icon:"shield",blurb:"An even, fair trade \u2014 stable, popular, liquid items.",
-   lo:0.92, hi:1.05, target:1.00, spread:0.08, wideLo:0.86,
-   q:x=>clamp01(0.28*x.liq + 0.24*x.des + 0.20*x.stab + 0.16*x.popularity + 0.12*x.histPerf - 0.22*x.vol)},
-  {k:"balanced",label:"Balanced",color:"#a78bfa",icon:"scale",blurb:"An even trade for an item that holds value with upside.",
-   lo:0.90, hi:1.05, target:0.99, spread:0.10, wideLo:0.84,
-   q:x=>clamp01(0.22*x.liq + 0.20*x.des + 0.20*x.longTerm + 0.14*x.popularity + 0.14*x.stab + 0.10*x.growth - 0.08*x.vol)},
-  {k:"aggressive",label:"Risky",color:"#fb923c",icon:"trendingUp",blurb:"A fair trade for a high-momentum item likely to climb.",
-   lo:0.85, hi:1.04, target:0.96, spread:0.12, wideLo:0.80,
-   q:x=>clamp01(0.30*x.growth + 0.26*x.recentMom + 0.16*x.mom + 0.16*x.des + 0.12*x.headroom)}
-];
+/* ===========================================================================
+   PORTFOLIO / INVENTORY + upgrade recommender — profile engine v2.
+   Why v2: weight-only tier tuning over one shared pool collapses (monotonic
+   scores keep the same godlies on top for every profile). This engine makes
+   tiers differ STRUCTURALLY, per recommendation-systems practice:
+     Stage 0/1  percentile-rank features (midrank ties, outlier-proof) and a
+                composite 0–100 RISK index from de-correlated pillars
+                (volatility · drawdown · exit-liquidity · price-concentration)
+     Stage 2    HARD per-tier eligibility bands → three genuinely different
+                candidate pools, with a transparent relaxation ladder so thin
+                pools (small categories / extreme inventory values) still fill
+     Stage 3    MMR diversity re-ranking (Carbonell–Goldstein) over each pool,
+                soft category/size quotas, plus seeded softmax exploration —
+                "Reroll" re-samples equally strong alternatives, deterministic
+                for a given inventory + seed
+     Stage 4    bundle assembly near the target: windowed enumeration + a
+                swap local-search pass; anti-degeneracy (no near-clone bundles)
+     Stage 5    tier-specific "why" chips from the binding reasons, a data-
+                aware confidence score, low-history flags, and diagnostics
+                (cross-tier overlap + intra-list diversity → window._recDiag)
+   Pure functions, no deps; every tunable lives in REC_CONFIG. ============= */
 const REC_CATS=["Godly","Ancient","Chroma","Vintage"];   // recommendation universe: high-tier tradeable only
 const PORT_CATS=["All","Godly","Ancient","Chroma","Vintage","High-demand"];
 function catMatch(it,cat){
@@ -2066,111 +2056,341 @@ function catMatch(it,cat){
   if(cat==="High-demand") return it.demand!=null && it.demand>=7;
   return it.category===cat;
 }
-function recConfidence(x){ return Math.round(clamp100(38 + 26*x.vconf + 14*x.dataN + 12*(1-x.vol) + 10*x.histPerf)); }
-// Per-strategy value fit: a bell centred on each strategy's target ratio (Safe ~1.0 = even, Balanced
-// ~1.10, Risky ~1.28 = slightly above), decreasing toward the window edges. Combined with the value
-// window filter in recommendUpgrades, this makes every strategy prefer near-value / slightly-above trades.
-function valueFit(r,p){ if(!isFinite(r)||r<=0) return 1; if(r>1.06) return 0; const sp=p.spread||0.10; let f=clamp01(1-0.6*Math.pow((r-p.target)/sp,2)); if(r>1.0) f*=clamp01(1-(r-1.0)*7); return f; }  // realistic: peaks at even, above-even is unrealistic
-function recValue(o,V){
-  if(!(V>0)) return null;
-  const r=o.s.val/V, pct=Math.round((r-1)*100);
-  if(r>=1.03) return {t:`\u25b2 +${pct}% value`, c:"#34d399"};
-  if(r>=0.96) return {t:"Even value", c:"#5eead4"};
-  const loss=Math.round((1-r)*100);
-  return (o.s.quality>=0.6 && loss<=12) ? {t:`\u25bc ${loss}% \u00b7 for upside`, c:"#fbbf24"} : {t:`\u25bc ${loss}% value`, c:"#fb7185"};
-}
-function recWhy(o){
-  const x=o.s, out=[];
-  if(x.chgPct>=3) out.push(`\u25b2 ${x.chgPct.toFixed(0)}% trend`);
-  else if(x.chgPct<=-3) out.push(`\u25bc ${Math.abs(x.chgPct).toFixed(0)}% trend`);
-  out.push(`Demand ${(x.d01*10).toFixed(0)}/10`);
-  out.push(x.liq>=0.66?"Very liquid":x.liq>=0.45?"Tradeable":"Thin market");
-  out.push(x.activity>=0.62?"Active trades":x.activity>=0.42?"Moderate activity":"Quiet market");
-  if(x.popularity>=0.62) out.push("Popular");
-  if(x.growth>=0.6) out.push("Growth upside");
-  if(x.histPerf>=0.62) out.push("Strong history");
-  if(x.rar01>=0.7) out.push(`Rare (${(x.rar01*10).toFixed(0)}/10)`);
-  if(x.vol>=0.6) out.push("Volatile");
-  if(x.vconf>=0.80) out.push("Sources agree");
-  return out.slice(0,5);
-}
-// Aggregate per-item signals into one signal object for a bundle (value-weighted), so all the existing
-// scoring (RISK_PROFILES.q, valueFit, recConfidence, recValue, recWhy) works on bundles unchanged.
-function comboSignals(members){
-  const KEYS=["liq","des","stab","trend","mom","recentMom","chgPct","headroom","vol","mdd","vconf","dataN","d01","rar01","activity","popularity","histPerf","longTerm","growth","quality"];
-  const acc={}; KEYS.forEach(k=>acc[k]=0); let W=0;
-  for(const c of members){ const w=Math.max(1,c.s.val); W+=w; for(const k of KEYS) acc[k]+=(c.s[k]||0)*w; }
-  if(W>0) for(const k of KEYS) acc[k]/=W;
-  acc.val = members.reduce((s,c)=>s+c.s.val,0);
-  return acc;
-}
-// Build 1–3 item bundles whose combined value lands near the target V. Bounded for performance:
-// singles + a windowed pair search (binary search per anchor) + triples drawn only from top-quality items.
-function buildCombos(items, V){
-  const arr=items.slice().sort((a,b)=>a.val-b.val), n=arr.length;
-  const out=[], seen=new Set();
-  const add=(m)=>{ if(m.length>1 && m.some(x=>x.val>=V*0.9)) return false; const sig=m.map(x=>x.it.id).sort().join("|"); if(seen.has(sig)) return false; seen.add(sig);
-    out.push({items:m, s:comboSignals(m), val:m.reduce((s,c)=>s+c.s.val,0)}); return true; };
-  const bs=(t)=>{ let lo=0,hi=n; while(lo<hi){ const mid=(lo+hi)>>1; if(arr[mid].val<t) lo=mid+1; else hi=mid; } return lo; };
-  // singles near value
-  for(const c of arr) if(c.val>=V*0.85 && c.val<=V*1.16) add([c]);
-  // pairs: each anchor + complement near (V - anchor)
-  let nP=0; for(let a=0;a<n && nP<320;a++){ if(arr[a].val>=V*0.98) break; const idx=bs(V-arr[a].val);
-    for(let k=Math.max(a+1,idx-2);k<=Math.min(n-1,idx+2) && nP<320;k++){ if(k<=a) continue;
-      const sum=arr[a].val+arr[k].val; if(sum>=V*0.85 && sum<=V*1.16){ if(add([arr[a],arr[k]])) nP++; } } }
-  // triples: TWO small-value anchors (so several can sum to V) + a third found near the remainder.
-  let T=arr.filter(c=> c.val>0 && c.val<=V*0.72); if(T.length>32){ const st=Math.ceil(T.length/32); T=T.filter((_,i)=>i%st===0); }
-  let nT=0; for(let a=0;a<T.length && nT<320;a++){ for(let b=a+1;b<T.length && nT<320;b++){ const base=T[a].val+T[b].val; if(base>=V*1.12) break;
-    const idx=bs(V-base);
-    for(let k=Math.max(0,idx-1);k<=Math.min(n-1,idx+1);k++){ const c=arr[k], id=c.it.id;
-      if(id===T[a].it.id||id===T[b].it.id) continue; const sum=base+c.val;
-      if(sum>=V*0.85 && sum<=V*1.16){ if(add([T[a],T[b],c])) nT++; } } } }
-  // quads: THREE small-value anchors + a fourth near the remainder.
-  let Q=arr.filter(c=> c.val>0 && c.val<=V*0.52); if(Q.length>24){ const st=Math.ceil(Q.length/24); Q=Q.filter((_,i)=>i%st===0); }
-  let nQ=0; for(let a=0;a<Q.length && nQ<240;a++){ for(let b=a+1;b<Q.length && nQ<240;b++){ if(Q[a].val+Q[b].val>=V*1.05) break;
-    for(let c=b+1;c<Q.length && nQ<240;c++){ const base=Q[a].val+Q[b].val+Q[c].val; if(base>=V*1.1) break;
-      const idx=bs(V-base);
-      for(let d=Math.max(0,idx-1);d<=Math.min(n-1,idx+1);d++){ const e=arr[d], eid=e.it.id;
-        if(eid===Q[a].it.id||eid===Q[b].it.id||eid===Q[c].it.id) continue; const sum=base+e.val;
-        if(sum>=V*0.86 && sum<=V*1.16){ if(add([Q[a],Q[b],Q[c],e])) nQ++; } } } } }
+const REC_CONFIG={
+  pillarW:{vol:0.30, dd:0.22, liq:0.28, price:0.20},          // composite-risk pillar weights (sum 1)
+  brackets:[0,60,300,1500,8000,40000],                        // value brackets (log-spaced for this distribution)
+  quotas:{picks:4, maxPerCat:2, maxPerSize:2},                // soft MMR quotas (never leave slots empty)
+  mmrSim:{shared:0.45, cat:0.30, size:0.22, bracket:0.20, dem:0.14, vol:0.14}, // shared-member overlap dominates
+  tau:0.08, explore:8,                                        // softmax temperature · sample among top-K
+  minPool:14, minCombos:6,                                    // relaxation-ladder thresholds
+  relax:[                                                     // L2.. band steps (L0 strict, L1 = wider value window)
+    {volPct:0.15, ddPct:0.15},
+    {demPct:-0.18},
+    {labelsOpen:true},
+    {open:true}
+  ],
+  tiers:[
+    {k:"safe",label:"Safe",color:"#34d399",icon:"shield",
+     policy:"Only top-demand, low-volatility, shallow-drawdown items in a tight even-value window \u2014 lower upside by design.",
+     lo:0.94,hi:1.05,target:1.00,spread:0.07,wideLo:0.88,lambda:0.72,
+     elig:{demPct:0.66, volPct:0.40, ddPct:0.45, riskMax:45, labels:{"Stable":1,"Doing Well":1,"Rising":1,"Improving":1}},
+     q:f=>clamp01(0.30*f.demPct + 0.22*f.liq + 0.18*(1-f.volPct) + 0.14*(1-f.ddPct) + 0.16*f.stab)},
+    {k:"balanced",label:"Balanced",color:"#a78bfa",icon:"scale",
+     policy:"Mid-band demand & volatility \u2014 stability blended with measured momentum; fluctuating thin-market items excluded.",
+     lo:0.90,hi:1.05,target:0.99,spread:0.10,wideLo:0.85,lambda:0.55,
+     elig:{demPct:0.34, volPct:0.78, ddPct:0.80, riskMax:72, noFluctThin:true},
+     q:f=>clamp01(0.22*f.demPct + 0.16*f.liq + 0.16*f.stab + 0.16*clamp01(0.5+f.mom*2) + 0.14*(1-f.volPct) + 0.16*f.growth)},
+    {k:"aggressive",label:"Risky",color:"#fb923c",icon:"trendingUp",
+     policy:"Momentum-first: rising Theil\u2013Sen slope & headroom below peak; volatility and thin demand allowed \u2014 picks can swing hard.",
+     lo:0.84,hi:1.04,target:0.955,spread:0.12,wideLo:0.80,lambda:0.40,
+     elig:{demPct:0, volPct:1.01, ddPct:1.01, riskMax:101, momQuota:0.5},
+     q:f=>clamp01(0.30*f.growth + 0.26*clamp01(0.5+f.recMom*2) + 0.16*f.momPct + 0.14*f.demPct + 0.14*f.headroom)}
+  ]
+};
+const RISK_PROFILES=REC_CONFIG.tiers;
+const REC_RELAX_MAX=REC_CONFIG.relax.length+1;               // L0 strict · L1 wide window · L2..L5 band steps
+/* ---- deterministic exploration: FNV-1a seed hash + mulberry32 PRNG ---- */
+function fnv1a(s){ let h=0x811c9dc5; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,0x01000193); } return h>>>0; }
+function mulberry32(a){ return function(){ a|=0; a=(a+0x6D2B79F5)|0; let t=Math.imul(a^(a>>>15),1|a); t=(t+Math.imul(t^(t>>>7),61|t))^t; return ((t^(t>>>14))>>>0)/4294967296; }; }
+/* ---- Stage 0/1: percentile features (midrank ties → outlier-proof, no scale dominance) ---- */
+function _midrankPcts(vals){
+  const arr=vals.slice().sort((a,b)=>a.x-b.x), n=arr.length, out=new Map();
+  let i=0; while(i<n){ let j=i; while(j+1<n && arr[j+1].x===arr[i].x) j++;
+    const p=n>1?((i+j)/2)/(n-1):0.5; for(let k=i;k<=j;k++) out.set(arr[k].id,p); i=j+1; }
   return out;
 }
+function valBracket(v){ const B=REC_CONFIG.brackets; for(let i=B.length-1;i>=0;i--) if(v>=B[i]) return i; return 0; }
+let _featCache={k:null,byId:null,n:0};
+function recFeatures(){
+  const key=_dataRev+":"+(HISTORY?1:0);                      // auto-invalidates on data rebuilds & history arrival
+  if(_featCache.k===key) return _featCache;
+  const W=REC_CONFIG.pillarW, raw=[];
+  for(const it of ALL){ if(it.placeholder||!REC_CATS.includes(it.category)) continue;
+    const r=reconcile(it); if(!r) continue;
+    const m=histMetrics(it.id);
+    const chg=Number.isFinite(it.changePct)?it.changePct:0;
+    const sent=TREND_SENT[it.trend]||"flat";
+    const labelRisk=sent==="warn"?1:sent==="down"?0.7:sent==="up"?0.35:0.2;    // label is ONE noisy input, never a gate by itself
+    const volRaw=m?(0.72*m.cv+0.28*labelRisk*0.35):(0.6*Math.min(0.5,Math.abs(chg)/40)+0.4*labelRisk*0.35);
+    const ddRaw=m?m.mdd:(chg<0?Math.min(0.4,Math.abs(chg)/100):0.04);          // graceful pre-feed fallbacks
+    const momRaw=m?m.normSlope:chg/100;
+    const d=it.demand==null?2.2:it.demand;                                     // unlisted demand ranks low, not zero
+    raw.push({it,r,m,chg,volRaw,ddRaw,momRaw,d});
+  }
+  const pct={
+    val:_midrankPcts(raw.map(x=>({id:x.it.id,x:x.r.value}))),
+    dem:_midrankPcts(raw.map(x=>({id:x.it.id,x:x.d}))),
+    vol:_midrankPcts(raw.map(x=>({id:x.it.id,x:x.volRaw}))),
+    dd:_midrankPcts(raw.map(x=>({id:x.it.id,x:x.ddRaw}))),
+    mom:_midrankPcts(raw.map(x=>({id:x.it.id,x:x.momRaw})))
+  };
+  const byId=new Map();
+  for(const x of raw){ const it=x.it, id=it.id, r=x.r, m=x.m;
+    const liq=itemLiquidity01(it), des=itemDesire01(it), stab=stabScore01(it);
+    const pts=histSeries(id)||[];
+    let recMom=x.momRaw;
+    if(pts.length>=4){ const k=Math.max(2,Math.round(pts.length/3)); const rc=pts.slice(-k), bsl=pts.slice(0,pts.length-k);
+      const ra=rc.reduce((a,b)=>a+b,0)/rc.length, ba=bsl.reduce((a,b)=>a+b,0)/bsl.length;
+      recMom=ba>0?(ra-ba)/ba:0; }
+    let headroom=0.22; if(pts.length>=3){ const peak=Math.max(...pts), l=pts[pts.length-1]; headroom=peak>0?clamp01((peak-l)/peak):0; }
+    const valPct=pct.val.get(id), demPct=pct.dem.get(id), volPct=pct.vol.get(id), ddPct=pct.dd.get(id), momPct=pct.mom.get(id);
+    const invLiq=1-clamp01(0.7*demPct+0.3*liq);                                // exit risk: hard-to-sell = risky
+    const risk=Math.round(100*(W.vol*volPct+W.dd*ddPct+W.liq*invLiq+W.price*valPct));
+    const growth=clamp01(0.40*headroom*(momPct>=0.5?1:0.35)+0.36*momPct+0.24*des);
+    const dataN=m?clamp01((m.n-3)/9):0;                                        // history sufficiency → confidence + Low-history flag
+    const rangeTight=r.value>0&&r.hi>r.lo?clamp01(1-((r.hi-r.lo)/r.value)/0.6):0.8;
+    byId.set(id,{val:r.value,vconf:r.conf/100,liq,des,stab,
+      mom:x.momRaw,recMom,chgPct:x.chg,headroom,growth,dataN,rangeTight,
+      d10:x.d,demNull:it.demand==null?1:0,rar01:it.rarity==null?0.4:it.rarity/10,
+      label:it.trend||"",valPct,demPct,volPct,ddPct,momPct,risk,
+      demTier:demPct>=0.66?2:demPct>=0.34?1:0, volTier:volPct>=0.66?2:volPct>=0.34?1:0});
+  }
+  _featCache={k:key,byId,n:raw.length};
+  return _featCache;
+}
+/* ---- Stage 2: hard tier eligibility + relaxation ladder (the mechanism that separates tiers) ---- */
+function tierEligible(f,e){
+  if(f.demPct<e.demPct) return false;
+  if(f.volPct>e.volPct) return false;
+  if(f.ddPct>e.ddPct) return false;
+  if(f.risk>e.riskMax) return false;
+  if(e.labels && !e.labels[f.label]) return false;
+  if(e.noFluctThin && f.label==="Fluctuating" && f.demPct<0.5) return false;
+  return true;
+}
+function relaxedElig(base,L){
+  const e={demPct:base.demPct,volPct:base.volPct,ddPct:base.ddPct,riskMax:base.riskMax,
+           labels:base.labels||null,noFluctThin:!!base.noFluctThin,momQuota:base.momQuota||0};
+  for(let i=2;i<=L;i++){ const r=REC_CONFIG.relax[i-2]; if(!r) break;
+    if(r.volPct){ e.volPct=Math.min(1.01,e.volPct+r.volPct); e.ddPct=Math.min(1.01,e.ddPct+(r.ddPct||0)); }
+    if(r.demPct) e.demPct=Math.max(0,e.demPct+r.demPct);
+    if(r.labelsOpen){ e.labels=null; e.noFluctThin=false; }
+    if(r.open){ e.demPct=0; e.volPct=1.01; e.ddPct=1.01; e.riskMax=101; e.labels=null; e.noFluctThin=false; }
+  }
+  return e;
+}
+/* ---- candidate objects: singles & bundles share one shape ---- */
+const AGG_KEYS=["liq","des","stab","mom","recMom","chgPct","headroom","growth","dataN","rangeTight","d10","demNull","rar01","valPct","demPct","volPct","ddPct","momPct","vconf"];
+function aggF(members){
+  const a={}; AGG_KEYS.forEach(k=>a[k]=0); let Wt=0;
+  for(const c of members){ const w=Math.max(1,c.f.val); Wt+=w; for(const k of AGG_KEYS) a[k]+=(c.f[k]||0)*w; }
+  if(Wt>0) for(const k of AGG_KEYS) a[k]/=Wt;
+  a.val=members.reduce((s,c)=>s+c.f.val,0);
+  const W=REC_CONFIG.pillarW, invLiq=1-clamp01(0.7*a.demPct+0.3*a.liq);
+  a.risk=Math.round(100*(W.vol*a.volPct+W.dd*a.ddPct+W.liq*invLiq+W.price*a.valPct));
+  a.demTier=a.demPct>=0.66?2:a.demPct>=0.34?1:0;
+  a.volTier=a.volPct>=0.66?2:a.volPct>=0.34?1:0;
+  return a;
+}
+function mkCand(members){
+  const f=aggF(members);
+  let dom=members[0]; for(const c of members) if(c.f.val>dom.f.val) dom=c;
+  const ids=members.map(c=>c.it.id).sort();
+  return {items:members, f, val:f.val, domCat:dom.it.category, sig:ids.join("|"),
+    idSet:new Set(ids), brSet:new Set(members.map(c=>valBracket(c.f.val)))};
+}
+/* ---- Stage 4: bundles near target — windowed enumeration, anti-clone guard ---- */
+function buildCombos(pool,V,p){
+  const arr=pool.slice().sort((a,b)=>a.f.val-b.f.val), n=arr.length;
+  const out=[], seen=new Set(), LO=p.wideLo, HI=p.hi;
+  const clone=m=>{ if(m.length<3) return false; const c0=m[0].it.category, b0=valBracket(m[0].f.val);
+    return m.every(x=>x.it.category===c0) && m.every(x=>valBracket(x.f.val)===b0); };   // "four near-identical knives" killer
+  const add=m=>{ if(m.length>1 && m.some(x=>x.f.val>=V*0.9)) return false;
+    if(clone(m)) return false;
+    const sig=m.map(x=>x.it.id).sort().join("|"); if(seen.has(sig)) return false; seen.add(sig);
+    out.push(mkCand(m)); return true; };
+  const bs=t=>{ let lo=0,hi=n; while(lo<hi){ const mid=(lo+hi)>>1; if(arr[mid].f.val<t) lo=mid+1; else hi=mid; } return lo; };
+  for(const c of arr) if(c.f.val>=V*LO && c.f.val<=V*HI) add([c]);
+  let nP=0; for(let a=0;a<n&&nP<340;a++){ if(arr[a].f.val>=V*0.98) break; const idx=bs(V-arr[a].f.val);
+    for(let k=Math.max(a+1,idx-2);k<=Math.min(n-1,idx+2)&&nP<340;k++){ if(k<=a) continue;
+      const s=arr[a].f.val+arr[k].f.val; if(s>=V*LO&&s<=V*HI){ if(add([arr[a],arr[k]])) nP++; } } }
+  let T=arr.filter(c=>c.f.val>0&&c.f.val<=V*0.72); if(T.length>32){ const st=Math.ceil(T.length/32); T=T.filter((_,i)=>i%st===0); }
+  let nT=0; for(let a=0;a<T.length&&nT<320;a++){ for(let b=a+1;b<T.length&&nT<320;b++){ const base=T[a].f.val+T[b].f.val; if(base>=V*1.02) break;
+    const idx=bs(V-base);
+    for(let k=Math.max(0,idx-1);k<=Math.min(n-1,idx+1);k++){ const c=arr[k];
+      if(c.it.id===T[a].it.id||c.it.id===T[b].it.id) continue; const s=base+c.f.val;
+      if(s>=V*LO&&s<=V*HI){ if(add([T[a],T[b],c])) nT++; } } } }
+  let Q=arr.filter(c=>c.f.val>0&&c.f.val<=V*0.52); if(Q.length>24){ const st=Math.ceil(Q.length/24); Q=Q.filter((_,i)=>i%st===0); }
+  let nQ=0; for(let a=0;a<Q.length&&nQ<240;a++){ for(let b=a+1;b<Q.length&&nQ<240;b++){ if(Q[a].f.val+Q[b].f.val>=V*1.0) break;
+    for(let c=b+1;c<Q.length&&nQ<240;c++){ const base=Q[a].f.val+Q[b].f.val+Q[c].f.val; if(base>=V*1.02) break;
+      const idx=bs(V-base);
+      for(let d=Math.max(0,idx-1);d<=Math.min(n-1,idx+1);d++){ const e=arr[d];
+        if(e.it.id===Q[a].it.id||e.it.id===Q[b].it.id||e.it.id===Q[c].it.id) continue; const s=base+e.f.val;
+        if(s>=V*LO&&s<=V*HI){ if(add([Q[a],Q[b],Q[c],e])) nQ++; } } } } }
+  return out;
+}
+/* ---- scoring: tier quality × value-proximity bell (target ≈ inventory value, never much more) ---- */
+function valueFit(r,p){ if(!isFinite(r)||r<=0) return 1; if(r>1.06) return 0; const sp=p.spread||0.10;
+  let f=clamp01(1-0.6*Math.pow((r-p.target)/sp,2)); if(r>1.0) f*=clamp01(1-(r-1.0)*7); return f; }
+function recConfidence(f){
+  const px=[f.volPct,f.ddPct,1-f.demPct], mu=(px[0]+px[1]+px[2])/3;                    // do the risk pillars tell one story?
+  const agree=1-clamp01(2*Math.sqrt(px.reduce((s,x)=>s+(x-mu)*(x-mu),0)/3));
+  return Math.round(clamp100(24+24*f.vconf+16*f.dataN+12*(1-f.volPct)+12*f.rangeTight+12*agree-8*f.demNull));
+}
+function scoreCand(cb,p,V){
+  cb.ratio=V>0?cb.val/V:1;
+  cb.qf=p.q(cb.f); cb.vf=(V>0)?valueFit(cb.ratio,p):1;
+  cb.sc=clamp100(100*cb.qf*(0.28+0.72*cb.vf));
+  cb.conf=recConfidence(cb.f);
+  return cb;
+}
+/* ---- Stage 4b: swap local search — close the value gap without trading away quality ---- */
+function polishBundles(ranked,pool,V,p,lo){
+  if(!(V>0)||!ranked.length) return;
+  const arr=pool.slice().sort((a,b)=>a.f.val-b.f.val), n=arr.length;
+  const bs=t=>{ let l=0,h=n; while(l<h){ const m=(l+h)>>1; if(arr[m].f.val<t) l=m+1; else h=m; } return l; };
+  const sigOf=cb=>[...cb.idSet].sort().join("|");
+  const sigs=new Set(ranked.map(sigOf));
+  for(const cb of ranked.slice(0,24)){
+    if(cb.items.length<2) continue;
+    for(let mi=0;mi<cb.items.length;mi++){
+      const others=cb.items.filter((_,j)=>j!==mi), base=others.reduce((s,c)=>s+c.f.val,0);
+      const idx=bs(V-base);
+      for(let k=Math.max(0,idx-2);k<=Math.min(n-1,idx+2);k++){
+        const c=arr[k]; if(!c||others.some(o=>o.it.id===c.it.id)) continue;
+        const sum=base+c.f.val, ratio=sum/V;
+        if(ratio<lo||ratio>p.hi) continue;
+        if(Math.abs(sum-V)>=Math.abs(cb.val-V)-1e-9) continue;                 // must strictly close the gap
+        const m=[...others,c], sig=m.map(x=>x.it.id).sort().join("|");
+        if(sigs.has(sig)) continue;
+        const cand=scoreCand(mkCand(m),p,V);
+        if(cand.qf<cb.qf*0.92) continue;                                       // never trade quality for the gap
+        sigs.delete(sigOf(cb)); Object.assign(cb,cand); sigs.add(sig);
+      }
+    }
+  }
+}
+/* ---- Stage 3: MMR diversity re-rank + quotas + seeded softmax exploration ---- */
+function candSim(a,b){
+  let inter=0; for(const id of a.idSet) if(b.idSet.has(id)) inter++;
+  const shared=inter/Math.min(a.idSet.size,b.idSet.size);
+  const cat=a.domCat===b.domCat?1:0;
+  const size=1-Math.abs(a.items.length-b.items.length)/3;
+  let bi=0,bu=0; for(const x of a.brSet){ bu++; if(b.brSet.has(x)) bi++; } for(const x of b.brSet) if(!a.brSet.has(x)) bu++;
+  const br=bu>0?bi/bu:1;
+  const dem=a.f.demTier===b.f.demTier?1:0, vol=a.f.volTier===b.f.volTier?1:0;
+  const w=REC_CONFIG.mmrSim;
+  const meta=(w.cat*cat+w.size*size+w.bracket*br+w.dem*dem+w.vol*vol)/(w.cat+w.size+w.bracket+w.dem+w.vol);
+  return clamp01(w.shared*shared+(1-w.shared)*meta);
+}
+function mmrSelect(ranked,p,seedKey,modeSize,shown){
+  const Q=REC_CONFIG.quotas, N=Q.picks, S=[];
+  if(!ranked.length) return S;
+  const top=Math.max(1e-6,ranked[0].sc);
+  const rng=mulberry32(fnv1a(seedKey));
+  const tau=(state.recSeed||0)===0?0:REC_CONFIG.tau;         // seed 0 = canonical greedy set; rerolls sample deterministically
+  const catCnt={}, sizeCnt={};
+  let posLeft=0;
+  if(p.elig.momQuota){ const avail=ranked.filter(c=>c.f.mom>1e-4).length;
+    posLeft=Math.min(Math.ceil(N*p.elig.momQuota),avail); }   // Aggressive: ≥half the picks ride positive Theil–Sen slope when any exist
+  while(S.length<N){
+    let cands=ranked.filter(c=>!S.includes(c));
+    if(!cands.length) break;
+    let filt=cands.filter(c=>(catCnt[c.domCat]||0)<Q.maxPerCat);           // soft quotas: applied only while
+    if(filt.length) cands=filt;                                            // alternatives remain
+    if(!modeSize){ filt=cands.filter(c=>(sizeCnt[c.items.length]||0)<Q.maxPerSize); if(filt.length) cands=filt; }
+    if(shown&&shown.size){ filt=cands.filter(c=>!shown.has(c.sig)); if(filt.length) cands=filt; }   // don't repeat an earlier tier's exact bundle
+    if(posLeft>0&&(N-S.length)<=posLeft){ filt=cands.filter(c=>c.f.mom>1e-4); if(filt.length) cands=filt; }
+    const scored=cands.map(c=>{ let mx=0; for(const s of S){ const sm=candSim(c,s); if(sm>mx) mx=sm; }
+      return {c,m:p.lambda*(c.sc/top)-(1-p.lambda)*mx}; }).sort((a,b)=>b.m-a.m);
+    let pick=scored[0].c;
+    const K=Math.min(REC_CONFIG.explore,scored.length);
+    if(K>1&&tau>0){ const w=[]; let tot=0;
+      for(let i=0;i<K;i++){ const x=Math.exp((scored[i].m-scored[0].m)/tau); w.push(x); tot+=x; }
+      let r=rng()*tot; for(let i=0;i<K;i++){ r-=w[i]; if(r<=0){ pick=scored[i].c; break; } } }
+    S.push(pick);
+    catCnt[pick.domCat]=(catCnt[pick.domCat]||0)+1;
+    sizeCnt[pick.items.length]=(sizeCnt[pick.items.length]||0)+1;
+    if(pick.f.mom>1e-4) posLeft=Math.max(0,posLeft-1);
+  }
+  return S.sort((a,b)=>b.sc-a.sc);
+}
+function avgPairSim(picks){ let s=0,n=0; for(let i=0;i<picks.length;i++) for(let j=i+1;j<picks.length;j++){ s+=candSim(picks[i],picks[j]); n++; } return n?s/n:0; }
+/* ---- Stage 5: value chip, tier-specific whys, confidence ---- */
+function recValue(o,V){
+  if(!(V>0)) return null;
+  const r=o.val/V, pv=Math.round((r-1)*100);
+  if(r>=1.03) return {t:`\u25b2 +${pv}% value`,c:"#34d399"};
+  if(r>=0.96) return {t:"Even value",c:"#5eead4"};
+  const loss=Math.round((1-r)*100);
+  return (o.qf>=0.6&&loss<=12)?{t:`\u25bc ${loss}% \u00b7 for upside`,c:"#fbbf24"}:{t:`\u25bc ${loss}% value`,c:"#fb7185"};
+}
+function recWhy(cb,p){
+  const f=cb.f, out=[], P=x=>Math.round(x*100), ap=cb.items.length>1?"~":"";
+  const dem=f.demNull>=0.5?"Demand unlisted":`Demand ${ap}${Math.round(f.d10)}/10`;
+  if(p.k==="safe"){
+    out.push(dem+` \u00b7 top ${Math.max(1,100-P(f.demPct))}%`);
+    out.push(`Low volatility \u00b7 ${P(f.volPct)}th pct`);
+    if(f.ddPct<=0.5) out.push("Shallow drawdowns");
+    if(f.volPct<=0.45&&f.stab>=0.3) out.push("Stable history");
+  } else if(p.k==="balanced"){
+    out.push(dem);
+    out.push(f.mom>0.01?`\u25b2 ${(f.mom*100).toFixed(0)}% momentum`:f.mom<-0.01?`\u25bc ${Math.abs(f.mom*100).toFixed(0)}% drift`:"Flat trend");
+    out.push(`Volatility ${P(f.volPct)}th pct`);
+    if(f.growth>=0.55) out.push("Upside potential");
+    if(f.ddPct<=0.6) out.push("Contained drawdowns");
+  } else {
+    out.push(f.mom>0.01?`\u25b2 +${(f.mom*100).toFixed(0)}% momentum`:`Momentum ${P(f.momPct)}th pct`);
+    if(f.headroom>=0.12) out.push(`${P(f.headroom)}% below peak`);
+    if(f.volPct>=0.6) out.push(`\u26a0 Volatile \u00b7 ${P(f.volPct)}th pct`);
+    if(f.d10<4&&f.demNull<0.5) out.push(`\u26a0 Thin demand ${ap}${Math.round(f.d10)}/10`); else out.push(dem);
+    if(f.rar01>=0.7) out.push(`Rare ${Math.round(f.rar01*10)}/10`);
+  }
+  if(f.vconf>=0.85) out.push("Sources agree");
+  if(f.dataN<0.3) out.push({t:"Low history",warn:1});
+  return out.slice(0,5).map(w=>typeof w==="string"?{t:w}:w);
+}
+/* ---- orchestrator ---- */
 let _recCache={k:null,v:null};   // recompute recommendations only when inputs actually change (_dataRev is declared up near buildData)
 function recommendUpgrades(port,cat,mode){
-  const modeSize = /^[1-4]$/.test(String(mode)) ? +mode : 0;   // 0 = General (any 1..4 items), else a fixed bundle size
+  const _t0=performance.now();
+  const modeSize=/^[1-4]$/.test(String(mode))?+mode:0;   // 0 = General (any 1..4 items), else a fixed bundle size
   const V=reconciledSide(port).value;
   const owned=new Set(port.map(o=>o.id));
-  const items=ALL.filter(it=> !it.placeholder && !owned.has(it.id) && REC_CATS.includes(it.category) && reconcile(it) && catMatch(it,cat))
-    .map(it=>{ const sg=invSignals(it); return {it, s:sg, val:sg.val}; });   // values from reconcile() = calculator engine
-  const REC_LO=0.84, REC_HI=1.06;   // realistic trades: target ~= your inventory value (never much more; never a lopsided giveaway)
-  let combos = (V>0) ? buildCombos(items, V) : items.slice(0,40).map(c=>({items:[c], s:c.s, val:c.val}));
-  for(const cb of combos){ cb.ratio = V>0? cb.val/V : 1; cb.conf = recConfidence(cb.s); }
-  if(modeSize) combos = combos.filter(cb=> cb.items.length===modeSize);   // respect the selected Recommendation Mode
-  const near = (V>0) ? combos.filter(cb=> cb.ratio>=REC_LO && cb.ratio<=REC_HI).length : combos.length;
-  // Simplicity preference: with quality & value equal, fewer items win — so an equal-value single beats a
-  // bundle. But a clearly stronger multi-item bundle still wins, so bundle size adapts to what trades best.
-  const out={};
+  const F=recFeatures();
+  const cands=[];
+  for(const it of ALL){ if(it.placeholder||owned.has(it.id)||!REC_CATS.includes(it.category)) continue;
+    const f=F.byId.get(it.id); if(!f||!catMatch(it,cat)) continue; cands.push({it,f}); }
+  const out={}, diag={relax:{},ild:{},pool:{}}; let nearTot=0; const nearSeen=new Set(), shownSigs=new Set();
   for(const p of RISK_PROFILES){
-    let cand = (V>0) ? combos.filter(cb=> cb.ratio>=p.lo && cb.ratio<=p.hi) : combos.slice();
-    if(V>0 && cand.length<3){ const lo2=Math.max(REC_LO, p.wideLo); cand=combos.filter(cb=> cb.ratio>=lo2 && cb.ratio<=p.hi); }  // widen DOWNWARD, never toward worth-more
-    const ranked=cand.map(o=>{ const qf=p.q(o.s), vf=(V>0)?valueFit(o.ratio,p):1;
-        return {...o, qf, vf, sc:clamp100(100*qf*(0.28+0.72*vf))}; })      // no size penalty — every bundle size competes fairly
-      .sort((a,b)=> b.sc-a.sc);
-    // Variety across BOTH axes: greedily take the best-scoring bundle whose SIZE and dominant CATEGORY are
-    // both new, so recommendations span item types (Godly, Ancient, Chroma, Set, Vintage, Legendary...) and
-    // bundle sizes (1..4). Then fill by new size, then best-remaining — single-category filters still vary by size.
-    const domCat=o=>{ let b=o.items[0]; for(const c of o.items) if(c.s.val>b.s.val) b=c; return b.it.category; };
-    let picks=[]; const usz=new Set(), ucat=new Set();
-    // pass 1: distinct dominant-category; in General mode also require a distinct bundle size
-    for(const o of ranked){ if(picks.length>=4) break; const sz=o.items.length, dc=domCat(o);
-      if(ucat.has(dc)) continue; if(!modeSize && usz.has(sz)) continue; ucat.add(dc); usz.add(sz); picks.push(o); }
-    // pass 2 (General only): fill remaining slots with fresh bundle sizes
-    if(!modeSize){ for(const o of ranked){ if(picks.length>=4) break; if(picks.includes(o)) continue; const sz=o.items.length; if(usz.has(sz)) continue; usz.add(sz); picks.push(o); } }
-    // pass 3: backfill best-remaining to at least three
-    for(const o of ranked){ if(picks.length>=3) break; if(!picks.includes(o)) picks.push(o); }
-    out[p.k]=picks.slice(0,4).sort((a,b)=> b.sc-a.sc);
+    let chosen=null;
+    for(let L=0;L<=REC_RELAX_MAX;L++){                                        // ladder: fill the pool honestly, one step at a time
+      const e=relaxedElig(p.elig,L);
+      const pl=cands.filter(c=>tierEligible(c.f,e));
+      if(pl.length<REC_CONFIG.minPool&&L<REC_RELAX_MAX) continue;
+      if(V>0){
+        let cs=buildCombos(pl,V,p);
+        if(modeSize) cs=cs.filter(cb=>cb.items.length===modeSize);
+        const lo=(L>=1)?p.wideLo:p.lo;
+        const list=cs.filter(cb=>{ const r=cb.val/V; return r>=lo&&r<=p.hi; });
+        if(list.length>=REC_CONFIG.minCombos||L===REC_RELAX_MAX){ chosen={list,lvl:L,pool:pl,lo}; break; }
+      } else {
+        let list=pl.slice().sort((a,b)=>p.q(b.f)-p.q(a.f)).slice(0,40).map(c=>mkCand([c]));
+        if(modeSize&&modeSize!==1) list=[];
+        chosen={list,lvl:L,pool:pl,lo:p.lo}; break;
+      }
+    }
+    if(!chosen) chosen={list:[],lvl:REC_RELAX_MAX,pool:[],lo:p.wideLo};
+    const ranked=chosen.list.map(cb=>scoreCand(cb,p,V)).sort((a,b)=>b.sc-a.sc);
+    polishBundles(ranked,chosen.pool,V,p,chosen.lo);
+    ranked.sort((a,b)=>b.sc-a.sc);
+    for(const cb of ranked){ const sig=[...cb.idSet].sort().join("|"); if(!nearSeen.has(sig)){ nearSeen.add(sig); nearTot++; } }
+    const seedKey=p.k+"|"+cat+"|"+mode+"|"+_dataRev+"|"+[...owned].sort().join(",")+"|"+(state.recSeed||0);
+    const picks=mmrSelect(ranked.slice(0,160),p,seedKey,modeSize,shownSigs);   // MMR only ever needs the top slice
+    picks.forEach(cb=>{ cb.why=recWhy(cb,p); shownSigs.add(cb.sig); });
+    out[p.k]=picks;
+    diag.relax[p.k]=chosen.lvl; diag.pool[p.k]=chosen.pool.length;
+    diag.ild[p.k]=picks.length>1?+((1-avgPairSim(picks)).toFixed(3)):null;    // intra-list diversity, per tier
   }
-  return {V, out, near};
+  const ks=RISK_PROFILES.map(p=>p.k); let mx=0;                               // cross-tier separation check
+  for(let i=0;i<ks.length;i++) for(let j=i+1;j<ks.length;j++){
+    const A=new Set((out[ks[i]]||[]).flatMap(c=>[...c.idSet])), B=new Set((out[ks[j]]||[]).flatMap(c=>[...c.idSet]));
+    if(!A.size||!B.size) continue; let inter=0; for(const x of A) if(B.has(x)) inter++;
+    const jac=inter/(A.size+B.size-inter); if(jac>mx) mx=jac; }
+  diag.overlap=+mx.toFixed(3);
+  diag.ms=+(performance.now()-_t0).toFixed(1);
+  try{ window._recDiag=diag; }catch(e){}
+  return {V,out,near:nearTot,diag};
 }
 
 function portSearchHTML(q){
@@ -2192,27 +2412,35 @@ function portfolioView(){
       <span class="qty"><button class="qbtn" data-action="pqty" data-id="${o.id}" data-d="-1" aria-label="decrease">${icon("minus",12)}</button><span class="qn">${o.qty}</span><button class="qbtn" data-action="pqty" data-id="${o.id}" data-d="1" aria-label="increase">${icon("plus",12)}</button></span>
       <button class="qbtn rm" data-action="prm" data-id="${o.id}" aria-label="remove">${icon("x",12)}</button></span></div>`;
   }).join("") : `<p class="port-empty">No items yet. Search below to add what you own \u2014 then I\u2019ll value your inventory at reconciled True Value and suggest upgrade paths.</p>`;
-  const _rk=state.portCat+"|"+state.recMode+"|"+_dataRev+"|"+port.map(o=>o.id+":"+o.qty).join(",");
+  const _rk=state.portCat+"|"+state.recMode+"|"+_dataRev+"|"+(state.recSeed||0)+"|"+port.map(o=>o.id+":"+o.qty).join(",");
   const rec=(_recCache.k===_rk)?_recCache.v:(_recCache={k:_rk,v:recommendUpgrades(port,state.portCat,state.recMode)}).v;
   const _recCatTxt = state.portCat==="All"?"items":esc(state.portCat)+" items";
-  const recNote = (rec.V>0 && rec.near<5) ? `<p class="port-empty" style="margin:0 2px 12px">${icon("info",12)} ${rec.near===0?("No "+_recCatTxt+" sit near your value right now"):("Only "+rec.near+" "+_recCatTxt+" sit near your value, so the strategies overlap")}${state.portCat==="All"?"":" \u2014 switch to <b>All</b> for more variety"}.</p>` : "";
+  const dg=rec.diag||{relax:{},ild:{}};
+  const _relaxed=RISK_PROFILES.filter(p=>(dg.relax[p.k]||0)>=2).map(p=>p.label);
+  const _notes=[];
+  if(rec.V>0 && rec.near<5) _notes.push(rec.near===0?("No "+_recCatTxt+" sit near your value right now"):("Only "+rec.near+" "+_recCatTxt+" candidates sit near your value"));
+  if(_relaxed.length) _notes.push("eligibility bands widened for "+_relaxed.join(", ")+" (thin pool at your value)");
+  if((dg.overlap||0)>=0.5) _notes.push("profiles overlap \u2014 pool too small to fully separate"+(state.portCat==="All"?"":" \u2014 try <b>All</b>"));
+  const recNote = _notes.length ? `<p class="port-empty" style="margin:0 2px 12px">${icon("info",12)} ${_notes.join(" \u00b7 ")}.</p>` : "";
   const catChips=PORT_CATS.map(c=>`<button class="pcat${state.portCat===c?' on':''}" data-action="pcat" data-c="${c}">${c}</button>`).join("");
   const _mOpt=(v,l)=>`<option value="${v}"${state.recMode===v?" selected":""}>${esc(l)}</option>`;
   const modeSel=`<label class="rec-modelab">Mode<select class="theme-sel" data-action="recmode" aria-label="Recommendation mode">${_mOpt("general","General")}${_mOpt("1","Single item")}${_mOpt("2","2-item bundle")}${_mOpt("3","3-item bundle")}${_mOpt("4","4-item bundle")}</select></label>`;
-  const card=(o,pf)=>{ const items=o.items, total=Math.round(o.s.val), multi=items.length>1;
+  const rerollBtn=`<button class="btn-sm rec-reroll" data-action="reroll" title="Re-sample equally strong alternatives \u2014 deterministic: the same inventory & seed always give the same picks">${icon("rotate",13)} Reroll${(state.recSeed||0)?` \u00b7 #${state.recSeed}`:""}</button>`;
+  const card=(o,pf)=>{ const items=o.items, total=Math.round(o.val), multi=items.length>1;
     const cc = o.conf>=75?"#34d399":o.conf>=55?"#fbbf24":"#fb7185";
+    const rc = o.f.risk<=35?"#34d399":o.f.risk<=65?"#fbbf24":"#fb7185";
     const vv = recValue(o, rec.V), vchip = vv?`<span class="rec-outlook" style="color:${vv.c};background:${vv.c}1f">${vv.t}</span>`:"";
     const top = multi
-      ? `<div class="rec-top"><span class="rec-bundle">${icon("layers",12)} ${items.length}-item bundle</span><span class="rec-val">${fmt(total)}</span></div><div class="rec-items">${items.map(c=>`<div class="rec-item"><span class="row gap6 min0">${itemIconTag(c.it,13)}<span class="rec-iname">${esc(c.it.name)}</span>${badge(c.it.category)}</span><span class="rec-ival">${fmt(Math.round(c.s.val))}</span></div>`).join("")}</div>`
+      ? `<div class="rec-top"><span class="rec-bundle">${icon("layers",12)} ${items.length}-item bundle</span><span class="rec-val">${fmt(total)}</span></div><div class="rec-items">${items.map(c=>`<div class="rec-item"><span class="row gap6 min0">${itemIconTag(c.it,13)}<span class="rec-iname">${esc(c.it.name)}</span>${badge(c.it.category)}</span><span class="rec-ival">${fmt(Math.round(c.f.val))}</span></div>`).join("")}</div>`
       : `<div class="rec-top"><span class="row gap8 min0">${itemIconTag(items[0].it,16)}<span class="rec-name">${esc(items[0].it.name)}</span></span><span class="rec-val">${fmt(total)}</span></div>`;
     return `<div class="rec-card">${top}
-      <div class="rec-mid">${multi?"":badge(items[0].it.category)}${vchip}<span class="rec-conf" style="color:${cc};background:${cc}1f" title="Confidence \u2014 data quality, source agreement & price history">${icon("shield",10)} ${o.conf}%</span></div>
-      <div class="rec-why">${recWhy(o).map(w=>`<span class="rec-chip">${esc(w)}</span>`).join("")}</div>
-      <div class="rec-fit" title="Overall match \u2014 quality \u00d7 value proximity"><span class="rec-fitbar"><span style="width:${Math.round(o.sc)}%;background:${pf.color}"></span></span><span class="rec-fitn">${Math.round(o.sc)}<span class="rec-score-s">/100 match</span></span></div>
+      <div class="rec-mid">${multi?"":badge(items[0].it.category)}${vchip}<span class="rec-risk" style="color:${rc};background:${rc}1a" title="Composite risk 0\u2013100 \u2014 volatility, drawdown, exit-liquidity & price-concentration percentiles over the live dataset (lower = safer)">Risk ${o.f.risk}</span><span class="rec-conf" style="color:${cc};background:${cc}1f" title="Confidence \u2014 source agreement, price-history depth, volatility & range tightness">${icon("shield",10)} ${o.conf}%</span></div>
+      <div class="rec-why">${(o.why||[]).map(w=>`<span class="rec-chip${w.warn?" warn":""}">${esc(w.t)}</span>`).join("")}</div>
+      <div class="rec-fit" title="Overall match \u2014 profile quality \u00d7 value proximity"><span class="rec-fitbar"><span style="width:${Math.round(o.sc)}%;background:${pf.color}"></span></span><span class="rec-fitn">${Math.round(o.sc)}<span class="rec-score-s">/100 match</span></span></div>
       <button class="rec-add" data-action="addMulti" data-side="them" data-ids="${items.map(c=>c.it.id).join(",")}">${icon("plus",12)} Model in calculator</button></div>`;
   };
-  const profSection=(pf)=>{ const picks=rec.out[pf.k]||[];
-    return `<div class="card rec-prof"><div class="rec-ph" style="color:${pf.color}">${icon(pf.icon,15)} ${pf.label}<span class="rec-blurb">${pf.blurb}</span></div>
+  const profSection=(pf)=>{ const picks=rec.out[pf.k]||[]; const lvl=(rec.diag&&rec.diag.relax&&rec.diag.relax[pf.k])||0;
+    return `<div class="card rec-prof"><div class="rec-ph" style="color:${pf.color}">${icon(pf.icon,15)} ${pf.label}${lvl>=2?`<span class="rec-relax" title="Not enough items met this profile's strict bands at your value \u2014 they were widened step by step (level ${lvl}) and picks are labelled honestly.">bands widened</span>`:""}<span class="rec-blurb">${pf.policy}</span></div>
       ${picks.length?`<div class="rec-grid">${picks.map(o=>card(o,pf)).join("")}</div>`:`<p class="port-empty">No ${state.portCat==="All"?"":esc(state.portCat)+" "}targets near your value for this strategy \u2014 try the All category.</p>`}</div>`;
   };
   const sp=state.savedPorts;
@@ -2229,7 +2457,7 @@ function portfolioView(){
     <div class="sp-list">${savedList}</div>
   </div>`;
   return `<div class="portfolio">
-    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Precision recommendations</b> \u2014 single items and multi-item bundles are scored on <b>value retention first</b>, then demand, liquidity, trading activity, momentum, popularity, stability, rarity, historical performance &amp; growth. Picks are realistic, roughly even-value trades the other trader would actually accept — worth about what your inventory is worth, never much more. Each card shows the value impact, a confidence score &amp; an overall match. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-07-29b</b></p>
+    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Profile engine v2</b> \u2014 each risk profile has its own <b>hard eligibility bands</b> (demand, volatility &amp; drawdown percentiles over the live dataset), so Safe / Balanced / Risky draw from genuinely different pools. Candidates are then <b>diversity-re-ranked</b> across categories, bundle sizes &amp; value brackets, each pick carrying a composite <b>Risk</b> index, a confidence score and its binding reasons. Targets stay \u2248 your inventory value \u2014 realistic trades the other side would actually accept, never much more. <b>Reroll</b> re-samples equally strong alternatives deterministically. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-07-29c</b></p>
     <div class="card">
       <div class="port-sum"><div><div class="port-sum-l">Inventory True Value</div><div class="port-sum-v">${fmt(Math.round(inv.value))}</div>${inv.hi>inv.lo?`<div class="port-sum-band">${fmt(Math.round(inv.lo))} \u2013 ${fmt(Math.round(inv.hi))}</div>`:""}</div>
         <div class="port-sum-r"><span class="port-health" style="color:${hCol}">${icon("activity",13)} ${hLabel} holdings</span>${inv.value>0?`<span class="port-conf">${inv.conf}% conf</span>`:""}${inv.priceless?`<span class="port-pl">${inv.priceless} priceless</span>`:""}</div></div>
@@ -2237,7 +2465,7 @@ function portfolioView(){
       <div class="port-list">${invRows}</div>
     </div>
     ${savedCard}
-    <div class="rec-catbar">${catChips}${modeSel}</div>
+    <div class="rec-catbar">${catChips}${modeSel}${rerollBtn}</div>
     ${recNote}${RISK_PROFILES.map(profSection).join("")}
   </div>`;
 }
@@ -2488,6 +2716,7 @@ app.addEventListener("click",e=>{
   else if(a==="pqty"){ const id=b.dataset.id, d=parseInt(b.dataset.d,10); const o=state.portfolio.find(x=>x.id===id); if(o){ const nq=o.qty+d; if(nq<1) state.portfolio=state.portfolio.filter(x=>x.id!==id); else o.qty=clampQty(nq); persist(); render(); } }
   else if(a==="prm"){ state.portfolio=state.portfolio.filter(x=>x.id!==b.dataset.id); persist(); render(); }
   else if(a==="pcat"){ if(state.portCat!==b.dataset.c){ state.portCat=b.dataset.c; render(); } }
+  else if(a==="reroll"){ state.recSeed=(state.recSeed||0)+1; render(); }
   else if(a==="psave"){ const nm=(state.portName||"").trim().replace(/\s+/g," ").slice(0,40);
     if(!state.portfolio.length){ toast("Add items to your inventory first"); }
     else { const name=nm||("Portfolio "+(state.savedPorts.length+1)); const items=state.portfolio.map(o=>({id:o.id,qty:o.qty}));
