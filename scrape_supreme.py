@@ -69,7 +69,11 @@ def parse_page(html_text, category, known_names):
     for idx, m in enumerate(marks):
         if m.group(1) == "Priceless": continue
         val = num(m.group(1))
-        pre = text[(marks[idx-1].end() if idx else 0):m.start()].strip()[-90:]
+        # Sets place a "Contains - <item list>" clause between the name and its Value.
+        # Drop it so the set NAME — not the tail of its contained-items list — sits at the
+        # end of `pre` for known-name matching. Harmless for other categories (no "Contains -").
+        pre = text[(marks[idx-1].end() if idx else 0):m.start()]
+        pre = pre.split("Contains -")[0].strip()[-90:]
         fld = text[m.end():(marks[idx+1].start() if idx+1 < len(marks) else len(text))]
         low = pre.lower(); name = None
         for kn in known_names:                                   # 1) exact known name (longest first)
