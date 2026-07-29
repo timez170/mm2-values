@@ -1,23 +1,55 @@
 name: Sync values from Supreme
 on:
   schedule:
-    - cron: "17 */6 * * *"     # every 6 hours
-  workflow_dispatch:
+    # ── SYNC INTERVAL ────────────────────────────────────────────────
+    # Edit this ONE line to change how often values sync:
+    #   every 3 hours:   "23 */3 * * *"
+    #   every 6 hours:   "23 */6 * * *"    (current)
+    #   every 12 hours:  "23 */12 * * *"
+    #   daily 06:00 UTC: "0 6 * * *"
+    # (GitHub cron is UTC and may drift a few minutes — harmless.)
+    - cron: "23 */6 * * *"
+  workflow_dispatch:        # manual "Run workflow" button stays available
+
+concurrency:
+  group: supreme-sync       # never two syncs at once
+  cancel-in-progress: false
+
 jobs:
   sync:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     permissions:
       contents: write
+    env:
+      SCRAPE_ENGINE: auto   # plain | browser | auto (plain first, escalate on WAF challenge)
     steps:
       - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install headless Chromium (clears the WAF challenge)
+        run: |
+          pip install --quiet playwright
+          python -m playwright install --with-deps chromium
+
       - name: Scrape Supreme -> values.json (abort-safe)
-        run: python3 scrape_supreme.py
+        run: python scrape_supreme.py
+
       - name: Append snapshot to history.json
-        run: python3 update_history.py
+        run: python update_history.py
+
       - name: Commit if changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add values.json history.json
-          git diff --cached --quiet || git commit -m "values: Supreme sync $(date -u '+%F %H:%M')"
-          git push
+          if git diff --cached --quiet; then
+            echo "No value changes this cycle."
+          else
+            git commit -m "values: Supreme sync $(date -u '+%F %H:%M')"
+            git pull --rebase origin main
+            git push
+          fi
