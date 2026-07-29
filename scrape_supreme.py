@@ -20,6 +20,11 @@ Zero dependencies (stdlib only). Usage (repo root): python3 scrape_supreme.py
 import json, os, re, sys, time, html, datetime
 from urllib.request import Request, urlopen
 
+# Fetch engine: "plain" (urllib, fast, works on residential IPs), "browser" (headless
+# Chromium via Playwright — executes the Incapsula/Imperva JS challenge that blocks
+# datacenter IPs like GitHub Actions), or "auto" (plain first, escalate on challenge).
+ENGINE = os.environ.get("SCRAPE_ENGINE", "auto").lower()
+
 PAGES = [  # (url, category, min_items)
     ("https://supremevalues.com/mm2/godlies",  "Godly",   100),
     ("https://supremevalues.com/mm2/chromas",  "Chroma",  35),
@@ -97,14 +102,80 @@ def parse_page(html_text, category, known_names):
         seen.add(name)
     return items
 
-def fetch(url):
+def log(msg):
+    print(msg, flush=True)
+
+def looks_blocked(text):
+    """Incapsula/Imperva serves a JS-challenge stub instead of the page to non-browser
+    clients. The stub never contains item cards; real category pages always do."""
+    return "_Incapsula_Resource" in text or "Request unsuccessful" in text or "Value -" not in text
+
+def fetch_plain(url):
     for attempt in range(3):
         try:
             with urlopen(Request(url, headers=UA), timeout=30) as r:
                 return r.read().decode("utf-8","replace")
-        except Exception as e:
+        except Exception:
             if attempt == 2: raise
             time.sleep(4*(attempt+1))
+
+_BROWSER = {"pw": None, "browser": None, "ctx": None}
+
+def fetch_browser(url):
+    """Headless-Chromium fetch. One shared context for the whole run, so the WAF
+    cookie earned clearing the first challenge carries to every later page."""
+    from playwright.sync_api import sync_playwright   # imported lazily: plain runs need no Playwright
+    if _BROWSER["ctx"] is None:
+        _BROWSER["pw"] = sync_playwright().start()
+        _BROWSER["browser"] = _BROWSER["pw"].chromium.launch(
+            args=["--disable-blink-features=AutomationControlled"])
+        _BROWSER["ctx"] = _BROWSER["browser"].new_context(
+            viewport={"width": 1366, "height": 900},
+            user_agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 "
+                       "(KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36")
+    page = _BROWSER["ctx"].new_page()
+    try:
+        last = ""
+        for attempt in range(3):
+            page.goto(url, wait_until="domcontentloaded", timeout=45000)
+            try:
+                # The challenge stub reloads itself once its JS sets the WAF cookie;
+                # we simply wait until real item cards exist in the document.
+                page.wait_for_function("document.documentElement.innerHTML.indexOf('Value -')>=0",
+                                       timeout=20000)
+                return page.content()
+            except Exception:
+                last = page.content()[:300].replace("\n", " ")
+                log(f"[scrape] challenge not cleared for {url} (attempt {attempt+1}/3)")
+                page.wait_for_timeout(4000 * (attempt + 1))
+        raise RuntimeError(f"WAF challenge never cleared for {url}; last content: {last!r}")
+    finally:
+        page.close()
+
+def close_browser():
+    for k in ("ctx", "browser"):
+        try:
+            if _BROWSER[k]: _BROWSER[k].close()
+        except Exception: pass
+    try:
+        if _BROWSER["pw"]: _BROWSER["pw"].stop()
+    except Exception: pass
+    _BROWSER.update({"pw": None, "browser": None, "ctx": None})
+
+def fetch(url):
+    if ENGINE in ("plain", "auto"):
+        try:
+            text = fetch_plain(url)
+            if not looks_blocked(text):
+                return text
+            log(f"[scrape] plain fetch got WAF challenge for {url}" +
+                ("; escalating to browser engine" if ENGINE == "auto" else ""))
+            if ENGINE == "plain":
+                raise RuntimeError("blocked by WAF (set SCRAPE_ENGINE=browser or auto)")
+        except Exception:
+            if ENGINE == "plain":
+                raise
+    return fetch_browser(url)
 
 def main(root="."):
     vpath = os.path.join(root,"values.json")
@@ -114,20 +185,23 @@ def main(root="."):
     for o in existing["items"]:
         known_by_cat.setdefault(o["category"],[]).append(o["name"])
     changed = new = 0
+    summary = []
     for url, cat, min_n in PAGES:
         try:
             page = fetch(url)
         except Exception as e:
-            print(f"[scrape] FETCH FAILED {cat}: {e}", file=sys.stderr); sys.exit(2)
+            print(f"[scrape] FETCH FAILED {cat}: {e}", file=sys.stderr); close_browser(); sys.exit(2)
         parsed = parse_page(page, cat, sorted(known_by_cat.get(cat,[]), key=len, reverse=True))
         if len(parsed) < min_n:
-            print(f"[scrape] ABORT: {cat} parsed only {len(parsed)} items (min {min_n})", file=sys.stderr); sys.exit(2)
+            print(f"[scrape] ABORT: {cat} parsed only {len(parsed)} items (min {min_n})", file=sys.stderr); close_browser(); sys.exit(2)
         if any(not (0 < it["supreme"] <= 5_000_000) for it in parsed):
-            print(f"[scrape] ABORT: insane value in {cat}", file=sys.stderr); sys.exit(2)
+            print(f"[scrape] ABORT: insane value in {cat}", file=sys.stderr); close_browser(); sys.exit(2)
         known = set(known_by_cat.get(cat,[]))
         matched = sum(1 for it in parsed if it["name"] in known)
         if known and matched < 0.8*len([n for n in known if not by_id[slug(n)].get("placeholder")]):
-            print(f"[scrape] ABORT: {cat} matched only {matched}/{len(known)} known items", file=sys.stderr); sys.exit(2)
+            print(f"[scrape] ABORT: {cat} matched only {matched}/{len(known)} known items", file=sys.stderr); close_browser(); sys.exit(2)
+        summary.append(f"{cat}: {len(parsed)} parsed, {matched} matched")
+        log(f"[scrape] {cat}: {len(parsed)} item(s) parsed, {matched} matched known")
         for it in parsed:
             iid = slug(it["name"])
             cur = by_id.get(iid)
@@ -144,11 +218,18 @@ def main(root="."):
                 if it["changePct"] is not None: cur["changePct"]=it["changePct"]
                 elif "changePct" in cur: cur.pop("changePct")
             if before != (cur.get("supreme"),cur.get("trend"),cur.get("change")): changed += 1
+    close_browser()
     existing["updatedAt"] = datetime.datetime.now(datetime.timezone.utc).strftime("%Y-%m-%d")
     body = '{\n"updatedAt": '+json.dumps(existing["updatedAt"])+',\n"items": [\n' + \
         ',\n'.join(json.dumps(o,separators=(",",":"),ensure_ascii=False) for o in existing["items"]) + '\n]\n}\n'
     with open(vpath,"w",encoding="utf-8") as f: f.write(body)
     print(f"[scrape] OK: {changed} item(s) updated, {new} new, {len(existing['items'])} total")
+    step = os.environ.get("GITHUB_STEP_SUMMARY")
+    if step:
+        with open(step, "a", encoding="utf-8") as f:
+            f.write(f"### Supreme sync — {existing['updatedAt']}\n"
+                    f"- **{changed}** updated, **{new}** new, {len(existing['items'])} total\n"
+                    + "".join(f"- {line}\n" for line in summary))
 
 if __name__ == "__main__":
     main(sys.argv[1] if len(sys.argv)>1 else ".")
