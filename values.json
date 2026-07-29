@@ -48,7 +48,7 @@
 {"id":"heartblade","name":"Heartblade","category":"Godly","supreme":65,"mm2":70,"demand":1,"rarity":2,"trend":"Stable","change":-2,"changePct":-3.0},
 {"id":"nightblade","name":"Nightblade","category":"Godly","supreme":20,"mm2":23,"demand":1,"rarity":2,"trend":"Stable","change":-2,"changePct":-9.1,"aliases":["nightfall"]},
 {"id":"ornament","name":"Ornament","category":"Godly","supreme":27,"mm2":28,"demand":1,"rarity":2,"trend":"Fluctuating","range":[25,28],"change":-1,"changePct":-3.6},
-{"id":"luger","name":"Luger","category":"Godly","supreme":1000000,"mm2":47,"demand":10,"rarity":10,"trend":"Stable","change":0,"changePct":0.0},
+{"id":"luger","name":"Luger","category":"Godly","supreme":40,"mm2":47,"demand":10,"rarity":10,"trend":"Stable","change":0,"changePct":0.0},
 {"id":"red-luger","name":"Red Luger","category":"Godly","supreme":37,"mm2":45,"demand":1,"rarity":2,"trend":"Stable","change":-1,"changePct":-2.6},
 {"id":"phantom","name":"Phantom","category":"Godly","supreme":35,"mm2":42,"demand":1,"rarity":2,"trend":"Stable","change":-2,"changePct":-5.4},
 {"id":"spectre","name":"Spectre","category":"Godly","supreme":35,"mm2":42,"demand":1,"rarity":2,"trend":"Stable","change":-2,"changePct":-5.4},
