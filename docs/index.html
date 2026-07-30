@@ -334,6 +334,7 @@
   .rec-fitbar{flex:1;height:5px;border-radius:9999px;background:rgba(42,55,80,.5);overflow:hidden}
   .rec-fitbar>span{display:block;height:100%;border-radius:9999px}
   .rec-fitn{font-size:10px;font-weight:700;color:var(--muted2);font-variant-numeric:tabular-nums;flex:none}
+  .rec-tag{font-size:9.5px;font-weight:800;letter-spacing:.03em;padding:2px 8px;border-radius:9999px;text-transform:uppercase}
   .rec-risk{font-size:10px;font-weight:700;display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:9999px;font-variant-numeric:tabular-nums}
   .rec-chip.warn{color:#fcd34d;border-color:rgba(251,191,36,.4);background:rgba(251,191,36,.08)}
   .rec-relax{font-size:9.5px;font-weight:700;color:#fbbf24;background:rgba(251,191,36,.12);border:1px solid rgba(251,191,36,.35);padding:1px 7px;border-radius:9999px;letter-spacing:.02em}
@@ -1771,7 +1772,7 @@ function headerHTML(){
 }
 function footerHTML(){
   return `<footer class="ftr">
-    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-07-29c</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Verdicts also weigh each side\u2019s market momentum (max \u00b14%). Values now follow <b>Supreme Values</b>; demand, rarity, stability & ranges are Supreme\u2019s. The MM2Values column is a dated reference snapshot (their site blocks automated refresh) and never affects verdicts unless Supreme lacks a value.</span></p>
+    <p class="row">${icon("info",12)} <span>Values as of <b>${DATA_DATE}</b> · ${ALL.length} items · <b style="color:#a78bfa">build 2026-07-30a</b> · ${DATA_LIVE?"live":DATA_SRC==="cache"?"cached":"built-in"} · Both lists share one unit (Seer = 3), compared 1:1. WFL bands: Fair ±${FAIR}% · Small ${FAIR}–${BIG}% · Big &gt;${BIG}%. Verdicts also weigh each side\u2019s market momentum (max \u00b14%). Values now follow <b>Supreme Values</b>; demand, rarity, stability & ranges are Supreme\u2019s. The MM2Values column is a dated reference snapshot (their site blocks automated refresh) and never affects verdicts unless Supreme lacks a value.</span></p>
     <p>Community estimates — not endorsed by Roblox or Nikilis. Demand/hype/duping shift fast; confirm live before high-value trades. Saved trades & favorites are stored locally on this device only.</p>
     <div class="ftr-social">
       <a href="https://youtube.com/@wyalife" target="_blank" rel="noopener noreferrer" aria-label="YouTube">${icon("youtube",15)} YouTube</a>
@@ -2057,42 +2058,48 @@ function catMatch(it,cat){
   return it.category===cat;
 }
 const REC_CONFIG={
+  /* ============================================================================
+     TRADE ENGINE v3 — the value <-> demand/rarity/hype frontier
+     ----------------------------------------------------------------------------
+     v2 tuned three tiers by WEIGHTS over one shared pool whose value windows all
+     sat at ~1.0x inventory, so every pick clustered at parity — the "everything
+     is the same value" problem. v3 fixes it structurally:
+       - only TWO strategies: Balanced and Risky
+       - each has a WIDE, TWO-SIDED value window (below AND above your value), so
+         trades can trade value away or grab value
+       - each guarantees specific ASYMMETRIC trade archetypes (slot-filled), then
+         fills the rest with diverse, profile-fit picks
+       - every pick is compared axis-by-axis (value / demand / rarity / hype)
+         against YOUR inventory aggregate and tagged with its trade type
+     Pure functions; every tunable lives here. ================================== */
   pillarW:{vol:0.30, dd:0.22, liq:0.28, price:0.20},          // composite-risk pillar weights (sum 1)
-  brackets:[0,60,300,1500,8000,40000],                        // value brackets (log-spaced for this distribution)
-  quotas:{picks:4, maxPerCat:2, maxPerSize:2},                // soft MMR quotas (never leave slots empty)
-  mmrSim:{shared:0.45, cat:0.30, size:0.22, bracket:0.20, dem:0.14, vol:0.14}, // shared-member overlap dominates
-  tau:0.08, explore:8,                                        // softmax temperature · sample among top-K
-  minPool:14, minCombos:6,                                    // relaxation-ladder thresholds
-  relax:[                                                     // L2.. band steps (L0 strict, L1 = wider value window)
-    {volPct:0.15, ddPct:0.15},
-    {demPct:-0.18},
-    {labelsOpen:true},
-    {open:true}
-  ],
+  brackets:[0,60,300,1500,8000,40000],                        // value brackets (log-spaced)
+  swing:{pct:0.06, floor:100, capPct:0.30},                   // U = clamp(V*pct, floor, V*capPct): a "meaningful value step"
+  picks:4, explore:8, tau:0.08,                               // cards per strategy · softmax breadth · temperature
+  combosCap:900, pairPerAnchor:8, sampleN:40,                 // enumeration caps
+  mmrSim:{shared:0.5, cat:0.24, size:0.16, bracket:0.16, dem:0.12},
   tiers:[
-    {k:"safe",label:"Safe",color:"#34d399",icon:"shield",
-     policy:"Only top-demand, low-volatility, shallow-drawdown items in a tight even-value window \u2014 lower upside by design.",
-     lo:0.94,hi:1.05,target:1.00,spread:0.07,wideLo:0.88,lambda:0.72,
-     elig:{demPct:0.66, volPct:0.40, ddPct:0.45, riskMax:45, labels:{"Stable":1,"Doing Well":1,"Rising":1,"Improving":1}},
-     q:f=>clamp01(0.30*f.demPct + 0.22*f.liq + 0.18*(1-f.volPct) + 0.14*(1-f.ddPct) + 0.16*f.stab)},
-    {k:"balanced",label:"Balanced",color:"#a78bfa",icon:"scale",
-     policy:"Mid-band demand & volatility \u2014 stability blended with measured momentum; fluctuating thin-market items excluded.",
-     lo:0.90,hi:1.05,target:0.99,spread:0.10,wideLo:0.85,lambda:0.55,
-     elig:{demPct:0.34, volPct:0.78, ddPct:0.80, riskMax:72, noFluctThin:true},
-     q:f=>clamp01(0.22*f.demPct + 0.16*f.liq + 0.16*f.stab + 0.16*clamp01(0.5+f.mom*2) + 0.14*(1-f.volPct) + 0.16*f.growth)},
-    {k:"aggressive",label:"Risky",color:"#fb923c",icon:"trendingUp",
-     policy:"Momentum-first: rising Theil\u2013Sen slope & headroom below peak; volatility and thin demand allowed \u2014 picks can swing hard.",
-     lo:0.84,hi:1.04,target:0.955,spread:0.12,wideLo:0.80,lambda:0.40,
-     elig:{demPct:0, volPct:1.01, ddPct:1.01, riskMax:101, momQuota:0.5},
-     q:f=>clamp01(0.30*f.growth + 0.26*clamp01(0.5+f.recMom*2) + 0.16*f.momPct + 0.14*f.demPct + 0.14*f.headroom)}
+    {k:"balanced",label:"Balanced",color:"#a78bfa",icon:"scale",lambda:0.5,volPctMax:0.72,
+     policy:"Even trades \u2014 value, demand & rarity stay matched. Give a little value and buy it back in demand/rarity, or take a modest value gain that eases off demand/rarity. Steadier, lower-volatility items.",
+     window:[0.72,1.28],
+     slots:[
+       {key:"fair-up",   tag:{t:"Value \u2192 Demand", c:"#5eead4"}},   // give a little value, gain demand/rarity
+       {key:"value-up",  tag:{t:"Value gain",          c:"#7dd3fc"}}    // modest value gain, ease off demand/rarity
+     ]},
+    {k:"aggressive",label:"Risky",color:"#fb923c",icon:"trendingUp",lambda:0.4,volPctMax:1.01,
+     policy:"Lopsided bets on the value\u2194demand frontier. Trade value away for demand, rarity & hype \u2014 or grab 100+ in value and accept lower demand/rarity. Volatile, thin, momentum-driven items allowed \u2014 can swing hard.",
+     window:[0.55,1.45],
+     slots:[
+       {key:"demand-bet", tag:{t:"Value \u2192 Hype", c:"#fda4af"}},    // trade value away for demand/rarity/hype
+       {key:"value-grab", tag:{t:"Value grab",       c:"#fbbf24"}}     // win 100+ value, drop demand/rarity
+     ]}
   ]
 };
 const RISK_PROFILES=REC_CONFIG.tiers;
-const REC_RELAX_MAX=REC_CONFIG.relax.length+1;               // L0 strict · L1 wide window · L2..L5 band steps
 /* ---- deterministic exploration: FNV-1a seed hash + mulberry32 PRNG ---- */
 function fnv1a(s){ let h=0x811c9dc5; for(let i=0;i<s.length;i++){ h^=s.charCodeAt(i); h=Math.imul(h,0x01000193); } return h>>>0; }
 function mulberry32(a){ return function(){ a|=0; a=(a+0x6D2B79F5)|0; let t=Math.imul(a^(a>>>15),1|a); t=(t+Math.imul(t^(t>>>7),61|t))^t; return ((t^(t>>>14))>>>0)/4294967296; }; }
-/* ---- Stage 0/1: percentile features (midrank ties → outlier-proof, no scale dominance) ---- */
+/* ---- Stage 0/1: percentile features (midrank ties -> outlier-proof, no scale dominance) ---- */
 function _midrankPcts(vals){
   const arr=vals.slice().sort((a,b)=>a.x-b.x), n=arr.length, out=new Map();
   let i=0; while(i<n){ let j=i; while(j+1<n && arr[j+1].x===arr[i].x) j++;
@@ -2137,7 +2144,7 @@ function recFeatures(){
     const invLiq=1-clamp01(0.7*demPct+0.3*liq);                                // exit risk: hard-to-sell = risky
     const risk=Math.round(100*(W.vol*volPct+W.dd*ddPct+W.liq*invLiq+W.price*valPct));
     const growth=clamp01(0.40*headroom*(momPct>=0.5?1:0.35)+0.36*momPct+0.24*des);
-    const dataN=m?clamp01((m.n-3)/9):0;                                        // history sufficiency → confidence + Low-history flag
+    const dataN=m?clamp01((m.n-3)/9):0;                                        // history sufficiency -> confidence + Low-history flag
     const rangeTight=r.value>0&&r.hi>r.lo?clamp01(1-((r.hi-r.lo)/r.value)/0.6):0.8;
     byId.set(id,{val:r.value,vconf:r.conf/100,liq,des,stab,
       mom:x.momRaw,recMom,chgPct:x.chg,headroom,growth,dataN,rangeTight,
@@ -2147,27 +2154,6 @@ function recFeatures(){
   }
   _featCache={k:key,byId,n:raw.length};
   return _featCache;
-}
-/* ---- Stage 2: hard tier eligibility + relaxation ladder (the mechanism that separates tiers) ---- */
-function tierEligible(f,e){
-  if(f.demPct<e.demPct) return false;
-  if(f.volPct>e.volPct) return false;
-  if(f.ddPct>e.ddPct) return false;
-  if(f.risk>e.riskMax) return false;
-  if(e.labels && !e.labels[f.label]) return false;
-  if(e.noFluctThin && f.label==="Fluctuating" && f.demPct<0.5) return false;
-  return true;
-}
-function relaxedElig(base,L){
-  const e={demPct:base.demPct,volPct:base.volPct,ddPct:base.ddPct,riskMax:base.riskMax,
-           labels:base.labels||null,noFluctThin:!!base.noFluctThin,momQuota:base.momQuota||0};
-  for(let i=2;i<=L;i++){ const r=REC_CONFIG.relax[i-2]; if(!r) break;
-    if(r.volPct){ e.volPct=Math.min(1.01,e.volPct+r.volPct); e.ddPct=Math.min(1.01,e.ddPct+(r.ddPct||0)); }
-    if(r.demPct) e.demPct=Math.max(0,e.demPct+r.demPct);
-    if(r.labelsOpen){ e.labels=null; e.noFluctThin=false; }
-    if(r.open){ e.demPct=0; e.volPct=1.01; e.ddPct=1.01; e.riskMax=101; e.labels=null; e.noFluctThin=false; }
-  }
-  return e;
 }
 /* ---- candidate objects: singles & bundles share one shape ---- */
 const AGG_KEYS=["liq","des","stab","mom","recMom","chgPct","headroom","growth","dataN","rangeTight","d10","demNull","rar01","valPct","demPct","volPct","ddPct","momPct","vconf"];
@@ -2189,78 +2175,65 @@ function mkCand(members){
   return {items:members, f, val:f.val, domCat:dom.it.category, sig:ids.join("|"),
     idSet:new Set(ids), brSet:new Set(members.map(c=>valBracket(c.f.val)))};
 }
-/* ---- Stage 4: bundles near target — windowed enumeration, anti-clone guard ---- */
-function buildCombos(pool,V,p){
-  const arr=pool.slice().sort((a,b)=>a.f.val-b.f.val), n=arr.length;
-  const out=[], seen=new Set(), LO=p.wideLo, HI=p.hi;
+/* ---- raw trade axes (identical functions applied to BOTH inventory & candidate) ---- */
+function demand01(it){ return it.demand==null?0.22:clamp01(it.demand/10); }
+function rarity01(it){ const ex=it.rarity==null?0.4:clamp01(it.rarity/10), pr=PRESTIGE[it.category]??0.3; return clamp01(0.55*ex+0.45*pr); }
+function hypeRaw01(it){ const chg=Number.isFinite(it.changePct)?it.changePct:0, sent=TREND_SENT[it.trend]||"flat";
+  const sb=sent==="up"?0.15:(sent==="warn"||sent==="down")?-0.12:0; return clamp01(0.5+chg/55+sb); }
+function axisAgg(members){ let w=0,D=0,R=0,H=0;
+  for(const c of members){ const ww=Math.max(1,c.f.val); w+=ww; D+=demand01(c.it)*ww; R+=rarity01(c.it)*ww; H+=hypeRaw01(c.it)*ww; }
+  if(w>0){ D/=w; R/=w; H/=w; } return {dem:D,rar:R,hype:H}; }
+/* ---- classify a candidate as a TRADE relative to the inventory aggregate ---- */
+function classify(cb,inv){ const a=axisAgg(cb.items);
+  cb.dem=a.dem; cb.rar=a.rar; cb.hype=a.hype;
+  cb.r=inv.V>0?cb.val/inv.V:1; cb.dVal=cb.val-inv.V;
+  cb.dDem=a.dem-inv.dem; cb.dRar=a.rar-inv.rar; cb.dHype=a.hype-inv.hype;
+  cb.dDes=0.5*cb.dDem+0.5*cb.dRar;                                   // "demand & rarity" axis the user pairs together
+  cb.dDesH=0.42*cb.dDem+0.38*cb.dRar+0.20*cb.dHype;                  // desirability incl. hype (Risky)
+  return cb; }
+/* ---- Stage 2: candidate enumeration across a WIDE, TWO-SIDED value band ---- */
+function combosBand(pool,V,loR,hiR,sizes,cap){
+  const arr=pool.slice().sort((a,b)=>a.f.val-b.f.val), n=arr.length, lo=V*loR, hi=V*hiR;
+  const out=[], seen=new Set();
+  const bsLow=t=>{ let l=0,h=n; while(l<h){ const m=(l+h)>>1; if(arr[m].f.val<t) l=m+1; else h=m; } return l; };
   const clone=m=>{ if(m.length<3) return false; const c0=m[0].it.category, b0=valBracket(m[0].f.val);
     return m.every(x=>x.it.category===c0) && m.every(x=>valBracket(x.f.val)===b0); };   // "four near-identical knives" killer
-  const add=m=>{ if(m.length>1 && m.some(x=>x.f.val>=V*0.9)) return false;
+  const add=m=>{ if(out.length>=cap) return false;
+    if(m.length>1 && m.some(x=>x.f.val>=V*0.95)) return false;            // no bundle dominated by one near-full-value item
     if(clone(m)) return false;
     const sig=m.map(x=>x.it.id).sort().join("|"); if(seen.has(sig)) return false; seen.add(sig);
     out.push(mkCand(m)); return true; };
-  const bs=t=>{ let lo=0,hi=n; while(lo<hi){ const mid=(lo+hi)>>1; if(arr[mid].f.val<t) lo=mid+1; else hi=mid; } return lo; };
-  for(const c of arr) if(c.f.val>=V*LO && c.f.val<=V*HI) add([c]);
-  let nP=0; for(let a=0;a<n&&nP<340;a++){ if(arr[a].f.val>=V*0.98) break; const idx=bs(V-arr[a].f.val);
-    for(let k=Math.max(a+1,idx-2);k<=Math.min(n-1,idx+2)&&nP<340;k++){ if(k<=a) continue;
-      const s=arr[a].f.val+arr[k].f.val; if(s>=V*LO&&s<=V*HI){ if(add([arr[a],arr[k]])) nP++; } } }
-  let T=arr.filter(c=>c.f.val>0&&c.f.val<=V*0.72); if(T.length>32){ const st=Math.ceil(T.length/32); T=T.filter((_,i)=>i%st===0); }
-  let nT=0; for(let a=0;a<T.length&&nT<320;a++){ for(let b=a+1;b<T.length&&nT<320;b++){ const base=T[a].f.val+T[b].f.val; if(base>=V*1.02) break;
-    const idx=bs(V-base);
-    for(let k=Math.max(0,idx-1);k<=Math.min(n-1,idx+1);k++){ const c=arr[k];
-      if(c.it.id===T[a].it.id||c.it.id===T[b].it.id) continue; const s=base+c.f.val;
-      if(s>=V*LO&&s<=V*HI){ if(add([T[a],T[b],c])) nT++; } } } }
-  let Q=arr.filter(c=>c.f.val>0&&c.f.val<=V*0.52); if(Q.length>24){ const st=Math.ceil(Q.length/24); Q=Q.filter((_,i)=>i%st===0); }
-  let nQ=0; for(let a=0;a<Q.length&&nQ<240;a++){ for(let b=a+1;b<Q.length&&nQ<240;b++){ if(Q[a].f.val+Q[b].f.val>=V*1.0) break;
-    for(let c=b+1;c<Q.length&&nQ<240;c++){ const base=Q[a].f.val+Q[b].f.val+Q[c].f.val; if(base>=V*1.02) break;
-      const idx=bs(V-base);
-      for(let d=Math.max(0,idx-1);d<=Math.min(n-1,idx+1);d++){ const e=arr[d];
-        if(e.it.id===Q[a].it.id||e.it.id===Q[b].it.id||e.it.id===Q[c].it.id) continue; const s=base+e.f.val;
-        if(s>=V*LO&&s<=V*HI){ if(add([Q[a],Q[b],Q[c],e])) nQ++; } } } } }
+  if(sizes.has(1)) for(const c of arr){ if(c.f.val>=lo&&c.f.val<=hi) add([c]); }
+  if(sizes.has(2)){ for(let a=0;a<n&&out.length<cap;a++){ const va=arr[a].f.val; if(va>hi) break;
+    let k=bsLow(lo-va); if(k<=a) k=a+1; let cnt=0;
+    for(; k<n&&cnt<REC_CONFIG.pairPerAnchor; k++){ const s=va+arr[k].f.val; if(s>hi) break; if(s>=lo){ add([arr[a],arr[k]]); cnt++; } } } }
+  if(sizes.has(3)||sizes.has(4)){
+    let base=arr.filter(c=>c.f.val<=hi*0.8); if(base.length>REC_CONFIG.sampleN){ const st=Math.ceil(base.length/REC_CONFIG.sampleN); base=base.filter((_,i)=>i%st===0); }
+    const bn=base.length, maxDepth=sizes.has(4)?4:3;
+    const dfs=(start,chosen,sum)=>{ if(out.length>=cap) return;
+      for(let i=start;i<bn;i++){ const s2=sum+base[i].f.val; if(s2>hi) break; const ch=chosen.concat(base[i]);
+        if(sizes.has(ch.length)&&s2>=lo) add(ch);
+        if(ch.length<maxDepth) dfs(i+1,ch,s2); } };
+    dfs(0,[],0);
+  }
   return out;
 }
-/* ---- scoring: tier quality × value-proximity bell (target ≈ inventory value, never much more) ---- */
-function valueFit(r,p){ if(!isFinite(r)||r<=0) return 1; if(r>1.06) return 0; const sp=p.spread||0.10;
-  let f=clamp01(1-0.6*Math.pow((r-p.target)/sp,2)); if(r>1.0) f*=clamp01(1-(r-1.0)*7); return f; }
+/* ---- confidence: data-aware, pillar-agreement aware ---- */
 function recConfidence(f){
   const px=[f.volPct,f.ddPct,1-f.demPct], mu=(px[0]+px[1]+px[2])/3;                    // do the risk pillars tell one story?
   const agree=1-clamp01(2*Math.sqrt(px.reduce((s,x)=>s+(x-mu)*(x-mu),0)/3));
   return Math.round(clamp100(24+24*f.vconf+16*f.dataN+12*(1-f.volPct)+12*f.rangeTight+12*agree-8*f.demNull));
 }
-function scoreCand(cb,p,V){
-  cb.ratio=V>0?cb.val/V:1;
-  cb.qf=p.q(cb.f); cb.vf=(V>0)?valueFit(cb.ratio,p):1;
-  cb.sc=clamp100(100*cb.qf*(0.28+0.72*cb.vf));
-  cb.conf=recConfidence(cb.f);
-  return cb;
-}
-/* ---- Stage 4b: swap local search — close the value gap without trading away quality ---- */
-function polishBundles(ranked,pool,V,p,lo){
-  if(!(V>0)||!ranked.length) return;
-  const arr=pool.slice().sort((a,b)=>a.f.val-b.f.val), n=arr.length;
-  const bs=t=>{ let l=0,h=n; while(l<h){ const m=(l+h)>>1; if(arr[m].f.val<t) l=m+1; else h=m; } return l; };
-  const sigOf=cb=>[...cb.idSet].sort().join("|");
-  const sigs=new Set(ranked.map(sigOf));
-  for(const cb of ranked.slice(0,24)){
-    if(cb.items.length<2) continue;
-    for(let mi=0;mi<cb.items.length;mi++){
-      const others=cb.items.filter((_,j)=>j!==mi), base=others.reduce((s,c)=>s+c.f.val,0);
-      const idx=bs(V-base);
-      for(let k=Math.max(0,idx-2);k<=Math.min(n-1,idx+2);k++){
-        const c=arr[k]; if(!c||others.some(o=>o.it.id===c.it.id)) continue;
-        const sum=base+c.f.val, ratio=sum/V;
-        if(ratio<lo||ratio>p.hi) continue;
-        if(Math.abs(sum-V)>=Math.abs(cb.val-V)-1e-9) continue;                 // must strictly close the gap
-        const m=[...others,c], sig=m.map(x=>x.it.id).sort().join("|");
-        if(sigs.has(sig)) continue;
-        const cand=scoreCand(mkCand(m),p,V);
-        if(cand.qf<cb.qf*0.92) continue;                                       // never trade quality for the gap
-        sigs.delete(sigOf(cb)); Object.assign(cb,cand); sigs.add(sig);
-      }
-    }
-  }
-}
-/* ---- Stage 3: MMR diversity re-rank + quotas + seeded softmax exploration ---- */
+/* ---- profile fit quality (drives fillers + the match bar) ---- */
+function qBal(cb,inv){ const U=inv.U;
+  return clamp01(0.26*cb.dem + 0.18*(1-cb.f.volPct) + 0.16*cb.f.stab
+    + 0.16*(1-Math.min(1,Math.abs(cb.dVal)/(1.3*U))) + 0.12*cb.rar + 0.12*(1-Math.min(1,Math.abs(cb.dDes)/0.4))); }
+function qRisk(cb,inv){ const U=inv.U;
+  return clamp01(0.30*cb.hype + 0.22*cb.f.headroom + 0.20*Math.min(1,Math.abs(cb.dVal)/(1.4*U))
+    + 0.16*cb.f.momPct + 0.12*cb.dem); }
+function qOf(cb,p,inv){ return p.k==="balanced"?qBal(cb,inv):qRisk(cb,inv); }
+function scoreProfile(cb,p,inv){ cb.qP=qOf(cb,p,inv); cb.conf=recConfidence(cb.f); cb.sc=clamp100(100*cb.qP); return cb; }
+/* ---- Stage 3: MMR diversity similarity ---- */
 function candSim(a,b){
   let inter=0; for(const id of a.idSet) if(b.idSet.has(id)) inter++;
   const shared=inter/Math.min(a.idSet.size,b.idSet.size);
@@ -2268,127 +2241,185 @@ function candSim(a,b){
   const size=1-Math.abs(a.items.length-b.items.length)/3;
   let bi=0,bu=0; for(const x of a.brSet){ bu++; if(b.brSet.has(x)) bi++; } for(const x of b.brSet) if(!a.brSet.has(x)) bu++;
   const br=bu>0?bi/bu:1;
-  const dem=a.f.demTier===b.f.demTier?1:0, vol=a.f.volTier===b.f.volTier?1:0;
+  const dem=a.f.demTier===b.f.demTier?1:0;
   const w=REC_CONFIG.mmrSim;
-  const meta=(w.cat*cat+w.size*size+w.bracket*br+w.dem*dem+w.vol*vol)/(w.cat+w.size+w.bracket+w.dem+w.vol);
+  const meta=(w.cat*cat+w.size*size+w.bracket*br+w.dem*dem)/(w.cat+w.size+w.bracket+w.dem);
   return clamp01(w.shared*shared+(1-w.shared)*meta);
 }
-function mmrSelect(ranked,p,seedKey,modeSize,shown){
-  const Q=REC_CONFIG.quotas, N=Q.picks, S=[];
-  if(!ranked.length) return S;
-  const top=Math.max(1e-6,ranked[0].sc);
-  const rng=mulberry32(fnv1a(seedKey));
-  const tau=(state.recSeed||0)===0?0:REC_CONFIG.tau;         // seed 0 = canonical greedy set; rerolls sample deterministically
-  const catCnt={}, sizeCnt={};
-  let posLeft=0;
-  if(p.elig.momQuota){ const avail=ranked.filter(c=>c.f.mom>1e-4).length;
-    posLeft=Math.min(Math.ceil(N*p.elig.momQuota),avail); }   // Aggressive: ≥half the picks ride positive Theil–Sen slope when any exist
-  while(S.length<N){
-    let cands=ranked.filter(c=>!S.includes(c));
-    if(!cands.length) break;
-    let filt=cands.filter(c=>(catCnt[c.domCat]||0)<Q.maxPerCat);           // soft quotas: applied only while
-    if(filt.length) cands=filt;                                            // alternatives remain
-    if(!modeSize){ filt=cands.filter(c=>(sizeCnt[c.items.length]||0)<Q.maxPerSize); if(filt.length) cands=filt; }
-    if(shown&&shown.size){ filt=cands.filter(c=>!shown.has(c.sig)); if(filt.length) cands=filt; }   // don't repeat an earlier tier's exact bundle
-    if(posLeft>0&&(N-S.length)<=posLeft){ filt=cands.filter(c=>c.f.mom>1e-4); if(filt.length) cands=filt; }
-    const scored=cands.map(c=>{ let mx=0; for(const s of S){ const sm=candSim(c,s); if(sm>mx) mx=sm; }
-      return {c,m:p.lambda*(c.sc/top)-(1-p.lambda)*mx}; }).sort((a,b)=>b.m-a.m);
-    let pick=scored[0].c;
-    const K=Math.min(REC_CONFIG.explore,scored.length);
+function avgPairSim(picks){ let s=0,n=0; for(let i=0;i<picks.length;i++) for(let j=i+1;j<picks.length;j++){ s+=candSim(picks[i],picks[j]); n++; } return n?s/n:0; }
+/* ---- Stage 2b: archetype slot matching (the guarantee of asymmetric trades) ----
+   Each slot returns candidates passing a directional predicate, ranked by how well
+   they embody that trade. rl (relax level 0..2) progressively loosens the bands so a
+   slot still fills on thinner pools; rl>=2 keeps only the trade DIRECTION honest. */
+function slotCandidates(pool,key,rl,inv){
+  const U=inv.U, r=[];
+  for(const cb of pool){ const dv=cb.dVal; let ok=false, rank=0;
+    if(key==="fair-up"){                                   // give a little value -> gain demand/rarity
+      const lo=-(2.0+rl*0.6)*U, hi=-(0.12-rl*0.06)*U;
+      const need = rl>=2 ? cb.dDes>0 : cb.dDes>=(0.06-rl*0.02);
+      ok = dv>=lo && dv<=hi && need;
+      rank = cb.dDes/Math.max(0.2*U,-dv);
+    } else if(key==="value-up"){                           // modest value gain -> ease off demand/rarity (still even)
+      const lo=(0.12-rl*0.06)*U, hi=(2.4+rl*0.8)*U;
+      const floor = rl>=2 ? -0.6 : (-0.34-rl*0.08);
+      const need = rl>=2 ? cb.dDes<0 : (cb.dDes<=(-0.03+rl*0.01) && cb.dDes>=floor);
+      ok = dv>=lo && dv<=hi && need;
+      rank = dv/Math.max(0.03,-cb.dDes);
+    } else if(key==="demand-bet"){                         // Risky: trade value away -> demand/rarity/HYPE
+      const hi=-(0.35-rl*0.12)*U;
+      const need = rl>=2 ? cb.dDesH>0 : cb.dDesH>=(0.10-rl*0.03);
+      ok = dv<=hi && need;
+      rank = cb.dDesH/Math.max(0.2*U,-dv) + (cb.dHype>0?0.15*cb.dHype:0);
+    } else if(key==="value-grab"){                         // Risky: WIN 100+ value -> drop demand/rarity
+      const lo=Math.max((0.8-rl*0.25)*U, rl>=2?60:100);
+      if(rl>=2){ ok = dv>=lo && cb.dDes<0; }               // deepest: gain value while NET demand+rarity drops
+      else { const dem=cb.dDem<=(-0.05+rl*0.02), rar=rl>=1?true:cb.dRar<=-0.03; ok = dv>=lo && dem && rar; }
+      rank = dv;
+    }
+    if(ok) r.push({cb,rank});
+  }
+  r.sort((a,b)=>b.rank-a.rank);
+  return r.map(x=>x.cb);
+}
+function bestForSlot(pool,p,key,hardSkip,softSkip,inv){
+  for(let rl=0;rl<=2;rl++){
+    let cs=slotCandidates(pool,key,rl,inv).filter(cb=>!hardSkip.has(cb.sig));
+    let strict=cs.filter(cb=>!softSkip.has(cb.sig)); if(strict.length) cs=strict;   // prefer not repeating the other profile
+    if(p.k==="balanced"&&rl<2){ const g=cs.filter(cb=>cb.f.volPct<=p.volPctMax); if(g.length) cs=g; }  // Balanced: steadier
+    if(cs.length) return {cb:cs[0],rl};
+  }
+  return null;
+}
+function fillerTag(cb,p){
+  const up=cb.dVal>0;
+  if(p.k==="balanced"){
+    if(Math.abs(cb.dDes)<0.06 && Math.abs(cb.r-1)<0.06) return {t:"Even sidegrade",c:"#5eead4"};
+    return up?{t:"Value gain",c:"#7dd3fc"}:{t:"Demand tilt",c:"#5eead4"};
+  }
+  return up?{t:"Value grab",c:"#fbbf24"}:{t:"Hype bet",c:"#fda4af"};
+}
+/* ---- Stage 3b: fill remaining slots by profile fit, MMR-diverse, seeded reroll ---- */
+function mmrFill(pool,p,chosen,usedSig,seedKey,need,inv){
+  if(need<=0) return [];
+  const rng=mulberry32(fnv1a(seedKey+"|fill")), tau=(state.recSeed||0)===0?0:REC_CONFIG.tau;
+  const top=Math.max(1e-6,...pool.map(cb=>cb.qP||0));
+  const S=chosen.slice(), res=[], sizeCnt={}; chosen.forEach(c=>sizeCnt[c.items.length]=(sizeCnt[c.items.length]||0)+1);
+  let cand=pool.filter(cb=>!usedSig.has(cb.sig));
+  while(res.length<need && cand.length){
+    cand=cand.filter(cb=>!usedSig.has(cb.sig)); if(!cand.length) break;
+    let cc=cand.filter(cb=>(sizeCnt[cb.items.length]||0)<3); if(cc.length) cand=cc;   // light size spread
+    const scored=cand.map(cb=>{ let mx=0; for(const s of S){ const sm=candSim(cb,s); if(sm>mx) mx=sm; }
+      return {cb,m:p.lambda*((cb.qP||0)/top)-(1-p.lambda)*mx}; }).sort((a,b)=>b.m-a.m);
+    let pick=scored[0].cb; const K=Math.min(REC_CONFIG.explore,scored.length);
     if(K>1&&tau>0){ const w=[]; let tot=0;
       for(let i=0;i<K;i++){ const x=Math.exp((scored[i].m-scored[0].m)/tau); w.push(x); tot+=x; }
-      let r=rng()*tot; for(let i=0;i<K;i++){ r-=w[i]; if(r<=0){ pick=scored[i].c; break; } } }
-    S.push(pick);
-    catCnt[pick.domCat]=(catCnt[pick.domCat]||0)+1;
-    sizeCnt[pick.items.length]=(sizeCnt[pick.items.length]||0)+1;
-    if(pick.f.mom>1e-4) posLeft=Math.max(0,posLeft-1);
+      let rr=rng()*tot; for(let i=0;i<K;i++){ rr-=w[i]; if(rr<=0){ pick=scored[i].cb; break; } } }
+    res.push(pick); S.push(pick); usedSig.add(pick.sig); sizeCnt[pick.items.length]=(sizeCnt[pick.items.length]||0)+1;
   }
-  return S.sort((a,b)=>b.sc-a.sc);
+  return res;
 }
-function avgPairSim(picks){ let s=0,n=0; for(let i=0;i<picks.length;i++) for(let j=i+1;j<picks.length;j++){ s+=candSim(picks[i],picks[j]); n++; } return n?s/n:0; }
-/* ---- Stage 5: value chip, tier-specific whys, confidence ---- */
+function pickProfile(pool,p,inv,seedKey,shownSigs){
+  const N=REC_CONFIG.picks;
+  if(!(inv.V>0)){                                                    // empty inventory: no "trade vs you" -> intrinsic fit only
+    const picks=pool.slice().sort((a,b)=>b.sc-a.sc).slice(0,N); picks.forEach(cb=>cb.tag=fillerTag(cb,p));
+    return {picks,arch:{filled:[],missing:[]},relax:0};
+  }
+  const chosenSig=new Set(), chosen=[], filled=[], missing=[]; let relax=0;
+  for(const slot of p.slots){
+    const b=bestForSlot(pool,p,slot.key,chosenSig,shownSigs,inv);
+    if(b){ b.cb.tag=slot.tag; b.cb.arch=slot.key; b.cb.sc=clamp100((b.cb.sc||0)+12); chosen.push(b.cb); chosenSig.add(b.cb.sig); filled.push(slot.key); relax=Math.max(relax,b.rl); }
+    else missing.push(slot.tag.t);
+  }
+  const usedSig=new Set(chosenSig); for(const s of shownSigs) usedSig.add(s);          // fillers avoid the other profile's bundles
+  const fillers=mmrFill(pool,p,chosen,usedSig,seedKey,N-chosen.length,inv);
+  fillers.forEach(cb=>{ cb.tag=cb.tag||fillerTag(cb,p); });
+  let picks=chosen.concat(fillers);
+  if(picks.length<N){ const have=new Set(picks.map(c=>c.sig));                          // tiny pool: pad from best remaining
+    const extra=pool.filter(cb=>!have.has(cb.sig)).sort((a,b)=>b.sc-a.sc).slice(0,N-picks.length);
+    extra.forEach(cb=>cb.tag=cb.tag||fillerTag(cb,p)); picks=picks.concat(extra); }
+  picks.sort((a,b)=>b.sc-a.sc);
+  return {picks,arch:{filled,missing},relax};
+}
+/* ---- Stage 5: value chip + axis-vs-you why chips ---- */
 function recValue(o,V){
   if(!(V>0)) return null;
-  const r=o.val/V, pv=Math.round((r-1)*100);
-  if(r>=1.03) return {t:`\u25b2 +${pv}% value`,c:"#34d399"};
-  if(r>=0.96) return {t:"Even value",c:"#5eead4"};
-  const loss=Math.round((1-r)*100);
-  return (o.qf>=0.6&&loss<=12)?{t:`\u25bc ${loss}% \u00b7 for upside`,c:"#fbbf24"}:{t:`\u25bc ${loss}% value`,c:"#fb7185"};
+  const d=o.val-V, r=o.val/V, pct=Math.round((r-1)*100);
+  if(Math.abs(pct)<3 && Math.abs(d)<100) return {t:"Even value",c:"#5eead4"};
+  const up=d>0, mag=Math.abs(pct)>=10?`${up?"+":"\u2212"}${fmt(Math.round(Math.abs(d)))}`:`${up?"+":"\u2212"}${Math.abs(pct)}%`;
+  return {t:`${up?"\u25b2":"\u25bc"} ${mag} value`, c:up?"#7dd3fc":"#fbbf24"};   // both are intended moves, not mistakes
 }
-function recWhy(cb,p){
-  const f=cb.f, out=[], P=x=>Math.round(x*100), ap=cb.items.length>1?"~":"";
-  const dem=f.demNull>=0.5?"Demand unlisted":`Demand ${ap}${Math.round(f.d10)}/10`;
-  if(p.k==="safe"){
-    out.push(dem+` \u00b7 top ${Math.max(1,100-P(f.demPct))}%`);
-    out.push(`Low volatility \u00b7 ${P(f.volPct)}th pct`);
-    if(f.ddPct<=0.5) out.push("Shallow drawdowns");
-    if(f.volPct<=0.45&&f.stab>=0.3) out.push("Stable history");
-  } else if(p.k==="balanced"){
-    out.push(dem);
-    out.push(f.mom>0.01?`\u25b2 ${(f.mom*100).toFixed(0)}% momentum`:f.mom<-0.01?`\u25bc ${Math.abs(f.mom*100).toFixed(0)}% drift`:"Flat trend");
-    out.push(`Volatility ${P(f.volPct)}th pct`);
-    if(f.growth>=0.55) out.push("Upside potential");
-    if(f.ddPct<=0.6) out.push("Contained drawdowns");
-  } else {
-    out.push(f.mom>0.01?`\u25b2 +${(f.mom*100).toFixed(0)}% momentum`:`Momentum ${P(f.momPct)}th pct`);
-    if(f.headroom>=0.12) out.push(`${P(f.headroom)}% below peak`);
-    if(f.volPct>=0.6) out.push(`\u26a0 Volatile \u00b7 ${P(f.volPct)}th pct`);
-    if(f.d10<4&&f.demNull<0.5) out.push(`\u26a0 Thin demand ${ap}${Math.round(f.d10)}/10`); else out.push(dem);
-    if(f.rar01>=0.7) out.push(`Rare ${Math.round(f.rar01*10)}/10`);
-  }
+function recWhy(cb,p,inv){
+  const f=cb.f, out=[], ap=cb.items.length>1?"~":"", P=x=>Math.round(x*100);
+  const d10=Math.round(cb.dem*10), yourD=Math.round(inv.dem*10);
+  if(cb.dDem>=0.06) out.push(`\u25b2 Demand ${ap}${d10}/10 vs your ${yourD}`);
+  else if(cb.dDem<=-0.06) out.push(`\u25bc Demand ${ap}${d10}/10 vs your ${yourD}`);
+  else out.push(f.demNull>=0.5?"Demand unlisted":`Demand ${ap}${d10}/10`);
+  if(cb.dRar>=0.05) out.push("\u25b2 Rarer");
+  else if(cb.dRar<=-0.05) out.push("\u25bc Less rare");
+  if(p.k==="aggressive"){ if(cb.dHype>=0.06||f.momPct>=0.6) out.push(`\u25b2 Hype \u00b7 ${P(f.momPct)}th pct`);
+    if(f.volPct>=0.6) out.push({t:`\u26a0 Volatile \u00b7 ${P(f.volPct)}th pct`,warn:1}); }
+  else { if(f.mom>0.01) out.push(`\u25b2 ${(f.mom*100).toFixed(0)}% momentum`);
+    else if(f.mom<-0.01) out.push(`\u25bc ${Math.abs(f.mom*100).toFixed(0)}% drift`);
+    if(f.volPct<=0.4) out.push("Low volatility"); }
   if(f.vconf>=0.85) out.push("Sources agree");
   if(f.dataN<0.3) out.push({t:"Low history",warn:1});
   return out.slice(0,5).map(w=>typeof w==="string"?{t:w}:w);
 }
 /* ---- orchestrator ---- */
-let _recCache={k:null,v:null};   // recompute recommendations only when inputs actually change (_dataRev is declared up near buildData)
+let _recCache={k:null,v:null};   // recompute only when inputs change (_dataRev declared up near buildData)
 function recommendUpgrades(port,cat,mode){
   const _t0=performance.now();
-  const modeSize=/^[1-4]$/.test(String(mode))?+mode:0;   // 0 = General (any 1..4 items), else a fixed bundle size
+  const modeSize=/^[1-4]$/.test(String(mode))?+mode:0;                     // 0 = General (any 1..4 items), else fixed size
   const V=reconciledSide(port).value;
   const owned=new Set(port.map(o=>o.id));
   const F=recFeatures();
-  const cands=[];
+  const U=Math.max(REC_CONFIG.swing.floor, Math.min(V*REC_CONFIG.swing.capPct, V*REC_CONFIG.swing.pct)) || REC_CONFIG.swing.floor;
+  const inv={ V, U,
+    dem:V>0?(sideAgg(port,demand01)??0.35):0.35,
+    rar:V>0?(sideAgg(port,rarity01)??0.45):0.45,
+    hype:V>0?(sideAgg(port,hypeRaw01)??0.5):0.5 };
+  const base=[];
   for(const it of ALL){ if(it.placeholder||owned.has(it.id)||!REC_CATS.includes(it.category)) continue;
-    const f=F.byId.get(it.id); if(!f||!catMatch(it,cat)) continue; cands.push({it,f}); }
-  const out={}, diag={relax:{},ild:{},pool:{}}; let nearTot=0; const nearSeen=new Set(), shownSigs=new Set();
-  for(const p of RISK_PROFILES){
-    let chosen=null;
-    for(let L=0;L<=REC_RELAX_MAX;L++){                                        // ladder: fill the pool honestly, one step at a time
-      const e=relaxedElig(p.elig,L);
-      const pl=cands.filter(c=>tierEligible(c.f,e));
-      if(pl.length<REC_CONFIG.minPool&&L<REC_RELAX_MAX) continue;
-      if(V>0){
-        let cs=buildCombos(pl,V,p);
-        if(modeSize) cs=cs.filter(cb=>cb.items.length===modeSize);
-        const lo=(L>=1)?p.wideLo:p.lo;
-        const list=cs.filter(cb=>{ const r=cb.val/V; return r>=lo&&r<=p.hi; });
-        if(list.length>=REC_CONFIG.minCombos||L===REC_RELAX_MAX){ chosen={list,lvl:L,pool:pl,lo}; break; }
-      } else {
-        let list=pl.slice().sort((a,b)=>p.q(b.f)-p.q(a.f)).slice(0,40).map(c=>mkCand([c]));
-        if(modeSize&&modeSize!==1) list=[];
-        chosen={list,lvl:L,pool:pl,lo:p.lo}; break;
-      }
+    const f=F.byId.get(it.id); if(!f||!catMatch(it,cat)) continue; base.push({it,f}); }
+  /* ---- enumerate the candidate pool ONCE: wide singles + near-parity bundles ----
+     (asymmetric archetypes are carried by wide singles; bundles cover even sidegrades.
+      building once & scoring per-profile on shallow copies keeps it fast and bleed-free) */
+  const FLO=0.55, FHI=1.45;
+  let rawPool=[];
+  if(V>0){
+    if(modeSize===0){
+      const singles=base.filter(c=>c.f.val>=V*FLO&&c.f.val<=V*FHI).map(c=>mkCand([c]));
+      const bundles=combosBand(base,V,0.72,1.28,new Set([2,3,4]),REC_CONFIG.combosCap);
+      rawPool=singles.concat(bundles);
+    } else if(modeSize===1){
+      rawPool=base.filter(c=>c.f.val>=V*FLO&&c.f.val<=V*FHI).map(c=>mkCand([c]));
+    } else {
+      rawPool=combosBand(base,V,FLO,FHI,new Set([modeSize]),REC_CONFIG.combosCap);
     }
-    if(!chosen) chosen={list:[],lvl:REC_RELAX_MAX,pool:[],lo:p.wideLo};
-    const ranked=chosen.list.map(cb=>scoreCand(cb,p,V)).sort((a,b)=>b.sc-a.sc);
-    polishBundles(ranked,chosen.pool,V,p,chosen.lo);
-    ranked.sort((a,b)=>b.sc-a.sc);
-    for(const cb of ranked){ const sig=[...cb.idSet].sort().join("|"); if(!nearSeen.has(sig)){ nearSeen.add(sig); nearTot++; } }
-    const seedKey=p.k+"|"+cat+"|"+mode+"|"+_dataRev+"|"+[...owned].sort().join(",")+"|"+(state.recSeed||0);
-    const picks=mmrSelect(ranked.slice(0,160),p,seedKey,modeSize,shownSigs);   // MMR only ever needs the top slice
-    picks.forEach(cb=>{ cb.why=recWhy(cb,p); shownSigs.add(cb.sig); });
-    out[p.k]=picks;
-    diag.relax[p.k]=chosen.lvl; diag.pool[p.k]=chosen.pool.length;
-    diag.ild[p.k]=picks.length>1?+((1-avgPairSim(picks)).toFixed(3)):null;    // intra-list diversity, per tier
+  } else {
+    rawPool=(modeSize&&modeSize!==1)?[]:base.map(c=>mkCand([c]));
   }
-  const ks=RISK_PROFILES.map(p=>p.k); let mx=0;                               // cross-tier separation check
+  for(const cb of rawPool) classify(cb,inv);
+  const out={}, diag={relax:{},ild:{},pool:{},arch:{},sample:{}}; const shownSigs=new Set(); let nearTot=0; const nearSeen=new Set();
+  for(const p of RISK_PROFILES){
+    let pool = (V>0 ? rawPool.filter(cb=>cb.r>=p.window[0]&&cb.r<=p.window[1]) : rawPool).map(cb=>Object.assign({},cb));
+    for(const cb of pool) scoreProfile(cb,p,inv);
+    let usable = p.k==="balanced" ? pool.filter(cb=>cb.f.volPct<=0.92) : pool;         // Balanced drops the wildest movers
+    if(usable.length<REC_CONFIG.picks) usable=pool;
+    const seedKey=p.k+"|"+cat+"|"+mode+"|"+_dataRev+"|"+[...owned].sort().join(",")+"|"+(state.recSeed||0);
+    const res=pickProfile(usable,p,inv,seedKey,shownSigs);
+    res.picks.forEach(cb=>{ cb.why=recWhy(cb,p,inv); shownSigs.add(cb.sig); if(!nearSeen.has(cb.sig)){ nearSeen.add(cb.sig); nearTot++; } });
+    out[p.k]=res.picks;
+    diag.relax[p.k]=res.relax; diag.pool[p.k]=usable.length; diag.arch[p.k]=res.arch;
+    diag.ild[p.k]=res.picks.length>1?+((1-avgPairSim(res.picks)).toFixed(3)):null;
+    diag.sample[p.k]=res.picks.map(cb=>({v:Math.round(cb.val),dv:Math.round(cb.dVal),dDem:+(cb.dDem||0).toFixed(2),dRar:+(cb.dRar||0).toFixed(2),dHype:+(cb.dHype||0).toFixed(2),arch:cb.arch||null,size:cb.items.length}));
+  }
+  const ks=RISK_PROFILES.map(p=>p.k); let mx=0;                                        // cross-profile separation check
   for(let i=0;i<ks.length;i++) for(let j=i+1;j<ks.length;j++){
     const A=new Set((out[ks[i]]||[]).flatMap(c=>[...c.idSet])), B=new Set((out[ks[j]]||[]).flatMap(c=>[...c.idSet]));
     if(!A.size||!B.size) continue; let inter=0; for(const x of A) if(B.has(x)) inter++;
     const jac=inter/(A.size+B.size-inter); if(jac>mx) mx=jac; }
-  diag.overlap=+mx.toFixed(3);
-  diag.ms=+(performance.now()-_t0).toFixed(1);
+  diag.overlap=+mx.toFixed(3); diag.U=Math.round(U); diag.ms=+(performance.now()-_t0).toFixed(1);
   try{ window._recDiag=diag; }catch(e){}
   return {V,out,near:nearTot,diag};
 }
@@ -2416,10 +2447,8 @@ function portfolioView(){
   const rec=(_recCache.k===_rk)?_recCache.v:(_recCache={k:_rk,v:recommendUpgrades(port,state.portCat,state.recMode)}).v;
   const _recCatTxt = state.portCat==="All"?"items":esc(state.portCat)+" items";
   const dg=rec.diag||{relax:{},ild:{}};
-  const _relaxed=RISK_PROFILES.filter(p=>(dg.relax[p.k]||0)>=2).map(p=>p.label);
   const _notes=[];
-  if(rec.V>0 && rec.near<5) _notes.push(rec.near===0?("No "+_recCatTxt+" sit near your value right now"):("Only "+rec.near+" "+_recCatTxt+" candidates sit near your value"));
-  if(_relaxed.length) _notes.push("eligibility bands widened for "+_relaxed.join(", ")+" (thin pool at your value)");
+  for(const _p of RISK_PROFILES){ const _a=(dg.arch||{})[_p.k]; if(_a&&_a.missing&&_a.missing.length) _notes.push(_p.label+": no "+_a.missing.map(t=>"\u201c"+t+"\u201d").join(" / ")+" trade at your value/category"); }
   if((dg.overlap||0)>=0.5) _notes.push("profiles overlap \u2014 pool too small to fully separate"+(state.portCat==="All"?"":" \u2014 try <b>All</b>"));
   const recNote = _notes.length ? `<p class="port-empty" style="margin:0 2px 12px">${icon("info",12)} ${_notes.join(" \u00b7 ")}.</p>` : "";
   const catChips=PORT_CATS.map(c=>`<button class="pcat${state.portCat===c?' on':''}" data-action="pcat" data-c="${c}">${c}</button>`).join("");
@@ -2434,7 +2463,7 @@ function portfolioView(){
       ? `<div class="rec-top"><span class="rec-bundle">${icon("layers",12)} ${items.length}-item bundle</span><span class="rec-val">${fmt(total)}</span></div><div class="rec-items">${items.map(c=>`<div class="rec-item"><span class="row gap6 min0">${itemIconTag(c.it,13)}<span class="rec-iname">${esc(c.it.name)}</span>${badge(c.it.category)}</span><span class="rec-ival">${fmt(Math.round(c.f.val))}</span></div>`).join("")}</div>`
       : `<div class="rec-top"><span class="row gap8 min0">${itemIconTag(items[0].it,16)}<span class="rec-name">${esc(items[0].it.name)}</span></span><span class="rec-val">${fmt(total)}</span></div>`;
     return `<div class="rec-card">${top}
-      <div class="rec-mid">${multi?"":badge(items[0].it.category)}${vchip}<span class="rec-risk" style="color:${rc};background:${rc}1a" title="Composite risk 0\u2013100 \u2014 volatility, drawdown, exit-liquidity & price-concentration percentiles over the live dataset (lower = safer)">Risk ${o.f.risk}</span><span class="rec-conf" style="color:${cc};background:${cc}1f" title="Confidence \u2014 source agreement, price-history depth, volatility & range tightness">${icon("shield",10)} ${o.conf}%</span></div>
+      <div class="rec-mid"><span class="rec-tag" style="color:${o.tag?o.tag.c:'#8aa0c6'};background:${(o.tag?o.tag.c:'#8aa0c6')}1a">${o.tag?esc(o.tag.t):'Pick'}</span>${multi?"":badge(items[0].it.category)}${vchip}<span class="rec-risk" style="color:${rc};background:${rc}1a" title="Composite risk 0\u2013100 \u2014 volatility, drawdown, exit-liquidity & price-concentration percentiles over the live dataset (lower = safer)">Risk ${o.f.risk}</span><span class="rec-conf" style="color:${cc};background:${cc}1f" title="Confidence \u2014 source agreement, price-history depth, volatility & range tightness">${icon("shield",10)} ${o.conf}%</span></div>
       <div class="rec-why">${(o.why||[]).map(w=>`<span class="rec-chip${w.warn?" warn":""}">${esc(w.t)}</span>`).join("")}</div>
       <div class="rec-fit" title="Overall match \u2014 profile quality \u00d7 value proximity"><span class="rec-fitbar"><span style="width:${Math.round(o.sc)}%;background:${pf.color}"></span></span><span class="rec-fitn">${Math.round(o.sc)}<span class="rec-score-s">/100 match</span></span></div>
       <button class="rec-add" data-action="addMulti" data-side="them" data-ids="${items.map(c=>c.it.id).join(",")}">${icon("plus",12)} Model in calculator</button></div>`;
@@ -2457,7 +2486,7 @@ function portfolioView(){
     <div class="sp-list">${savedList}</div>
   </div>`;
   return `<div class="portfolio">
-    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Profile engine v2</b> \u2014 each risk profile has its own <b>hard eligibility bands</b> (demand, volatility &amp; drawdown percentiles over the live dataset), so Safe / Balanced / Risky draw from genuinely different pools. Candidates are then <b>diversity-re-ranked</b> across categories, bundle sizes &amp; value brackets, each pick carrying a composite <b>Risk</b> index, a confidence score and its binding reasons. Targets stay \u2248 your inventory value \u2014 realistic trades the other side would actually accept, never much more. <b>Reroll</b> re-samples equally strong alternatives deterministically. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-07-29c</b></p>
+    <p class="chg-intro">${icon("sparkles",12,"violet")} <b>Trade engine v3</b> \u2014 two strategies on the value\u2194demand frontier. <b>Balanced</b> surfaces even trades (give a little value, gain demand/rarity \u2014 or take a modest value bump that eases off demand/rarity); <b>Risky</b> surfaces the lopsided bets (trade value away for demand, rarity &amp; hype, or grab 100+ in value and accept lower demand/rarity). Every pick is <b>tagged with its trade type</b> and compared axis-by-axis against your own inventory, each carrying a composite <b>Risk</b> index, a confidence score and its binding reasons. <b>Reroll</b> re-samples equally strong alternatives deterministically. Not guarantees \u2014 confirm live before high-value trades. <b style="color:#a78bfa">\u00b7 engine build 2026-07-30a</b></p>
     <div class="card">
       <div class="port-sum"><div><div class="port-sum-l">Inventory True Value</div><div class="port-sum-v">${fmt(Math.round(inv.value))}</div>${inv.hi>inv.lo?`<div class="port-sum-band">${fmt(Math.round(inv.lo))} \u2013 ${fmt(Math.round(inv.hi))}</div>`:""}</div>
         <div class="port-sum-r"><span class="port-health" style="color:${hCol}">${icon("activity",13)} ${hLabel} holdings</span>${inv.value>0?`<span class="port-conf">${inv.conf}% conf</span>`:""}${inv.priceless?`<span class="port-pl">${inv.priceless} priceless</span>`:""}</div></div>
