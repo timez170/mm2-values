@@ -1,5 +1,5 @@
 {
-"updatedAt": "2026-08-13",
+"updatedAt": "2026-08-14",
 "items": [
 {"id":"traveler-s-gun","name":"Traveler's Gun","category":"Godly","supreme":5600,"mm2":5350,"demand":5,"rarity":5,"trend":"Stable","change":100,"changePct":1.8,"aliases":["trav gun","tg","travelers gun"]},
 {"id":"evergun","name":"Evergun","category":"Godly","supreme":3450,"mm2":3250,"demand":5,"rarity":4,"trend":"Stable","change":-25,"changePct":-0.7},
